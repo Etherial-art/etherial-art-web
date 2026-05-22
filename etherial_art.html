@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Etherial_Art — Arte · Diseño · Creación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1A7A72;--gl:#1F8F85;--gp:#DFF2EF;--gb:#B2DDD9;
+  --teal:#A8D8D4;--gold:#F5D000;--cream:#F5FAFA;
+  --dark:#0F2B29;--dg:#155950;--muted:#3D706B;--hint:#7BB8B4;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:flex;flex-direction:column}
+
+/* ══ TOP BAR ══════════════════════════════════════════ */
+.topbar{
+  flex-shrink:0;
+  background:rgba(250,250,245,0.96);backdrop-filter:blur(12px);
+  border-bottom:0.5px solid var(--gb);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:56px;position:relative;z-index:50;
+}
+.brand{font-family:var(--serif);font-size:20px;font-weight:300;letter-spacing:.1em;color:var(--gl);white-space:nowrap}
+.brand b{font-weight:500}
+
+/* ══ TAB BAR ══════════════════════════════════════════ */
+.tabbar{
+  flex-shrink:0;
+  background:var(--cream);border-bottom:0.5px solid var(--gb);
+  display:flex;align-items:center;padding:0 2.5rem;gap:0;
+}
+.tab{
+  display:flex;align-items:center;gap:7px;
+  padding:0 1.25rem;height:44px;
+  font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border-bottom:2px solid transparent;cursor:pointer;
+  transition:color .2s,border-color .2s;white-space:nowrap;
+  background:none;border-top:none;border-left:none;border-right:none;
+  font-family:var(--sans);
+}
+.tab i{font-size:16px}
+.tab:hover{color:var(--gl)}
+.tab.active{color:var(--gl);border-bottom-color:var(--gold);font-weight:500}
+.tab-spacer{flex:1}
+.topbar-cta{
+  font-size:11px;letter-spacing:.07em;padding:7px 18px;
+  border:1.5px solid var(--gold);color:var(--gl);
+  border-radius:24px;cursor:pointer;background:none;
+  font-family:var(--sans);transition:all .2s;white-space:nowrap;
+}
+.topbar-cta:hover{background:var(--gp);color:var(--dg)}
+
+/* ══ MAIN CONTENT ═════════════════════════════════════ */
+.main{flex:1;overflow-y:auto;overflow-x:hidden}
+.page{display:none;min-height:100%}
+.page.active{display:block}
+
+/* ══ PÁGINA: INICIO (galería de arte) ════════════════ */
+.gallery-hero{
+  padding:3.5rem 2.5rem 1.5rem;
+  display:flex;flex-direction:column;gap:.5rem;
+  border-bottom:0.5px solid var(--gb);
+}
+.gallery-hero-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal)}
+.gallery-hero-title{font-family:var(--serif);font-size:36px;font-weight:300;color:var(--dark);letter-spacing:-.01em}
+.gallery-hero-title em{font-style:italic;color:var(--gl)}
+
+/* masonry-style grid */
+.gallery-grid{
+  padding:2rem 2.5rem 3rem;
+  columns:3;column-gap:16px;
+}
+.gallery-item{
+  break-inside:avoid;margin-bottom:16px;border-radius:12px;overflow:hidden;
+  border:0.5px solid var(--gb);cursor:pointer;position:relative;
+  transition:transform .2s;
+}
+.gallery-item:hover{transform:scale(1.01)}
+.gallery-img{
+  width:100%;display:block;
+  background:var(--gb);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;
+}
+/* Alturas variadas para efecto masonry */
+.gallery-item:nth-child(1) .gallery-img{height:260px}
+.gallery-item:nth-child(2) .gallery-img{height:200px}
+.gallery-item:nth-child(3) .gallery-img{height:300px}
+.gallery-item:nth-child(4) .gallery-img{height:180px}
+.gallery-item:nth-child(5) .gallery-img{height:240px}
+.gallery-item:nth-child(6) .gallery-img{height:200px}
+.gallery-item:nth-child(7) .gallery-img{height:220px}
+.gallery-item:nth-child(8) .gallery-img{height:160px}
+.gallery-item:nth-child(9) .gallery-img{height:280px}
+.gallery-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(30,77,43,.6) 0%,transparent 55%);
+  opacity:0;transition:opacity .2s;
+  display:flex;align-items:flex-end;padding:1rem;
+}
+.gallery-item:hover .gallery-overlay{opacity:1}
+.gallery-overlay-text{color:#fff;font-size:13px;font-weight:400;letter-spacing:.04em}
+
+/* ══ PÁGINA: SOBRE MÍ ════════════════════════════════ */
+.about-page{padding:3.5rem 2.5rem;max-width:900px;margin:0 auto}
+.about-layout{display:grid;grid-template-columns:300px 1fr;gap:4rem;align-items:start}
+.about-photo{
+  width:100%;aspect-ratio:3/4;border-radius:16px;
+  background:linear-gradient(145deg,#B8E4E1,#7DC4BF);
+  border:0.5px solid var(--gb);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:.75rem;color:var(--muted);
+}
+.about-photo i{font-size:36px;color:var(--gl);opacity:.4}
+.about-photo p{font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.about-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:.75rem}
+.about-name{font-family:var(--serif);font-size:40px;font-weight:300;color:var(--dg);line-height:1;margin-bottom:.4rem}
+.about-role{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:2rem}
+.about-bio{font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:2rem}
+.about-bio p+p{margin-top:1rem}
+.about-divider{height:0.5px;background:var(--gb);margin:2rem 0}
+.about-section-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--hint);margin-bottom:1rem}
+.skills-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:2rem}
+.skill-tag{font-size:12px;padding:5px 14px;border-radius:20px;border:0.5px solid var(--gb);color:var(--gl)}
+.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem}
+.stat-card{background:#fff;border:0.5px solid var(--gb);border-radius:10px;padding:1rem;text-align:center}
+.stat-num{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--dg);display:block}
+.stat-label{font-size:11px;color:var(--hint);letter-spacing:.06em;margin-top:2px}
+.about-contact-row{display:flex;gap:10px;flex-wrap:wrap}
+.about-contact-chip{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 16px;border:0.5px solid var(--gb);border-radius:8px;
+  font-size:13px;color:var(--gl);background:#fff;text-decoration:none;
+  transition:background .2s;
+}
+.about-contact-chip:hover{background:var(--gp)}
+.about-contact-chip i{font-size:16px;color:var(--teal)}
+
+/* ══ PÁGINA: SERVICIOS & TRACKER ════════════════════ */
+.services-page{padding:3.5rem 2.5rem;max-width:900px;margin:0 auto}
+.page-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem}
+.page-title{font-family:var(--serif);font-size:34px;font-weight:300;color:var(--dark);margin-bottom:2.5rem;letter-spacing:-.01em}
+
+/* acordeón */
+.services-list{display:flex;flex-direction:column;margin-bottom:4rem}
+.service-item{border:0.5px solid var(--gb);background:#fff;overflow:hidden}
+.service-item:first-child{border-radius:12px 12px 0 0}
+.service-item:last-child{border-radius:0 0 12px 12px}
+.service-item+.service-item{border-top:none}
+.service-trigger{
+  width:100%;display:flex;align-items:center;gap:1.25rem;
+  padding:1.25rem 1.5rem;background:none;border:none;cursor:pointer;
+  font-family:var(--sans);text-align:left;transition:background .15s;
+}
+.service-trigger:hover{background:var(--gp)}
+.srv-icon{
+  width:40px;height:40px;border-radius:10px;background:var(--gp);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;color:var(--gl);font-size:20px;
+  transition:background .2s,color .2s;
+}
+.service-item.open .srv-icon{background:var(--gp);color:var(--dg)}
+.srv-text{flex:1}
+.srv-name{font-size:15px;font-weight:500;color:var(--dg);display:block}
+.srv-hint{font-size:12px;color:var(--hint);margin-top:2px}
+.srv-price{font-size:13px;color:var(--teal);letter-spacing:.04em;margin-right:.5rem;white-space:nowrap}
+.srv-chevron{font-size:18px;color:var(--hint);transition:transform .28s}
+.service-item.open .srv-chevron{transform:rotate(180deg)}
+.srv-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);padding:0 1.5rem}
+.service-item.open .srv-body{max-height:320px;padding:0 1.5rem 1.5rem}
+.srv-body-inner{border-top:0.5px solid var(--gb);padding-top:1.25rem;display:flex;flex-direction:column;gap:1rem}
+.srv-desc{font-size:13px;color:var(--muted);line-height:1.75}
+.srv-pay{
+  display:inline-block;align-self:flex-start;
+  padding:9px 22px;background:var(--gl);color:#fff;
+  border:1.5px solid var(--gold);border-radius:8px;font-size:12px;letter-spacing:.06em;
+  cursor:pointer;font-family:var(--sans);transition:background .2s;text-decoration:none;
+}
+.srv-pay:hover{background:var(--dg)}
+
+/* tracker */
+.tracker-header{margin-bottom:1.5rem}
+.tracker-bar{display:flex;gap:8px;margin-bottom:1.5rem}
+.tracker-input{
+  flex:1;padding:10px 16px;border:0.5px solid var(--gb);
+  border-radius:8px;font-size:13px;background:#fff;color:var(--dark);
+  font-family:var(--sans);outline:none;transition:border-color .2s;
+}
+.tracker-input:focus{border-color:var(--gl)}
+.tracker-btn{
+  padding:10px 20px;background:var(--gl);color:#fff;
+  border:1.5px solid var(--gold);border-radius:8px;font-size:12px;letter-spacing:.05em;
+  cursor:pointer;font-family:var(--sans);white-space:nowrap;
+}
+#tracker-result{
+  padding:.75rem 1rem;background:var(--gp);border:0.5px solid var(--gb);
+  border-radius:8px;font-size:13px;color:var(--dg);display:none;margin-bottom:1.5rem;
+}
+.tracker-table{width:100%;border-collapse:collapse;font-size:13px}
+.tracker-table th{
+  text-align:left;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--teal);padding:.5rem 1rem .75rem;font-weight:500;
+}
+.tracker-table td{padding:.75rem 1rem;border-top:0.5px solid #E8F2EA;color:var(--dark)}
+.tracker-table tr:hover td{background:var(--gp)}
+.folio-num{color:var(--gl);font-weight:500}
+.pill{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:500}
+.s-pending{background:#FEF8E0;color:#7A5900}
+.s-sent{background:#EEF7F0;color:#1E4D2B}
+.s-paid{background:#E0F5F0;color:#085041}
+.s-progress{background:#E8F0FF;color:#1A3A8A}
+
+/* ══ PÁGINA: PORTAFOLIO ═══════════════════════════════ */
+.portfolio-page{padding:3.5rem 2.5rem 3rem}
+.port-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:2.5rem}
+.port-filter{
+  font-size:11px;padding:5px 16px;border-radius:20px;
+  border:0.5px solid var(--gb);color:var(--muted);background:#fff;
+  cursor:pointer;font-family:var(--sans);transition:all .2s;
+}
+.port-filter:hover,.port-filter.active{background:var(--gp);color:var(--dg);border-color:var(--gold)}
+.port-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.port-card{border-radius:12px;overflow:hidden;border:0.5px solid var(--gb);transition:transform .2s}
+.port-card:hover{transform:translateY(-2px)}
+.port-card[data-cat].hidden{display:none}
+.port-img{
+  height:200px;display:flex;align-items:flex-end;padding:1rem;
+  position:relative;
+}
+.port-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(30,77,43,.55) 0%,transparent 60%);
+}
+.port-img span{position:relative;z-index:1;color:#fff;font-size:12px;letter-spacing:.06em}
+.port-info{background:#fff;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between}
+.port-title{font-size:14px;font-weight:500;color:var(--dg)}
+.port-tag{font-size:11px;color:var(--teal);margin-top:2px}
+.port-year{font-size:11px;color:var(--hint)}
+
+/* ══ FOOTER ═══════════════════════════════════════════ */
+.page-footer{
+  background:var(--dg);padding:1.75rem 2.5rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-brand{font-family:var(--serif);font-size:17px;font-weight:300;letter-spacing:.12em;color:#fff}
+.footer-social{display:flex;gap:1rem}
+.footer-social a{font-size:18px;color:var(--teal);text-decoration:none;transition:color .2s}
+.footer-social a:hover{color:var(--gold)}
+.footer-copy{font-size:11px;color:var(--hint);letter-spacing:.06em}
+
+/* tracker loading */
+.tracker-loading{
+  display:flex;align-items:center;gap:10px;
+  padding:1rem;font-size:13px;color:var(--hint);
+}
+.tracker-loading i{font-size:18px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tracker-empty{
+  padding:2rem;text-align:center;
+  font-size:13px;color:var(--hint);
+}
+.tracker-empty i{font-size:32px;display:block;margin-bottom:.5rem;color:var(--gb)}
+/* lugar en fila badge */
+.fila-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:11px;color:var(--muted);
+}
+.fila-badge b{color:var(--dg)}
+.toast{
+  position:fixed;bottom:2rem;right:2rem;z-index:300;
+  background:var(--dg);color:#fff;padding:12px 20px;border-radius:10px;
+  font-size:13px;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ══ RESPONSIVE ═══════════════════════════════════════ */
+@media(max-width:768px){
+  .topbar{padding:0 1.25rem}
+  .tabbar{padding:0 .5rem;gap:0;overflow-x:auto}
+  .tab{padding:0 .9rem;font-size:11px}
+  .tab span{display:none}
+  .gallery-grid{columns:2;padding:1.5rem}
+  .about-page,.services-page,.portfolio-page{padding:2rem 1.5rem}
+  .about-layout{grid-template-columns:1fr}
+  .about-stats{grid-template-columns:repeat(3,1fr)}
+  .port-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="brand">Etherial_<b>Art</b></div>
+  <button class="topbar-cta" onclick="goTab('contacto')">Contactar</button>
+</div>
+
+<!-- TAB BAR -->
+<div class="tabbar">
+  <button class="tab active" data-tab="inicio" onclick="goTab('inicio')">
+    <i class="ti ti-home" aria-hidden="true"></i><span>Inicio</span>
+  </button>
+  <button class="tab" data-tab="sobre" onclick="goTab('sobre')">
+    <i class="ti ti-user" aria-hidden="true"></i><span>Sobre mí</span>
+  </button>
+  <button class="tab" data-tab="servicios" onclick="goTab('servicios')">
+    <i class="ti ti-brush" aria-hidden="true"></i><span>Servicios</span>
+  </button>
+  <button class="tab" data-tab="portafolio" onclick="goTab('portafolio')">
+    <i class="ti ti-layout-grid" aria-hidden="true"></i><span>Portafolio</span>
+  </button>
+  <button class="tab" data-tab="contacto" onclick="goTab('contacto')">
+    <i class="ti ti-mail" aria-hidden="true"></i><span>Contacto</span>
+  </button>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+
+  <!-- ══ INICIO ══════════════════════════════════════ -->
+  <div class="page active" id="page-inicio">
+    <div class="gallery-hero">
+      <div class="gallery-hero-eyebrow">Arte · Diseño · Creación</div>
+      <h1 class="gallery-hero-title">Lo que sale de mis <em>manos.</em></h1>
+    </div>
+
+    <!-- GALERÍA — reemplaza los divs .gallery-img con tus imágenes:
+         <img src="tu-imagen.jpg" style="width:100%;display:block;object-fit:cover;height:XXXpx"> -->
+    <div class="gallery-grid">
+      <!-- ══ GALERÍA DE INICIO ══════════════════════════════════════
+           Para cada obra, reemplaza el div.gallery-img por una etiqueta img:
+           <img src="img/NOMBRE-DEL-ARCHIVO.jpg" style="width:100%;display:block;object-fit:cover;height:260px">
+           Los archivos van en la carpeta img/ del repositorio.
+           ══════════════════════════════════════════════════════════ -->
+      <div class="gallery-item">
+        <div class="gallery-img" style="height:260px;background:#B8E4E1">
+          <!-- <img src="img/galeria-01.jpg" style="width:100%;display:block;object-fit:cover;height:260px"> -->
+          img/galeria-01.jpg
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Serie botánica I</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-img" style="height:200px;background:#C8EBE8">
+          <!-- <img src="img/galeria-02.jpg" style="width:100%;display:block;object-fit:cover;height:200px"> -->
+          img/galeria-02.jpg
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Retrato ilustrado</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-img" style="height:300px;background:#9DD6D2">
+          <!-- <img src="img/galeria-03.jpg" style="width:100%;display:block;object-fit:cover;height:300px"> -->
+          img/galeria-03.jpg
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Portada editorial</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-img" style="height:180px;background:#BCE3E0">
+          <!-- <img src="img/galeria-04.jpg" style="width:100%;display:block;object-fit:cover;height:180px"> -->
+          img/galeria-04.jpg
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Print colección</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-img" style="height:240px;background:#C4EAE7">
+          <!-- <img src="img/galeria-05.jpg" style="width:100%;display:block;object-fit:cover;height:240px"> -->
+          img/galeria-05.jpg
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Serie botánica II</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-img" style="height:200px;background:#A8D8D4">
+          <!-- <img src="img/galeria-06.jpg" style="width:100%;display:block;object-fit:cover;height:200px"> -->
+          img/galeria-06.jpg
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Ilustración digital</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-img" style="height:220px;background:#B8E4E1">
+          <!-- <img src="img/galeria-07.jpg" style="width:100%;display:block;object-fit:cover;height:220px"> -->
+          img/galeria-07.jpg
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Acuarela</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-img" style="height:160px;background:#CCE9E7">
+          <!-- <img src="img/galeria-08.jpg" style="width:100%;display:block;object-fit:cover;height:160px"> -->
+          img/galeria-08.jpg
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Tipografía</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-img" style="height:280px;background:#9DD6D2">
+          <!-- <img src="img/galeria-09.jpg" style="width:100%;display:block;object-fit:cover;height:280px"> -->
+          img/galeria-09.jpg
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Ilustración fantástica</span></div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="footer-brand">Etherial_Art</div>
+      <div class="footer-social">
+        <a href="https://instagram.com/etherial_art" target="_blank" aria-label="Instagram"><i class="ti ti-brand-instagram" aria-hidden="true"></i></a>
+        <a href="https://ko-fi.com/etherial" target="_blank" aria-label="Ko-fi"><i class="ti ti-coffee" aria-hidden="true"></i></a>
+        <a href="mailto:etherial_art@proton.me" aria-label="Email"><i class="ti ti-mail" aria-hidden="true"></i></a>
+      </div>
+      <div class="footer-copy">© 2025 Etherial_Art · Todos los derechos reservados</div>
+    </div>
+  </div>
+
+  <!-- ══ SOBRE MÍ ═══════════════════════════════════ -->
+  <div class="page" id="page-sobre">
+    <div class="about-page">
+      <div class="about-layout">
+        <div>
+          <!-- Para poner tu foto: reemplaza este div por:
+               <img src="img/foto-perfil.jpg" style="width:100%;border-radius:16px;display:block;object-fit:cover;aspect-ratio:3/4"> -->
+          <div class="about-photo">
+            <i class="ti ti-user" aria-hidden="true"></i>
+            <p>Tu foto aquí</p>
+          </div>
+        </div>
+        <div>
+          <div class="about-eyebrow">Quién soy</div>
+          <h2 class="about-name">Nikolas Quill</h2>
+          <div class="about-role">"Niko" · Artista · Diseñador · Creador</div>
+
+          <div class="about-bio">
+            <p>Soy artista visual enfocado en ilustración y diseño. Mi trabajo nace de la observación del entorno natural y la búsqueda de formas que comuniquen sin palabras.</p>
+            <p>Dibujo mundos detallados, a veces botánicos, a veces fantásticos — siempre con intención. Cada comisión es una conversación: me cuentas tu idea y yo la convierto en imagen.</p>
+            <p>Trabajo principalmente en digital con Procreate e Illustrator, y también en técnicas tradicionales como acuarela y tinta. Entrego todo en alta resolución listo para imprimir.</p>
+          </div>
+
+          <div class="about-divider"></div>
+          <div class="about-section-label">Herramientas & medios</div>
+          <div class="skills-row">
+            <span class="skill-tag">Procreate</span>
+            <span class="skill-tag">Illustrator</span>
+            <span class="skill-tag">Acuarela</span>
+            <span class="skill-tag">Tinta</span>
+            <span class="skill-tag">Diseño editorial</span>
+            <span class="skill-tag">Tipografía</span>
+          </div>
+
+          <div class="about-divider"></div>
+          <div class="about-section-label">En números</div>
+          <div class="about-stats">
+            <div class="stat-card">
+              <span class="stat-num">+50</span>
+              <span class="stat-label">Comisiones entregadas</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-num">3</span>
+              <span class="stat-label">Años de experiencia</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-num">7–14</span>
+              <span class="stat-label">Días de entrega</span>
+            </div>
+          </div>
+
+          <div class="about-divider"></div>
+          <div class="about-section-label">Encuéntrame en</div>
+          <div class="about-contact-row">
+            <a href="https://instagram.com/etherial_art" target="_blank" class="about-contact-chip">
+              <i class="ti ti-brand-instagram" aria-hidden="true"></i> @etherial_art
+            </a>
+            <a href="mailto:etherial_art@proton.me" class="about-contact-chip">
+              <i class="ti ti-mail" aria-hidden="true"></i> etherial_art@proton.me
+            </a>
+            <a href="https://ko-fi.com/etherial" target="_blank" class="about-contact-chip">
+              <i class="ti ti-coffee" aria-hidden="true"></i> ko-fi.com/etherial
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SERVICIOS ══════════════════════════════════ -->
+  <div class="page" id="page-servicios">
+    <div class="services-page">
+      <div class="page-eyebrow">Lo que ofrezco</div>
+      <h2 class="page-title">Servicios & productos</h2>
+
+      <div class="services-list">
+        <div class="service-item" id="srv-1">
+          <button class="service-trigger" onclick="toggleSrv('srv-1')" aria-expanded="false">
+            <div class="srv-icon"><i class="ti ti-brush" aria-hidden="true"></i></div>
+            <div class="srv-text">
+              <span class="srv-name">Ilustración original</span>
+              <span class="srv-hint">Piezas únicas por encargo</span>
+            </div>
+            <span class="srv-price">desde $800 MXN</span>
+            <i class="ti ti-chevron-down srv-chevron" aria-hidden="true"></i>
+          </button>
+          <div class="srv-body">
+            <div class="srv-body-inner">
+              <p class="srv-desc">Piezas completamente únicas creadas desde cero según tu idea — con mi estilo propio o adaptado a tu visión. Incluye boceto inicial para aprobación, hasta 2 rondas de ajustes y entrega en alta resolución (PNG + PDF).</p>
+              <a href="https://ko-fi.com/etherial" target="_blank" class="srv-pay">Solicitar en Ko-fi</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="service-item" id="srv-2">
+          <button class="service-trigger" onclick="toggleSrv('srv-2')" aria-expanded="false">
+            <div class="srv-icon"><i class="ti ti-layout" aria-hidden="true"></i></div>
+            <div class="srv-text">
+              <span class="srv-name">Diseño editorial</span>
+              <span class="srv-hint">Portadas, libros y materiales impresos</span>
+            </div>
+            <span class="srv-price">desde $1,200 MXN</span>
+            <i class="ti ti-chevron-down srv-chevron" aria-hidden="true"></i>
+          </button>
+          <div class="srv-body">
+            <div class="srv-body-inner">
+              <p class="srv-desc">Diseño de portadas, maquetación de libros, revistas, zines y materiales impresos con identidad visual propia. Entrega en formatos listos para imprenta o publicación digital.</p>
+              <a href="https://ko-fi.com/etherial" target="_blank" class="srv-pay">Solicitar en Ko-fi</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="service-item" id="srv-3">
+          <button class="service-trigger" onclick="toggleSrv('srv-3')" aria-expanded="false">
+            <div class="srv-icon"><i class="ti ti-photo" aria-hidden="true"></i></div>
+            <div class="srv-text">
+              <span class="srv-name">Prints & productos</span>
+              <span class="srv-hint">Arte listo para imprimir y colecciones</span>
+            </div>
+            <span class="srv-price">desde $350 MXN</span>
+            <i class="ti ti-chevron-down srv-chevron" aria-hidden="true"></i>
+          </button>
+          <div class="srv-body">
+            <div class="srv-body-inner">
+              <p class="srv-desc">Arte digital listo para imprimir en el tamaño que necesites, merchandise personalizado y colecciones limitadas. Incluye licencia de uso personal o comercial según el paquete.</p>
+              <a href="https://ko-fi.com/etherial" target="_blank" class="srv-pay">Solicitar en Ko-fi</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRACKER -->
+      <div class="tracker-header">
+        <div class="page-eyebrow">Estado de pedidos</div>
+        <h2 class="page-title" style="margin-bottom:1.5rem">Tracker de folios</h2>
+      </div>
+      <div class="tracker-bar">
+        <input class="tracker-input" id="folio-input" placeholder="Ingresa tu número de folio o nombre, ej: #0001" />
+        <button class="tracker-btn" onclick="buscarFolio()">Buscar</button>
+      </div>
+      <div id="tracker-result"></div>
+      <table class="tracker-table">
+        <thead>
+          <tr>
+            <th>Folio</th><th>Cliente</th><th>Servicio</th><th>Fecha</th><th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="folio-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ PORTAFOLIO ════════════════════════════════ -->
+  <div class="page" id="page-portafolio">
+    <div class="portfolio-page">
+      <div class="page-eyebrow">Trabajo completo</div>
+      <h2 class="page-title">Portafolio</h2>
+
+      <div class="port-filters">
+        <button class="port-filter active" onclick="filterPort('todo')">Todo</button>
+        <button class="port-filter" onclick="filterPort('ilustracion')">Ilustración</button>
+        <button class="port-filter" onclick="filterPort('editorial')">Editorial</button>
+        <button class="port-filter" onclick="filterPort('digital')">Arte digital</button>
+        <button class="port-filter" onclick="filterPort('print')">Prints</button>
+      </div>
+
+      <div class="port-grid">
+        <!-- Agrega tantas port-card como quieras. data-cat define el filtro -->
+        <div class="port-card" data-cat="ilustracion">
+          <div class="port-img" style="background:#B8E4E1"><span>Proyecto 01</span></div>
+          <div class="port-info">
+            <div><div class="port-title">Serie botánica I</div><div class="port-tag">Ilustración</div></div>
+            <span class="port-year">2024</span>
+          </div>
+        </div>
+        <div class="port-card" data-cat="editorial">
+          <div class="port-img" style="background:#C8EBE8"><span>Proyecto 02</span></div>
+          <div class="port-info">
+            <div><div class="port-title">Portada editorial</div><div class="port-tag">Editorial</div></div>
+            <span class="port-year">2025</span>
+          </div>
+        </div>
+        <div class="port-card" data-cat="print">
+          <div class="port-img" style="background:#A0D4D0"><span>Proyecto 03</span></div>
+          <div class="port-info">
+            <div><div class="port-title">Print colección</div><div class="port-tag">Print</div></div>
+            <span class="port-year">2025</span>
+          </div>
+        </div>
+        <div class="port-card" data-cat="digital">
+          <div class="port-img" style="background:#BCE3E0"><span>Proyecto 04</span></div>
+          <div class="port-info">
+            <div><div class="port-title">Arte digital I</div><div class="port-tag">Arte digital</div></div>
+            <span class="port-year">2024</span>
+          </div>
+        </div>
+        <div class="port-card" data-cat="ilustracion">
+          <div class="port-img" style="background:#C4EAE7"><span>Proyecto 05</span></div>
+          <div class="port-info">
+            <div><div class="port-title">Serie botánica II</div><div class="port-tag">Ilustración</div></div>
+            <span class="port-year">2024</span>
+          </div>
+        </div>
+        <div class="port-card" data-cat="editorial">
+          <div class="port-img" style="background:#A8D8D4"><span>Proyecto 06</span></div>
+          <div class="port-info">
+            <div><div class="port-title">Zine independiente</div><div class="port-tag">Editorial</div></div>
+            <span class="port-year">2023</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CONTACTO ══════════════════════════════════ -->
+  <div class="page" id="page-contacto">
+    <div class="services-page">
+      <div class="page-eyebrow">Hablemos</div>
+      <h2 class="page-title">Contacto</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem">
+        <div>
+          <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:1.5rem">¿Tienes un proyecto en mente? Cuéntame tu idea y encontramos la forma de darle vida.</p>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-mail" style="font-size:18px;color:var(--teal)" aria-hidden="true"></i> etherial_art@proton.me</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-brand-instagram" style="font-size:18px;color:var(--teal)" aria-hidden="true"></i> @etherial_art</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-coffee" style="font-size:18px;color:var(--teal)" aria-hidden="true"></i> ko-fi.com/etherial</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-clock" style="font-size:18px;color:var(--teal)" aria-hidden="true"></i> Respondo en 24–48 hrs</div>
+          </div>
+        </div>
+        <div>
+          <div style="margin-bottom:14px">
+            <label style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:7px">Nombre</label>
+            <input id="f-nombre" placeholder="Tu nombre" style="width:100%;padding:10px 14px;border:0.5px solid var(--gb);border-radius:8px;font-size:13px;background:#fff;color:var(--dark);font-family:var(--sans);outline:none">
+          </div>
+          <div style="margin-bottom:14px">
+            <label style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:7px">Correo</label>
+            <input id="f-correo" type="email" placeholder="tu@correo.com" style="width:100%;padding:10px 14px;border:0.5px solid var(--gb);border-radius:8px;font-size:13px;background:#fff;color:var(--dark);font-family:var(--sans);outline:none">
+          </div>
+          <div style="margin-bottom:14px">
+            <label style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:7px">Mensaje</label>
+            <textarea id="f-msg" placeholder="Cuéntame sobre tu proyecto..." style="width:100%;padding:10px 14px;border:0.5px solid var(--gb);border-radius:8px;font-size:13px;background:#fff;color:var(--dark);font-family:var(--sans);outline:none;height:100px;resize:vertical"></textarea>
+          </div>
+          <button onclick="enviarCorreo()" style="width:100%;padding:11px;background:var(--gl);color:#fff;border:1.5px solid var(--gold);border-radius:8px;font-size:13px;letter-spacing:.06em;cursor:pointer;font-family:var(--sans)">Enviar mensaje</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ━━ NAVEGACIÓN POR PESTAÑAS ━━━━━━━━━━━━━━━━━━━━
+function goTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active', p.id==='page-'+name));
+  document.getElementById('main').scrollTop = 0;
+}
+
+// ━━ ACORDEÓN SERVICIOS ━━━━━━━━━━━━━━━━━━━━━━━━
+function toggleSrv(id){
+  const el = document.getElementById(id);
+  const open = el.classList.contains('open');
+  document.querySelectorAll('.service-item').forEach(e=>e.classList.remove('open'));
+  if(!open) el.classList.add('open');
+}
+
+// ━━ FILTROS PORTAFOLIO ━━━━━━━━━━━━━━━━━━━━━━━
+function filterPort(cat){
+  document.querySelectorAll('.port-filter').forEach(b=>b.classList.toggle('active', b.textContent.toLowerCase()===cat||cat==='todo'&&b.textContent==='Todo'));
+  document.querySelectorAll('.port-card').forEach(c=>{
+    c.classList.toggle('hidden', cat!=='todo' && c.dataset.cat!==cat);
+  });
+}
+
+// ━━ SUPABASE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const _url = 'https://eliyhtdwmeghfslijwgh.supabase.co';
+const _key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaXlodGR3bWVnaGZzbGlqd2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTU2MDMsImV4cCI6MjA5MTMzMTYwM30.QxWx1uHhEZJCvrFcvSfOzlPLUBA39uaRdl80NKEsjZc';
+const db = window.supabase.createClient(_url, _key);
+
+// ━━ STATUS — etiquetas y colores ━━━━━━━━━━━━━
+// Basado en tu enum commission_status de Supabase
+const eLabel = {
+  waiting:   'En espera',
+  notified:  'Notificado',
+  active:    'En proceso',
+  completed: 'Completado',
+  expired:   'Expirado'
+};
+const eClass = {
+  waiting:   's-pending',   // amarillo
+  notified:  's-progress',  // azul
+  active:    's-sent',      // verde claro
+  completed: 's-paid',      // verde oscuro
+  expired:   's-expired'    // gris
+};
+
+// estilo extra para expirado
+const extraStyle = document.createElement('style');
+extraStyle.textContent = '.s-expired{background:#F0F0F0;color:#777}';
+document.head.appendChild(extraStyle);
+
+let foliosGlobales = [];
+
+// ━━ RENDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderFolios(lista){
+  const tbody = document.getElementById('folio-tbody');
+
+  if(lista.length === 0){
+    tbody.innerHTML = `<tr><td colspan="6" class="tracker-empty">
+      <i class="ti ti-inbox" aria-hidden="true"></i>
+      No hay folios para mostrar
+    </td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = lista.map(f => {
+    const status = (f.status || 'waiting').toLowerCase();
+    const label  = eLabel[status]  || status;
+    const cls    = eClass[status]  || 's-pending';
+    const fecha  = f.created_at
+      ? new Date(f.created_at).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'})
+      : '—';
+    const fila   = f.lugar_en_fila
+      ? `<span class="fila-badge"><i class="ti ti-list-numbers"></i> Lugar <b>#${f.lugar_en_fila}</b></span>`
+      : '—';
+
+    return `<tr>
+      <td class="folio-num">#${String(f.folio).padStart(4,'0')}</td>
+      <td>${f.cliente_tag || '—'}</td>
+      <td>${f.descripcion_arte || '—'}</td>
+      <td>${fecha}</td>
+      <td>${fila}</td>
+      <td><span class="pill ${cls}">${label}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ━━ CARGA DESDE SUPABASE ━━━━━━━━━━━━━━━━━━━━
+async function cargarFolios(){
+  const tbody = document.getElementById('folio-tbody');
+  tbody.innerHTML = `<tr><td colspan="6" class="tracker-loading">
+    <i class="ti ti-loader-2" aria-hidden="true"></i> Cargando folios...
+  </td></tr>`;
+
+  const { data, error } = await db
+    .from('seguimiento_publico')
+    .select('folio, cliente_tag, descripcion_arte, status, lugar_en_fila, created_at')
+    .order('folio', { ascending: true });
+
+  if(error){
+    console.error('Supabase error:', error);
+    tbody.innerHTML = `<tr><td colspan="6" class="tracker-empty">
+      <i class="ti ti-wifi-off" aria-hidden="true"></i>
+      No se pudieron cargar los folios. Intenta más tarde.
+    </td></tr>`;
+    return;
+  }
+
+  foliosGlobales = data || [];
+  renderFolios(foliosGlobales);
+}
+
+// ━━ BUSCAR ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function buscarFolio(){
+  const q   = document.getElementById('folio-input').value.trim().toLowerCase();
+  const res = document.getElementById('tracker-result');
+
+  if(!q){
+    res.style.display = 'none';
+    renderFolios(foliosGlobales);
+    return;
+  }
+
+  const found = foliosGlobales.filter(f =>
+    String(f.folio).includes(q) ||
+    (f.cliente_tag || '').toLowerCase().includes(q)
+  );
+
+  res.style.display  = 'block';
+  res.textContent = found.length
+    ? `Se encontró ${found.length} folio(s).`
+    : 'No se encontró ningún folio con ese número o nombre.';
+  renderFolios(found);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Agregar columna "Lugar en fila" al header
+  const thead = document.querySelector('.tracker-table thead tr');
+  if(thead && thead.children.length === 5){
+    const th = document.createElement('th');
+    th.textContent = 'Lugar en fila';
+    thead.insertBefore(th, thead.children[4]);
+  }
+
+  document.getElementById('folio-input')
+    .addEventListener('keydown', e => { if(e.key==='Enter') buscarFolio(); });
+
+  cargarFolios();
+});
+
+// ━━ CONTACTO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function enviarCorreo(){
+  const n=document.getElementById('f-nombre').value.trim();
+  const c=document.getElementById('f-correo').value.trim();
+  const m=document.getElementById('f-msg').value.trim();
+  if(!n||!c||!m){ showToast('Por favor llena todos los campos.'); return; }
+  window.location.href=`mailto:etherial_art@proton.me?subject=${encodeURIComponent('Comisión – '+n)}&body=${encodeURIComponent('Nombre: '+n+'\nCorreo: '+c+'\n\nMensaje:\n'+m)}`;
+}
+
+// ━━ TOAST ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>

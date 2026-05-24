@@ -15,16 +15,23 @@
   --green:#1A7A72;--gl:#1F8F85;--gp:#DFF2EF;--gb:#B2DDD9;
   --teal:#A8D8D4;--gold:#F5D000;--cream:#F5FAFA;
   --dark:#0F2B29;--dg:#155950;--muted:#3D706B;--hint:#7BB8B4;
+  --card:#ffffff;--border:#B2DDD9;
   --serif:'Cormorant Garamond',Georgia,serif;
   --sans:'DM Sans',sans-serif;
+}
+[data-theme="dark"]{
+  --gl:#4DBDB5;--gp:#122422;--gb:#1F4744;
+  --teal:#5EC9C1;--gold:#F5D000;--cream:#0A1F1E;
+  --dark:#E8F5F4;--dg:#A8DDD9;--muted:#7BB8B4;--hint:#4A8A86;
+  --card:#122422;--border:#1F4744;
 }
 html,body{height:100%;overflow:hidden}
 body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:flex;flex-direction:column}
 
 /* ══ TOP BAR ══════════════════════════════════════════ */
 .topbar{
-  flex-shrink:0;background:rgba(250,250,245,0.96);backdrop-filter:blur(12px);
-  border-bottom:0.5px solid var(--gb);
+  flex-shrink:0;background:var(--cream);backdrop-filter:blur(12px);
+  border-bottom:0.5px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
   padding:0 2.5rem;height:56px;position:relative;z-index:50;
 }
@@ -33,7 +40,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 
 /* ══ TAB BAR ══════════════════════════════════════════ */
 .tabbar{
-  flex-shrink:0;background:var(--cream);border-bottom:0.5px solid var(--gb);
+  flex-shrink:0;background:var(--cream);border-bottom:0.5px solid var(--border);
   display:flex;align-items:center;padding:0 2.5rem;gap:0;
 }
 .tab{
@@ -59,12 +66,12 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .page.active{display:block}
 
 /* ══ GALERÍA ══════════════════════════════════════════ */
-.gallery-hero{padding:3.5rem 2.5rem 1.5rem;display:flex;flex-direction:column;gap:.5rem;border-bottom:0.5px solid var(--gb)}
+.gallery-hero{padding:3.5rem 2.5rem 1.5rem;display:flex;flex-direction:column;gap:.5rem;border-bottom:0.5px solid var(--border)}
 .gallery-hero-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal)}
 .gallery-hero-title{font-family:var(--serif);font-size:36px;font-weight:300;color:var(--dark);letter-spacing:-.01em}
 .gallery-hero-title em{font-style:italic;color:var(--gl)}
 .gallery-grid{padding:2rem 2.5rem 3rem;columns:3;column-gap:16px}
-.gallery-item{break-inside:avoid;margin-bottom:16px;border-radius:12px;overflow:hidden;border:0.5px solid var(--gb);cursor:pointer;position:relative;transition:transform .2s}
+.gallery-item{break-inside:avoid;margin-bottom:16px;border-radius:12px;overflow:hidden;border:0.5px solid var(--border);cursor:pointer;position:relative;transition:transform .2s}
 .gallery-item:hover{transform:scale(1.01)}
 .gallery-img{width:100%;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
 .gallery-item:nth-child(1) .gallery-img{height:260px}
@@ -83,7 +90,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 /* ══ SOBRE MÍ ════════════════════════════════════════ */
 .about-page{padding:3.5rem 2.5rem;max-width:900px;margin:0 auto}
 .about-layout{display:grid;grid-template-columns:300px 1fr;gap:4rem;align-items:start}
-.about-photo{width:100%;aspect-ratio:3/4;border-radius:16px;background:linear-gradient(145deg,#B8E4E1,#7DC4BF);border:0.5px solid var(--gb);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.75rem;color:var(--muted)}
+.about-photo{width:100%;aspect-ratio:3/4;border-radius:16px;background:linear-gradient(145deg,#B8E4E1,#7DC4BF);border:0.5px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.75rem;color:var(--muted)}
 .about-photo i{font-size:36px;color:var(--gl);opacity:.4}
 .about-photo p{font-size:11px;letter-spacing:.12em;text-transform:uppercase}
 .about-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:.75rem}
@@ -94,13 +101,13 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .about-divider{height:0.5px;background:var(--gb);margin:2rem 0}
 .about-section-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--hint);margin-bottom:1rem}
 .skills-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:2rem}
-.skill-tag{font-size:12px;padding:5px 14px;border-radius:20px;border:0.5px solid var(--gb);color:var(--gl)}
+.skill-tag{font-size:12px;padding:5px 14px;border-radius:20px;border:0.5px solid var(--border);color:var(--gl)}
 .about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem}
-.stat-card{background:#fff;border:0.5px solid var(--gb);border-radius:10px;padding:1rem;text-align:center}
+.stat-card{background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
 .stat-num{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--dg);display:block}
 .stat-label{font-size:11px;color:var(--hint);letter-spacing:.06em;margin-top:2px}
 .about-contact-row{display:flex;gap:10px;flex-wrap:wrap}
-.about-contact-chip{display:flex;align-items:center;gap:8px;padding:8px 16px;border:0.5px solid var(--gb);border-radius:8px;font-size:13px;color:var(--gl);background:#fff;text-decoration:none;transition:background .2s}
+.about-contact-chip{display:flex;align-items:center;gap:8px;padding:8px 16px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--gl);background:var(--card);text-decoration:none;transition:background .2s}
 .about-contact-chip:hover{background:var(--gp)}
 .about-contact-chip i{font-size:16px;color:var(--teal)}
 
@@ -109,7 +116,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .page-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem}
 .page-title{font-family:var(--serif);font-size:34px;font-weight:300;color:var(--dark);margin-bottom:2.5rem;letter-spacing:-.01em}
 .services-list{display:flex;flex-direction:column;margin-bottom:4rem}
-.service-item{border:0.5px solid var(--gb);background:#fff;overflow:hidden}
+.service-item{border:0.5px solid var(--border);background:var(--card);overflow:hidden}
 .service-item:first-child{border-radius:12px 12px 0 0}
 .service-item:last-child{border-radius:0 0 12px 12px}
 .service-item+.service-item{border-top:none}
@@ -125,7 +132,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .service-item.open .srv-chevron{transform:rotate(180deg)}
 .srv-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);padding:0 1.5rem}
 .service-item.open .srv-body{max-height:400px;padding:0 1.5rem 1.5rem}
-.srv-body-inner{border-top:0.5px solid var(--gb);padding-top:1.25rem;display:flex;flex-direction:column;gap:1rem}
+.srv-body-inner{border-top:0.5px solid var(--border);padding-top:1.25rem;display:flex;flex-direction:column;gap:1rem}
 .srv-desc{font-size:13px;color:var(--muted);line-height:1.75}
 .srv-pay{display:inline-block;align-self:flex-start;padding:9px 22px;background:var(--gl);color:#fff;border:1.5px solid var(--gold);border-radius:8px;font-size:12px;letter-spacing:.06em;cursor:pointer;font-family:var(--sans);transition:background .2s;text-decoration:none}
 .srv-pay:hover{background:var(--dg)}
@@ -136,10 +143,10 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 /* ══ TRACKER ════════════════════════════════════════ */
 .tracker-header{margin-bottom:1.5rem}
 .tracker-bar{display:flex;gap:8px;margin-bottom:1.5rem}
-.tracker-input{flex:1;padding:10px 16px;border:0.5px solid var(--gb);border-radius:8px;font-size:13px;background:#fff;color:var(--dark);font-family:var(--sans);outline:none;transition:border-color .2s}
+.tracker-input{flex:1;padding:10px 16px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none;transition:border-color .2s}
 .tracker-input:focus{border-color:var(--gl)}
 .tracker-btn{padding:10px 20px;background:var(--gl);color:#fff;border:1.5px solid var(--gold);border-radius:8px;font-size:12px;letter-spacing:.05em;cursor:pointer;font-family:var(--sans);white-space:nowrap}
-#tracker-result{padding:.75rem 1rem;background:var(--gp);border:0.5px solid var(--gb);border-radius:8px;font-size:13px;color:var(--dg);display:none;margin-bottom:1.5rem}
+#tracker-result{padding:.75rem 1rem;background:var(--gp);border:0.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--dg);display:none;margin-bottom:1.5rem}
 .tracker-table{width:100%;border-collapse:collapse;font-size:13px}
 .tracker-table th{text-align:left;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);padding:.5rem 1rem .75rem;font-weight:500}
 .tracker-table td{padding:.75rem 1rem;border-top:0.5px solid #E8F2EA;color:var(--dark)}
@@ -161,16 +168,16 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 /* ══ PORTAFOLIO ══════════════════════════════════════ */
 .portfolio-page{padding:3.5rem 2.5rem 3rem}
 .port-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:2.5rem}
-.port-filter{font-size:11px;padding:5px 16px;border-radius:20px;border:0.5px solid var(--gb);color:var(--muted);background:#fff;cursor:pointer;font-family:var(--sans);transition:all .2s}
+.port-filter{font-size:11px;padding:5px 16px;border-radius:20px;border:0.5px solid var(--border);color:var(--muted);background:var(--card);cursor:pointer;font-family:var(--sans);transition:all .2s}
 .port-filter:hover,.port-filter.active{background:var(--gp);color:var(--dg);border-color:var(--gold)}
 .port-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.port-card{border-radius:12px;overflow:hidden;border:0.5px solid var(--gb);transition:transform .2s}
+.port-card{border-radius:12px;overflow:hidden;border:0.5px solid var(--border);transition:transform .2s}
 .port-card:hover{transform:translateY(-2px)}
 .port-card[data-cat].hidden{display:none}
 .port-img{height:200px;display:flex;align-items:flex-end;padding:1rem;position:relative}
 .port-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(30,77,43,.55) 0%,transparent 60%)}
 .port-img span{position:relative;z-index:1;color:#fff;font-size:12px;letter-spacing:.06em}
-.port-info{background:#fff;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between}
+.port-info{background:var(--card);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between}
 .port-title{font-size:14px;font-weight:500;color:var(--dg)}
 .port-tag{font-size:11px;color:var(--teal);margin-top:2px}
 .port-year{font-size:11px;color:var(--hint)}
@@ -189,13 +196,13 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .field{margin-bottom:1.25rem}
 .field-label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:7px}
 .field-note{font-size:11px;color:var(--hint);margin-top:5px;line-height:1.5}
-.field input[type=text],.field input[type=email],.field textarea{width:100%;padding:10px 14px;border:0.5px solid var(--gb);border-radius:8px;font-size:13px;background:#fff;color:var(--dark);font-family:var(--sans);outline:none;transition:border-color .2s}
+.field input[type=text],.field input[type=email],.field textarea{width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none;transition:border-color .2s}
 .field input:focus,.field textarea:focus{border-color:var(--gl)}
 .field textarea{height:100px;resize:vertical}
 .options-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .options-grid.single{grid-template-columns:1fr}
 .options-grid.three{grid-template-columns:repeat(3,1fr)}
-.opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:0.5px solid var(--gb);border-radius:8px;cursor:pointer;transition:all .2s;background:#fff;font-size:13px;color:var(--dark);position:relative;user-select:none}
+.opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;background:var(--card);font-size:13px;color:var(--dark);position:relative;user-select:none}
 .opt:hover{border-color:var(--gl);background:var(--gp)}
 .opt.selected{border-color:var(--gl);background:var(--gp);font-weight:500}
 .opt.disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
@@ -211,19 +218,19 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .notice-warn{background:#FEF8E0;color:#7A5900;border:0.5px solid #F0D878}
 .notice-rush{background:#FFF0F0;color:#9B1C1C;border:0.5px solid #FCA5A5}
 .price-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1.5rem}
-.price-table th{text-align:left;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);padding:.5rem .75rem;border-bottom:0.5px solid var(--gb)}
+.price-table th{text-align:left;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);padding:.5rem .75rem;border-bottom:0.5px solid var(--border)}
 .price-table td{padding:.5rem .75rem;border-bottom:0.5px solid #E8F2EA;color:var(--dark)}
 .price-table tr:last-child td{border-bottom:none}
 .price-table td:last-child{text-align:right;color:var(--gl);font-weight:500}
 .form-nav{display:flex;gap:10px;margin-top:2rem}
-.btn-back{padding:10px 22px;background:transparent;color:var(--muted);border:0.5px solid var(--gb);border-radius:8px;font-size:12px;letter-spacing:.05em;cursor:pointer;font-family:var(--sans);transition:all .2s}
+.btn-back{padding:10px 22px;background:transparent;color:var(--muted);border:0.5px solid var(--border);border-radius:8px;font-size:12px;letter-spacing:.05em;cursor:pointer;font-family:var(--sans);transition:all .2s}
 .btn-back:hover{border-color:var(--gl);color:var(--gl)}
 .btn-next{padding:10px 28px;background:var(--gl);color:#fff;border:1.5px solid var(--gold);border-radius:8px;font-size:12px;letter-spacing:.06em;cursor:pointer;font-family:var(--sans);transition:all .2s;margin-left:auto}
 .btn-next:hover{background:var(--dg)}
 .btn-submit{padding:11px 32px;background:var(--gl);color:#fff;border:1.5px solid var(--gold);border-radius:8px;font-size:13px;letter-spacing:.06em;cursor:pointer;font-family:var(--sans);transition:all .2s;margin-left:auto}
 .btn-submit:hover{background:var(--dg)}
 .btn-submit:disabled{opacity:.5;cursor:not-allowed}
-.form-success{text-align:center;padding:3rem 2rem;background:#fff;border:0.5px solid var(--gb);border-radius:14px;display:none}
+.form-success{text-align:center;padding:3rem 2rem;background:var(--card);border:0.5px solid var(--border);border-radius:14px;display:none}
 .form-success i{font-size:48px;color:var(--gl);display:block;margin-bottom:1rem}
 .folio-big{font-family:var(--serif);font-size:48px;font-weight:300;color:var(--gl);letter-spacing:4px;margin:1rem 0}
 .form-success p{font-size:13px;color:var(--muted);line-height:1.8}
@@ -254,6 +261,17 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
   .options-grid{grid-template-columns:1fr}
   .options-grid.three{grid-template-columns:repeat(3,1fr)}
 }
+
+/* Dark mode overrides */
+[data-theme="dark"] .tracker-input,
+[data-theme="dark"] .field input,
+[data-theme="dark"] .field textarea {
+  background:var(--card);color:var(--dark);border-color:var(--border);
+}
+[data-theme="dark"] .notice-info{background:#0D2A3A;color:#7BB8D4;border-color:#1A4A6A}
+[data-theme="dark"] .notice-warn{background:#2A2000;color:#C4A020;border-color:#4A3A00}
+[data-theme="dark"] .notice-rush{background:#2A0A0A;color:#E05050;border-color:#6A1A1A}
+.lang-btn.active{background:var(--gl)!important;color:#fff!important;}
 </style>
 </head>
 <body>
@@ -261,7 +279,15 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 <!-- TOP BAR -->
 <div class="topbar">
   <div class="brand">Etherial_<b>Art</b></div>
-  <button class="topbar-cta" onclick="goTab('contacto')">Contactar</button>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:0.5px solid var(--border);border-radius:20px;padding:5px 10px;cursor:pointer;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:4px;transition:all .2s;" title="Toggle dark mode"><i class="ti ti-moon" id="theme-icon"></i></button>
+    <div style="display:flex;align-items:center;gap:2px;border:0.5px solid var(--border);border-radius:20px;padding:3px 4px">
+      <button class="lang-btn active" id="lang-es" onclick="setLang('es')" style="background:none;border:none;border-radius:16px;padding:3px 8px;font-size:11px;letter-spacing:.06em;cursor:pointer;color:var(--muted);font-family:var(--sans);transition:all .2s;">ES</button>
+      <button class="lang-btn" id="lang-en" onclick="setLang('en')" style="background:none;border:none;border-radius:16px;padding:3px 8px;font-size:11px;letter-spacing:.06em;cursor:pointer;color:var(--muted);font-family:var(--sans);transition:all .2s;">EN</button>
+      <button class="lang-btn" id="lang-de" onclick="setLang('de')" style="background:none;border:none;border-radius:16px;padding:3px 8px;font-size:11px;letter-spacing:.06em;cursor:pointer;color:var(--muted);font-family:var(--sans);transition:all .2s;">DE</button>
+    </div>
+    <button class="topbar-cta" onclick="goTab('contacto')" id="cta-contact">Contactar</button>
+  </div>
 </div>
 
 <!-- TAB BAR -->
@@ -352,7 +378,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
       <div class="footer-brand">Etherial_Art</div>
       <div class="footer-social">
         <a href="https://instagram.com/etherial_art" target="_blank"><i class="ti ti-brand-instagram"></i></a>
-        <a href="https://ko-fi.com/etherial_art" target="_blank"><i class="ti ti-coffee"></i></a>
+        <a href="https://ko-fi.com/etherial" target="_blank"><i class="ti ti-coffee"></i></a>
         <a href="mailto:etherial_art@proton.me"><i class="ti ti-mail"></i></a>
       </div>
       <div class="footer-copy">© 2025 Etherial_Art · Todos los derechos reservados</div>
@@ -397,7 +423,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
           <div class="about-contact-row">
             <a href="https://instagram.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-brand-instagram"></i> @etherial_art</a>
             <a href="mailto:etherial_art@proton.me" class="about-contact-chip"><i class="ti ti-mail"></i> etherial_art@proton.me</a>
-            <a href="https://ko-fi.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> ko-fi.com/etherial</a>
+            <a href="https://ko-fi.com/etherial" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> ko-fi.com/etherial</a>
           </div>
         </div>
       </div>
@@ -422,7 +448,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
             <div class="srv-body-inner">
               <p class="srv-desc">Piezas completamente únicas creadas desde cero según tu idea — con mi estilo propio o adaptado a tu visión. Stickers, icons, PFPs, badges, half/full body y escenas cinemáticas. Incluye boceto inicial para aprobación y hasta 2 rondas de ajustes.</p>
               <div class="srv-btn-row">
-                <a href="https://ko-fi.com/etherial_art" target="_blank" class="srv-pay-outline"><i class="ti ti-coffee" style="font-size:13px"></i> Ver en Ko-fi</a>
+                <a href="https://ko-fi.com/etherial" target="_blank" class="srv-pay-outline"><i class="ti ti-coffee" style="font-size:13px"></i> Ver en Ko-fi</a>
                 <button class="srv-pay" onclick="abrirFormulario('ilustracion')">Solicitar comisión →</button>
               </div>
             </div>
@@ -812,7 +838,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
       <div class="form-section" id="fs-5">
         <h3 class="form-section-title">Resumen de tu solicitud</h3>
         <p class="form-section-sub">Revisa que todo esté correcto antes de enviar.</p>
-        <div id="resumen-content" style="background:#fff;border:0.5px solid var(--gb);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;font-size:13px;color:var(--dark);line-height:1.8"></div>
+        <div id="resumen-content" style="background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;font-size:13px;color:var(--dark);line-height:1.8"></div>
         <div class="notice notice-warn">⚠️ Soy estudiante de Robótica. Tiempos estimados: Stickers/Icons 1–2 semanas · PFP/Badge/Half/Full/Cinematic 4–6 semanas.</div>
         <div class="form-nav">
           <button class="btn-back" onclick="backSection(5)">← Atrás</button>
@@ -829,7 +855,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <p style="margin-top:1rem">Revisaré tu solicitud en las próximas <strong>48 horas</strong>.</p>
         <div style="margin-top:2rem;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
           <a href="https://instagram.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-brand-instagram"></i> @etherial_art</a>
-          <a href="https://ko-fi.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
+          <a href="https://ko-fi.com/etherial" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
         </div>
       </div>
     </div>
@@ -846,22 +872,22 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
           <div style="display:flex;flex-direction:column;gap:12px">
             <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-mail" style="font-size:18px;color:var(--teal)"></i> etherial_art@proton.me</div>
             <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-brand-instagram" style="font-size:18px;color:var(--teal)"></i> @etherial_art</div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-coffee" style="font-size:18px;color:var(--teal)"></i> ko-fi.com/etherial_art</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-coffee" style="font-size:18px;color:var(--teal)"></i> ko-fi.com/etherial</div>
             <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-clock" style="font-size:18px;color:var(--teal)"></i> Respondo en 24–48 hrs</div>
           </div>
         </div>
         <div>
           <div style="margin-bottom:14px">
             <label style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:7px">Nombre</label>
-            <input id="f-nombre" placeholder="Tu nombre" style="width:100%;padding:10px 14px;border:0.5px solid var(--gb);border-radius:8px;font-size:13px;background:#fff;color:var(--dark);font-family:var(--sans);outline:none">
+            <input id="f-nombre" placeholder="Tu nombre" style="width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none">
           </div>
           <div style="margin-bottom:14px">
             <label style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:7px">Correo</label>
-            <input id="f-correo" type="email" placeholder="tu@correo.com" style="width:100%;padding:10px 14px;border:0.5px solid var(--gb);border-radius:8px;font-size:13px;background:#fff;color:var(--dark);font-family:var(--sans);outline:none">
+            <input id="f-correo" type="email" placeholder="tu@correo.com" style="width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none">
           </div>
           <div style="margin-bottom:14px">
             <label style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:7px">Mensaje</label>
-            <textarea id="f-msg" placeholder="Cuéntame sobre tu proyecto..." style="width:100%;padding:10px 14px;border:0.5px solid var(--gb);border-radius:8px;font-size:13px;background:#fff;color:var(--dark);font-family:var(--sans);outline:none;height:100px;resize:vertical"></textarea>
+            <textarea id="f-msg" placeholder="Cuéntame sobre tu proyecto..." style="width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none;height:100px;resize:vertical"></textarea>
           </div>
           <button onclick="enviarCorreo()" style="width:100%;padding:11px;background:var(--gl);color:#fff;border:1.5px solid var(--gold);border-radius:8px;font-size:13px;letter-spacing:.06em;cursor:pointer;font-family:var(--sans)">Enviar mensaje</button>
         </div>
@@ -873,6 +899,272 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 <div class="toast" id="toast"></div>
 
 <script>
+
+// ━━ TRADUCCIONES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const i18n = {
+  es:{
+    'nav.home':'Inicio','nav.about':'Sobre mí','nav.services':'Servicios',
+    'nav.portfolio':'Portafolio','nav.commissions':'Comisiones','nav.contact':'Contactar',
+    'home.eyebrow':'Arte · Diseño · Creación',
+    'about.eyebrow':'Quién soy',
+    'services.eyebrow':'Lo que ofrezco','services.title':'Servicios & productos',
+    'services.illus.name':'Ilustración digital','services.illus.hint':'Piezas únicas por encargo',
+    'services.edit.name':'Diseño editorial','services.edit.hint':'Portadas y materiales digitales',
+    'services.print.name':'Print — Arte para imprimir','services.print.hint':'Arte digital en alta resolución',
+    'services.kofi':'Ver en Ko-fi','services.request':'Solicitar comisión →',
+    'tracker.eyebrow':'Estado de pedidos','tracker.title':'Tracker de folios',
+    'tracker.search':'Buscar','tracker.loading':'Cargando folios...',
+    'tracker.empty':'No hay folios para mostrar','tracker.error':'No se pudieron cargar los folios.',
+    'tracker.found':'Se encontró {n} folio(s).','tracker.notfound':'No se encontró ningún folio.',
+    'tracker.col.folio':'Folio','tracker.col.client':'Cliente','tracker.col.desc':'Descripción',
+    'tracker.col.date':'Fecha','tracker.col.queue':'Lugar en fila','tracker.col.status':'Estado',
+    'portfolio.eyebrow':'Trabajo completo','portfolio.title':'Portafolio',
+    'portfolio.all':'Todo','portfolio.illus':'Ilustración','portfolio.edit':'Editorial','portfolio.digital':'Arte digital',
+    'form.eyebrow':'Solicitud de comisión','form.intro':'Cuéntame tu idea y nos ponemos en contacto en 48hrs.',
+    'form.back':'← Atrás','form.next':'Siguiente →','form.submit':'Enviar solicitud ✓',
+    'form.success.title':'¡Solicitud enviada!',
+    'form.success.track':'Con este folio puedes rastrear tu comisión en Servicios → Tracker.',
+    'form.success.time':'Revisaré tu solicitud en las próximas 48 horas.',
+    'form.sending':'Enviando...','form.error':'Hubo un error. Intenta de nuevo.',
+    'form.conn.error':'Error de conexión. Intenta de nuevo.',
+    'contact.eyebrow':'Hablemos','contact.title':'Contacto',
+    'contact.send':'Enviar mensaje','contact.val':'Por favor llena todos los campos.',
+    'contact.response':'Respondo en 24–48 hrs',
+    'val.tag':'Ingresa tu nombre o @','val.email':'Ingresa tu correo',
+    'val.lang':'Selecciona tu idioma','val.first':'Indica si es tu primera comisión',
+    'val.service':'Selecciona el tipo de servicio','val.tipo_ilus':'Selecciona el tipo de ilustración',
+    'val.acabado':'Selecciona el acabado','val.personajes':'Indica cuántos personajes',
+    'val.tipo_edit':'Selecciona el tipo de material','val.tipo_print':'Selecciona el tipo de pieza',
+    'val.uso':'Selecciona el uso final','val.desc':'Ingresa la descripción de tu idea',
+    'val.rush':'Indica la prioridad','val.contacto':'Selecciona tu canal de contacto',
+    'val.discord':'Ingresa tu usuario de Discord',
+    'status.waiting':'En espera','status.notified':'Notificado','status.active':'En proceso',
+    'status.completed':'Completado','status.expired':'Expirado',
+    'step.1':'Información básica','step.2':'Tipo de servicio',
+    'step.3':'Detalles','step.4':'Contacto','step.5':'Resumen',
+    'step.label':'Paso {n} de 5',
+  },
+  en:{
+    'nav.home':'Home','nav.about':'About','nav.services':'Services',
+    'nav.portfolio':'Portfolio','nav.commissions':'Commissions','nav.contact':'Contact',
+    'home.eyebrow':'Art · Design · Creation',
+    'about.eyebrow':'Who I am',
+    'services.eyebrow':'What I offer','services.title':'Services & products',
+    'services.illus.name':'Digital illustration','services.illus.hint':'Unique pieces on commission',
+    'services.edit.name':'Editorial design','services.edit.hint':'Covers and digital materials',
+    'services.print.name':'Print-ready art','services.print.hint':'High-resolution digital art',
+    'services.kofi':'View on Ko-fi','services.request':'Request commission →',
+    'tracker.eyebrow':'Order status','tracker.title':'Order tracker',
+    'tracker.search':'Search','tracker.loading':'Loading orders...',
+    'tracker.empty':'No orders to display','tracker.error':'Could not load orders.',
+    'tracker.found':'Found {n} order(s).','tracker.notfound':'No order found.',
+    'tracker.col.folio':'Folio','tracker.col.client':'Client','tracker.col.desc':'Description',
+    'tracker.col.date':'Date','tracker.col.queue':'Queue position','tracker.col.status':'Status',
+    'portfolio.eyebrow':'Full work','portfolio.title':'Portfolio',
+    'portfolio.all':'All','portfolio.illus':'Illustration','portfolio.edit':'Editorial','portfolio.digital':'Digital art',
+    'form.eyebrow':'Commission request','form.intro':'Tell me your idea and I\'ll get back to you within 48hrs.',
+    'form.back':'← Back','form.next':'Next →','form.submit':'Submit request ✓',
+    'form.success.title':'Request sent!',
+    'form.success.track':'Use this folio to track your commission in Services → Tracker.',
+    'form.success.time':'I\'ll review your request within the next 48 hours.',
+    'form.sending':'Sending...','form.error':'Something went wrong. Please try again.',
+    'form.conn.error':'Connection error. Please try again.',
+    'contact.eyebrow':"Let\'s talk",'contact.title':'Contact',
+    'contact.send':'Send message','contact.val':'Please fill in all fields.',
+    'contact.response':'I respond within 24–48 hrs',
+    'val.tag':'Enter your name or @','val.email':'Enter your email',
+    'val.lang':'Select your language','val.first':'Let me know if this is your first commission',
+    'val.service':'Select a service type','val.tipo_ilus':'Select the illustration type',
+    'val.acabado':'Select a finish','val.personajes':'Indicate number of characters',
+    'val.tipo_edit':'Select the material type','val.tipo_print':'Select the piece type',
+    'val.uso':'Select the final use','val.desc':'Enter a description of your idea',
+    'val.rush':'Indicate the order priority','val.contacto':'Select your contact channel',
+    'val.discord':'Enter your Discord username',
+    'status.waiting':'Waiting','status.notified':'Notified','status.active':'In progress',
+    'status.completed':'Completed','status.expired':'Expired',
+    'step.1':'Basic info','step.2':'Service type',
+    'step.3':'Details','step.4':'Contact','step.5':'Summary',
+    'step.label':'Step {n} of 5',
+  },
+  de:{
+    'nav.home':'Start','nav.about':'Über mich','nav.services':'Leistungen',
+    'nav.portfolio':'Portfolio','nav.commissions':'Aufträge','nav.contact':'Kontakt',
+    'home.eyebrow':'Kunst · Design · Kreation',
+    'about.eyebrow':'Wer ich bin',
+    'services.eyebrow':'Was ich anbiete','services.title':'Leistungen & Produkte',
+    'services.illus.name':'Digitale Illustration','services.illus.hint':'Einzigartige Stücke auf Bestellung',
+    'services.edit.name':'Buchgestaltung','services.edit.hint':'Cover und digitale Materialien',
+    'services.print.name':'Druckfertige Kunst','services.print.hint':'Digitale Kunst in hoher Auflösung',
+    'services.kofi':'Auf Ko-fi ansehen','services.request':'Auftrag anfragen →',
+    'tracker.eyebrow':'Bestellstatus','tracker.title':'Auftrags-Tracker',
+    'tracker.search':'Suchen','tracker.loading':'Aufträge werden geladen...',
+    'tracker.empty':'Keine Aufträge vorhanden','tracker.error':'Aufträge konnten nicht geladen werden.',
+    'tracker.found':'{n} Auftrag/Aufträge gefunden.','tracker.notfound':'Kein Auftrag gefunden.',
+    'tracker.col.folio':'Folio','tracker.col.client':'Kunde','tracker.col.desc':'Beschreibung',
+    'tracker.col.date':'Datum','tracker.col.queue':'Warteschlangenplatz','tracker.col.status':'Status',
+    'portfolio.eyebrow':'Vollständige Arbeiten','portfolio.title':'Portfolio',
+    'portfolio.all':'Alle','portfolio.illus':'Illustration','portfolio.edit':'Editorial','portfolio.digital':'Digitale Kunst',
+    'form.eyebrow':'Auftragsanfrage','form.intro':'Erzähl mir deine Idee und ich melde mich innerhalb von 48 Std.',
+    'form.back':'← Zurück','form.next':'Weiter →','form.submit':'Anfrage senden ✓',
+    'form.success.title':'Anfrage gesendet!',
+    'form.success.track':'Mit dieser Folionummer kannst du deinen Auftrag unter Leistungen → Tracker verfolgen.',
+    'form.success.time':'Ich werde deine Anfrage innerhalb der nächsten 48 Stunden prüfen.',
+    'form.sending':'Wird gesendet...','form.error':'Ein Fehler ist aufgetreten. Bitte versuche es erneut.',
+    'form.conn.error':'Verbindungsfehler. Bitte versuche es erneut.',
+    'contact.eyebrow':'Lass uns reden','contact.title':'Kontakt',
+    'contact.send':'Nachricht senden','contact.val':'Bitte fülle alle Felder aus.',
+    'contact.response':'Ich antworte innerhalb von 24–48 Std.',
+    'val.tag':'Gib deinen Namen oder @ ein','val.email':'Gib deine E-Mail ein',
+    'val.lang':'Wähle deine Sprache','val.first':'Gib an, ob es dein erster Auftrag ist',
+    'val.service':'Wähle eine Auftragsart','val.tipo_ilus':'Wähle die Illustrationsart',
+    'val.acabado':'Wähle eine Ausführung','val.personajes':'Gib die Anzahl der Figuren an',
+    'val.tipo_edit':'Wähle die Materialart','val.tipo_print':'Wähle die Stückart',
+    'val.uso':'Wähle die Endnutzung','val.desc':'Gib eine Beschreibung deiner Idee ein',
+    'val.rush':'Gib die Auftragspriorität an','val.contacto':'Wähle deinen Kontaktkanal',
+    'val.discord':'Gib deinen Discord-Nutzernamen ein',
+    'status.waiting':'Wartend','status.notified':'Benachrichtigt','status.active':'In Bearbeitung',
+    'status.completed':'Abgeschlossen','status.expired':'Abgelaufen',
+    'step.1':'Grundinfos','step.2':'Auftragsart',
+    'step.3':'Projektdetails','step.4':'Kontakt','step.5':'Übersicht',
+    'step.label':'Schritt {n} von 5',
+  }
+};
+
+let lang = 'es';
+function t(key, vars){
+  let s=(i18n[lang]&&i18n[lang][key])||(i18n.es&&i18n.es[key])||key;
+  if(vars) Object.keys(vars).forEach(k=>{s=s.replace('{'+k+'}',vars[k]);});
+  return s;
+}
+
+function setLang(l){
+  lang=l;
+  localStorage.setItem('ea-lang',l);
+  document.documentElement.lang=l;
+  ['es','en','de'].forEach(x=>{
+    const btn=document.getElementById('lang-'+x);
+    if(btn){
+      btn.style.background=x===l?'var(--gl)':'transparent';
+      btn.style.color=x===l?'#fff':'var(--muted)';
+    }
+  });
+  applyTranslations();
+}
+
+function applyTranslations(){
+  // Nav tabs
+  const tabMap={
+    'inicio':'nav.home','sobre':'nav.about','servicios':'nav.services',
+    'portafolio':'nav.portfolio','comisiones':'nav.commissions','contacto':'nav.contact'
+  };
+  document.querySelectorAll('.tab').forEach(tab=>{
+    const key=tabMap[tab.dataset.tab];
+    if(key){const span=tab.querySelector('span');if(span) span.textContent=t(key);}
+  });
+
+  // CTA button
+  const cta=document.getElementById('cta-contact');
+  if(cta) cta.textContent=t('nav.contact');
+
+  // Tab comisiones/contacto spans
+  const tc=document.getElementById('tab-comisiones');
+  if(tc) tc.textContent=t('nav.commissions');
+  const tco=document.getElementById('tab-contacto');
+  if(tco) tco.textContent=t('nav.contact');
+
+  // Gallery
+  const eyebrow=document.querySelector('.gallery-hero-eyebrow');
+  if(eyebrow) eyebrow.textContent=t('home.eyebrow');
+
+  // About
+  const ae=document.querySelector('.about-eyebrow');
+  if(ae) ae.textContent=t('about.eyebrow');
+
+  // Services
+  const se=document.querySelector('#page-servicios .page-eyebrow');
+  if(se) se.textContent=t('services.eyebrow');
+  const st=document.querySelector('#page-servicios .page-title');
+  if(st) st.textContent=t('services.title');
+
+  // Service names
+  const snames=[
+    ['#srv-1 .srv-name','services.illus.name'],['#srv-1 .srv-hint','services.illus.hint'],
+    ['#srv-2 .srv-name','services.edit.name'],['#srv-2 .srv-hint','services.edit.hint'],
+    ['#srv-3 .srv-name','services.print.name'],['#srv-3 .srv-hint','services.print.hint'],
+  ];
+  snames.forEach(([sel,key])=>{const el=document.querySelector(sel);if(el) el.textContent=t(key);});
+
+  // Ko-fi and request buttons
+  document.querySelectorAll('.srv-pay-outline span').forEach(el=>el.textContent=t('services.kofi'));
+  document.querySelectorAll('.srv-pay[onclick*="abrirFormulario"]').forEach(el=>el.textContent=t('services.request'));
+
+  // Tracker
+  const te=document.querySelector('#page-servicios .tracker-header .page-eyebrow');
+  if(te) te.textContent=t('tracker.eyebrow');
+  const tt=document.querySelector('#page-servicios .page-title:last-of-type');
+
+  // Tracker table headers
+  const ths=document.querySelectorAll('.tracker-table th');
+  const thKeys=['tracker.col.folio','tracker.col.client','tracker.col.desc','tracker.col.date','tracker.col.queue','tracker.col.status'];
+  ths.forEach((th,i)=>{if(thKeys[i]) th.textContent=t(thKeys[i]);});
+
+  // Tracker search button
+  const tsb=document.querySelector('.tracker-btn');
+  if(tsb) tsb.textContent=t('tracker.search');
+  const tip=document.getElementById('folio-input');
+  if(tip) tip.placeholder=t('tracker.placeholder')||'#0001';
+
+  // Portfolio
+  const pe=document.querySelector('#page-portafolio .page-eyebrow');
+  if(pe) pe.textContent=t('portfolio.eyebrow');
+  const pt=document.querySelector('#page-portafolio .page-title');
+  if(pt) pt.textContent=t('portfolio.title');
+  const pfilters=document.querySelectorAll('.port-filter');
+  const pfkeys=['portfolio.all','portfolio.illus','portfolio.edit','portfolio.digital'];
+  pfilters.forEach((btn,i)=>{if(pfkeys[i]) btn.textContent=t(pfkeys[i]);else if(i===4) btn.textContent='Prints';});
+
+  // Form
+  const fe=document.querySelector('#page-comisiones .page-eyebrow');
+  if(fe) fe.textContent=t('form.eyebrow');
+  const fi=document.querySelector('#page-comisiones > div > p');
+  if(fi) fi.textContent=t('form.intro');
+
+  // Form buttons
+  document.querySelectorAll('.btn-back').forEach(b=>b.textContent=t('form.back'));
+  document.querySelectorAll('.btn-next').forEach(b=>b.textContent=t('form.next'));
+  const sub=document.getElementById('btn-submit');
+  if(sub&&!sub.disabled) sub.textContent=t('form.submit');
+
+  // Success
+  const sct=document.querySelector('.form-success p:nth-child(3)');
+  if(sct) sct.textContent=t('form.success.track');
+  const sct2=document.querySelector('.form-success p:nth-child(4)');
+  if(sct2) sct2.textContent=t('form.success.time');
+
+  // Contact page
+  const ce=document.querySelector('#page-contacto .page-eyebrow');
+  if(ce) ce.textContent=t('contact.eyebrow');
+  const ct=document.querySelector('#page-contacto .page-title');
+  if(ct) ct.textContent=t('contact.title');
+  const csb=document.querySelector('#page-contacto button[onclick]');
+  if(csb) csb.textContent=t('contact.send');
+
+  // Re-render tracker with new language labels
+  renderFolios(foliosGlobales);
+  actualizarProgreso();
+}
+
+// ━━ TEMA OSCURO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function applyTheme(dark){
+  document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+  const icon=document.getElementById('theme-icon');
+  if(icon) icon.className=dark?'ti ti-sun':'ti ti-moon';
+  localStorage.setItem('ea-theme',dark?'dark':'light');
+}
+function toggleTheme(){
+  applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');
+}
+
 // ━━ NAVEGACIÓN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function goTab(name){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
@@ -898,7 +1190,6 @@ function filterPort(cat){
 const _url='https://eliyhtdwmeghfslijwgh.supabase.co';
 const _key='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaXlodGR3bWVnaGZzbGlqd2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTU2MDMsImV4cCI6MjA5MTMzMTYwM30.QxWx1uHhEZJCvrFcvSfOzlPLUBA39uaRdl80NKEsjZc';
 const db=window.supabase.createClient(_url,_key);
-const eLabel={waiting:'En espera',notified:'Notificado',active:'En proceso',completed:'Completado',expired:'Expirado'};
 const eClass={waiting:'s-pending',notified:'s-progress',active:'s-sent',completed:'s-paid',expired:'s-expired'};
 const extraStyle=document.createElement('style');
 extraStyle.textContent='.s-expired{background:#F0F0F0;color:#777}';
@@ -908,7 +1199,7 @@ let foliosGlobales=[];
 function renderFolios(lista){
   const tbody=document.getElementById('folio-tbody');
   if(!lista.length){
-    tbody.innerHTML='<tr><td colspan="6" class="tracker-empty"><i class="ti ti-inbox"></i> No hay folios para mostrar</td></tr>';
+    tbody.innerHTML=`<tr><td colspan="6" class="tracker-empty"><i class="ti ti-inbox"></i> ${t('tracker.empty')}</td></tr>`;
     return;
   }
   tbody.innerHTML=lista.map(f=>{
@@ -921,7 +1212,7 @@ function renderFolios(lista){
 
 async function cargarFolios(){
   const tbody=document.getElementById('folio-tbody');
-  tbody.innerHTML='<tr><td colspan="6" class="tracker-loading"><i class="ti ti-loader-2"></i> Cargando folios...</td></tr>';
+  tbody.innerHTML=`<tr><td colspan="6" class="tracker-loading"><i class="ti ti-loader-2"></i> ${t('tracker.loading')}</td></tr>`;
   try{
     const {data,error}=await db.from('seguimiento_publico').select('folio,cliente_tag,descripcion_arte,status,lugar_en_fila,created_at').order('folio',{ascending:true});
     if(error) throw error;
@@ -939,7 +1230,7 @@ function buscarFolio(){
   if(!q){res.style.display='none';renderFolios(foliosGlobales);return;}
   const found=foliosGlobales.filter(f=>String(f.folio).includes(q)||(f.cliente_tag||'').toLowerCase().includes(q));
   res.style.display='block';
-  res.textContent=found.length?`Se encontró ${found.length} folio(s).`:'No se encontró ningún folio.';
+  res.textContent=found.length?t('tracker.found',{n:found.length}):t('tracker.notfound');
   renderFolios(found);
 }
 
@@ -995,32 +1286,32 @@ function toggleOpt(el,grupo){
 
 function validarSeccion(n){
   if(n===1){
-    if(!document.getElementById('f-tag').value.trim()){showToast('Ingresa tu nombre o @');return false;}
-    if(!document.getElementById('f-email').value.trim()){showToast('Ingresa tu correo');return false;}
-    if(!formData.idioma){showToast('Selecciona tu idioma');return false;}
-    if(!formData.primera){showToast('Indica si es tu primera comisión');return false;}
-    if(!formData.servicio){showToast('Selecciona el tipo de servicio');return false;}
+    if(!document.getElementById('f-tag').value.trim()){showToast(t('val.tag'));return false;}
+    if(!document.getElementById('f-email').value.trim()){showToast(t('val.email'));return false;}
+    if(!formData.idioma){showToast(t('val.lang'));return false;}
+    if(!formData.primera){showToast(t('val.first'));return false;}
+    if(!formData.servicio){showToast(t('val.service'));return false;}
   }
   if(n===2){
     const s=formData.servicio;
     if(s==='Ilustración digital'){
-      if(!formData.tipo_ilus){showToast('Selecciona el tipo de ilustración');return false;}
-      if(!formData.acabado){showToast('Selecciona el acabado');return false;}
-      if(!formData.personajes){showToast('Indica cuántos personajes');return false;}
+      if(!formData.tipo_ilus){showToast(t('val.tipo_ilus'));return false;}
+      if(!formData.acabado){showToast(t('val.acabado'));return false;}
+      if(!formData.personajes){showToast(t('val.personajes'));return false;}
     }
     if(s==='Diseño Editorial'&&!formData.tipo_edit){showToast('Selecciona el tipo de material');return false;}
     if(s==='Arte Digital para Imprimir'){
-      if(!formData.tipo_print){showToast('Selecciona el tipo de pieza');return false;}
-      if(!formData.uso){showToast('Selecciona el uso final');return false;}
+      if(!formData.tipo_print){showToast(t('val.tipo_print'));return false;}
+      if(!formData.uso){showToast(t('val.uso'));return false;}
     }
   }
   if(n===3){
-    if(!document.getElementById('f-desc').value.trim()){showToast('Ingresa la descripción de tu idea');return false;}
-    if(!formData.rush){showToast('Indica la prioridad de tu orden');return false;}
+    if(!document.getElementById('f-desc').value.trim()){showToast(t('val.desc'));return false;}
+    if(!formData.rush){showToast(t('val.rush'));return false;}
   }
   if(n===4){
-    if(!formData.contacto){showToast('Selecciona tu canal de contacto');return false;}
-    if(formData.contacto==='Discord'&&!document.getElementById('f-discord').value.trim()){showToast('Ingresa tu usuario de Discord');return false;}
+    if(!formData.contacto){showToast(t('val.contacto'));return false;}
+    if(formData.contacto==='Discord'&&!document.getElementById('f-discord').value.trim()){showToast(t('val.discord'));return false;}
   }
   return true;
 }
@@ -1079,14 +1370,13 @@ function backSection(actual){
 }
 
 function actualizarProgreso(){
-  const labels=['Información básica','Tipo de servicio','Detalles del proyecto','Contacto','Resumen'];
   for(let i=1;i<=5;i++){
     const el=document.getElementById('step-'+i);
     el.classList.remove('active','done');
     if(i<seccionActual) el.classList.add('done');
     else if(i===seccionActual) el.classList.add('active');
   }
-  document.getElementById('form-step-label').textContent=`Paso ${seccionActual} de 5 — ${labels[seccionActual-1]}`;
+  document.getElementById('form-step-label').textContent=t('step.label',{n:seccionActual})+' — '+t('step.'+seccionActual);
 }
 
 function generarResumen(){
@@ -1117,7 +1407,7 @@ function generarResumen(){
 
 async function enviarComision(){
   const btn=document.getElementById('btn-submit');
-  btn.disabled=true;btn.textContent='Enviando...';
+  btn.disabled=true;btn.textContent=t('form.sending');
   const payload={
     cliente_tag:document.getElementById('f-tag').value.trim(),
     email:document.getElementById('f-email').value.trim(),
@@ -1171,7 +1461,7 @@ function enviarCorreo(){
   const n=document.getElementById('f-nombre').value.trim();
   const c=document.getElementById('f-correo').value.trim();
   const m=document.getElementById('f-msg').value.trim();
-  if(!n||!c||!m){showToast('Por favor llena todos los campos.');return;}
+  if(!n||!c||!m){showToast(t('contact.val'));return;}
   window.location.href=`mailto:etherial_art@proton.me?subject=${encodeURIComponent('Comisión – '+n)}&body=${encodeURIComponent('Nombre: '+n+'\nCorreo: '+c+'\n\nMensaje:\n'+m)}`;
 }
 
@@ -1184,6 +1474,19 @@ function showToast(msg){
 
 // ━━ INIT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 document.addEventListener('DOMContentLoaded',()=>{
+  // Theme
+  const savedTheme=localStorage.getItem('ea-theme');
+  const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(savedTheme?savedTheme==='dark':prefersDark);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',e=>{
+    if(!localStorage.getItem('ea-theme')) applyTheme(e.matches);
+  });
+  // Language
+  const savedLang=localStorage.getItem('ea-lang');
+  const browserLang=navigator.language.substring(0,2);
+  const detectedLang=savedLang||(['es','en','de'].includes(browserLang)?browserLang:'es');
+  setLang(detectedLang);
+  // Tracker
   document.getElementById('folio-input').addEventListener('keydown',e=>{if(e.key==='Enter') buscarFolio();});
   cargarFolios();
   const params=new URLSearchParams(window.location.search);

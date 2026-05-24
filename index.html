@@ -1184,7 +1184,7 @@ function renderFolios(lista){
     const status=(f.status||'waiting').toLowerCase();
     const fecha=f.created_at?new Date(f.created_at).toLocaleDateString(lang==='de'?'de-DE':lang==='en'?'en-US':'es-MX',{day:'2-digit',month:'short',year:'numeric'}):'—';
     const fila=f.lugar_en_fila?`<span class="fila-badge"><i class="ti ti-list-numbers"></i> #${f.lugar_en_fila}</span>`:'—';
-    return `<tr><td class="folio-num">#${String(f.folio).padStart(4,'0')}</td><td>${f.cliente_tag||'—'}</td><td>${f.descripcion_arte||'—'}</td><td>${fecha}</td><td>${fila}</td><td><span class="pill ${eClass[status]||'s-pending'}">${t('status.'+status)}</span></td></tr>`;
+    return `<tr><td class="folio-num">#${String(f.folio).padStart(4,'0')}</td><td>${f.cliente_tag||'—'}</td><td>${f.tipo_ilustracion||f.tipo_editorial||f.tipo_print||f.tipo_servicio||'—'}</td><td>${fecha}</td><td>${fila}</td><td><span class="pill ${eClass[status]||'s-pending'}">${t('status.'+status)}</span></td></tr>`;
   }).join('');
 }
 

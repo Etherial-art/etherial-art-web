@@ -1119,7 +1119,17 @@ function applyTranslations(){
 
   // Contact button
   const csb=document.getElementById('contact-send-btn');if(csb) csb.textContent=t('contact.send');
-
+  // Skill tags
+  const sk1=document.getElementById('skill-editorial');if(sk1) sk1.textContent=lang==='de'?'Buchgestaltung':lang==='en'?'Editorial design':'Diseño editorial';
+  const sk2=document.getElementById('skill-typography');if(sk2) sk2.textContent=lang==='de'?'Typografie':lang==='en'?'Typography':'Tipografía';
+  // Placeholders de contacto
+  const fn=document.getElementById('f-nombre');if(fn) fn.placeholder=lang==='en'?'Your name':lang==='de'?'Dein Name':'Tu nombre';
+  const fm=document.getElementById('f-msg');if(fm) fm.placeholder=lang==='en'?'Tell me about your project...':lang==='de'?'Erzähl mir von deinem Projekt...':'Cuéntame sobre tu proyecto...';
+  // Placeholder email formulario comisiones
+  const fe=document.getElementById('f-email');if(fe) fe.placeholder=lang==='en'?'your@email.com':lang==='de'?'deine@email.de':'tu@correo.com';
+  // Placeholder tag formulario
+  const ft=document.getElementById('f-tag');if(ft) ft.placeholder=lang==='en'?'e.g. @username or Name':lang==='de'?'z.B. @nutzername oder Name':'ej: @usuario o Nombre';
+  
   renderFolios(foliosGlobales);
   actualizarProgreso();
 }

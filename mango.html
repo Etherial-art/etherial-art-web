@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Etherial_Art — Arte · Diseño · Creación</title>
+<title>Etherial_Mango — Proyectos · Arte · Creación</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="description" content="Arte visual, ilustración y diseño por Nikolas (Etherial_Art). Comisiones abiertas: stickers, PFPs, full body, escenas cinemáticas y más.">
-<meta property="og:title" content="Etherial_Art — Arte · Diseño · Creación">
-<meta property="og:description" content="Arte visual, ilustración y diseño por Nikolas. Comisiones abiertas: stickers, PFPs, full body, escenas cinemáticas y más.">
+<meta name="description" content="Etherial_Mango — Arte personal, proyectos propios y OCs por Nikolas. El universo creativo sin filtros.">
+<meta property="og:title" content="Etherial_Mango — Proyectos · Arte · Creación">
+<meta property="og:description" content="Arte personal, proyectos propios y OCs por Nikolas. El universo creativo sin filtros.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="img/foto-perfil.jpeg">
+<meta property="og:image" content="img/galeria-01.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Etherial_Art — Arte · Diseño · Creación">
-<meta name="twitter:description" content="Arte visual, ilustración y diseño por Nikolas. Comisiones abiertas.">
+<meta name="twitter:title" content="Etherial_Mango — Proyectos · Arte · Creación">
+<meta name="twitter:description" content="Arte personal, proyectos propios y OCs por Nikolas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -23,18 +23,18 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --gl:#1F8F85;--gp:#DFF2EF;--gb:#B2DDD9;
-  --teal:#A8D8D4;--gold:#F5D000;--cream:#F5FAFA;
-  --dark:#0F2B29;--dg:#155950;--muted:#3D706B;--hint:#7BB8B4;
-  --card:#ffffff;--border:#B2DDD9;
+  --gl:#D4720A;--gp:#FFF5E0;--gb:#FFD99A;
+  --teal:#E09040;--gold:#F5D000;--cream:#FFFCF5;
+  --dark:#2D1500;--dg:#A04500;--muted:#7A4A10;--hint:#C07A30;
+  --card:#ffffff;--border:#FFD99A;
   --serif:'Cormorant Garamond',Georgia,serif;
   --sans:'DM Sans',sans-serif;
 }
 [data-theme="dark"]{
-  --gl:#4DBDB5;--gp:#122422;--gb:#1F4744;
-  --teal:#5EC9C1;--gold:#F5D000;--cream:#0A1F1E;
-  --dark:#E8F5F4;--dg:#A8DDD9;--muted:#7BB8B4;--hint:#4A8A86;
-  --card:#122422;--border:#1F4744;
+  --gl:#F0A040;--gp:#1A0A00;--gb:#3D1A00;
+  --teal:#F5C060;--gold:#F5D000;--cream:#120800;
+  --dark:#FFE8C0;--dg:#F5C080;--muted:#C07A30;--hint:#804A18;
+  --card:#1A0A00;--border:#3D1A00;
 }
 html,body{height:100%;overflow:hidden}
 body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:flex;flex-direction:column;transition:background .3s,color .3s}
@@ -52,6 +52,8 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .lang-btn:hover:not(.active){color:var(--gl)}
 .topbar-cta{font-size:11px;letter-spacing:.07em;padding:6px 16px;border:1.5px solid var(--gold);color:var(--gl);border-radius:24px;cursor:pointer;background:none;font-family:var(--sans);transition:all .2s;white-space:nowrap}
 .topbar-cta:hover{background:var(--gp);color:var(--dg)}
+.hub-btn{font-size:11px;letter-spacing:.06em;padding:5px 14px;border:0.5px solid var(--border);color:var(--muted);border-radius:20px;text-decoration:none;font-family:var(--sans);transition:all .2s;white-space:nowrap}
+.hub-btn:hover{border-color:var(--gl);color:var(--gl)}
 
 /* ══ TAB BAR ══════════════════════════════════════════ */
 .tabbar{flex-shrink:0;background:var(--cream);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 2.5rem;gap:0;transition:background .3s,border-color .3s}
@@ -106,6 +108,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .about-contact-row{display:flex;gap:10px;flex-wrap:wrap}
 .about-contact-chip{display:flex;align-items:center;gap:8px;padding:8px 16px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--gl);background:var(--card);text-decoration:none;transition:background .2s}
 .about-contact-chip:hover{background:var(--gp)}
+.about-contact-chip.pending{opacity:.4;pointer-events:none;border-style:dashed;cursor:default}
 .about-contact-chip i{font-size:16px;color:var(--teal)}
 
 /* ══ SERVICIOS ═══════════════════════════════════════ */
@@ -239,18 +242,6 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .folio-big{font-family:var(--serif);font-size:48px;font-weight:300;color:var(--gl);letter-spacing:4px;margin:1rem 0}
 .form-success p{font-size:13px;color:var(--muted);line-height:1.8}
 
-/* ══ WORLDS ══════════════════════════════════════════ */
-.worlds-section{padding:1.25rem 2.5rem 1.5rem;border-bottom:0.5px solid var(--border)}
-.worlds-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:.9rem}
-.worlds-row{display:flex;gap:12px;flex-wrap:wrap}
-.world-card{display:flex;align-items:center;gap:12px;padding:10px 18px;border-radius:10px;border:0.5px solid var(--border);text-decoration:none;font-family:var(--sans);background:var(--card);transition:all .2s;flex:1;min-width:150px}
-.world-card:hover:not(.world-locked){transform:translateY(-2px);border-color:var(--gl);box-shadow:0 4px 16px rgba(0,0,0,.07)}
-.world-locked{opacity:.55;cursor:default;pointer-events:none}
-.world-icon{font-size:22px;flex-shrink:0;line-height:1}
-.world-name{font-size:13px;font-weight:500;color:var(--dg);display:block}
-.world-tag{font-size:11px;color:var(--hint);margin-top:2px;display:block}
-@media(max-width:768px){.worlds-section{padding:1rem 1.5rem 1.25rem}.worlds-row{flex-direction:column}}
-
 /* ══ FOOTER ══════════════════════════════════════════ */
 .page-footer{background:var(--dg);padding:1.75rem 2.5rem;display:flex;justify-content:space-between;align-items:center}
 .footer-brand{font-family:var(--serif);font-size:17px;font-weight:300;letter-spacing:.12em;color:#fff}
@@ -289,8 +280,9 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 
 <!-- TOP BAR -->
 <div class="topbar">
-  <div class="brand">Etherial_<b>Art</b></div>
+  <div class="brand">Etherial_<b>Mango</b></div>
   <div class="topbar-right">
+    <a href="index.html" class="hub-btn">← Etherial_Art</a>
     <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">
       <i class="ti ti-moon" id="theme-icon"></i>
     </button>
@@ -322,23 +314,6 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
     <div class="gallery-hero-eyebrow" id="home-eyebrow">Arte · Diseño · Creación</div>
     <h1 class="gallery-hero-title" id="home-title">Lo que sale de mis <em>manos.</em></h1>
   </div>
-  <div class="worlds-section">
-    <div class="worlds-eyebrow" id="worlds-eyebrow">Mis universos</div>
-    <div class="worlds-row">
-      <a href="mango.html" class="world-card">
-        <span class="world-icon">🥭</span>
-        <div><span class="world-name">Etherial_Mango</span><span class="world-tag" id="worlds-mango-tag">Proyectos personales</span></div>
-      </a>
-      <a href="wuff.html" class="world-card">
-        <span class="world-icon">🐾</span>
-        <div><span class="world-name">Etherial_Wuff</span><span class="world-tag" id="worlds-wuff-tag">Arte anthro · Furry</span></div>
-      </a>
-      <div class="world-card world-locked">
-        <span class="world-icon">🔒</span>
-        <div><span class="world-name">Etherial_Static</span><span class="world-tag" id="worlds-static-tag">18+ · Próximamente</span></div>
-      </div>
-    </div>
-  </div>
   <div class="gallery-grid">
     <div class="gallery-item" data-href="img/galeria-01.jpg"><div class="gallery-img" style="height:260px"><img src="img/galeria-01.jpg" style="width:100%;display:block;object-fit:cover;height:260px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 01</span></div></div>
     <div class="gallery-item" data-href="img/galeria-02.jpg"><div class="gallery-img" style="height:200px"><img src="img/galeria-02.jpg" style="width:100%;display:block;object-fit:cover;height:200px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 02</span></div></div>
@@ -355,13 +330,16 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
     <div class="gallery-item" data-href="img/galeria-13.jpg"><div class="gallery-img" style="height:200px"><img src="img/galeria-13.jpg" style="width:100%;display:block;object-fit:cover;height:200px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 13</span></div></div>
   </div>
   <div class="page-footer">
-    <div class="footer-brand">Etherial_Art</div>
+    <div class="footer-brand">Etherial_Mango</div>
     <div class="footer-social">
-      <a href="https://instagram.com/etherial_art" target="_blank"><i class="ti ti-brand-instagram"></i></a>
+      <a href="https://bsky.app/profile/etherial-mango.bsky.social" target="_blank"><i class="ti ti-brand-bluesky"></i></a>
+      <a href="https://instagram.com/etherial_mango" target="_blank"><i class="ti ti-brand-instagram"></i></a>
+      <a href="https://etherial-mango.tumblr.com" target="_blank"><i class="ti ti-brand-tumblr"></i></a>
+      <a href="https://x.com/etherial_mango" target="_blank" style="opacity:.4;pointer-events:none"><i class="ti ti-brand-x"></i></a>
       <a href="https://ko-fi.com/etherial_art" target="_blank"><i class="ti ti-coffee"></i></a>
       <a href="mailto:etherial_art@proton.me"><i class="ti ti-mail"></i></a>
     </div>
-    <div class="footer-copy" id="footer-copy">© 2026 Etherial_Art · Todos los derechos reservados</div>
+    <div class="footer-copy" id="footer-copy">© 2026 Etherial_Mango · Todos los derechos reservados</div>
   </div>
 </div>
 
@@ -370,7 +348,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
   <div class="about-page">
     <div class="about-layout">
       <div>
-        <img src="img/foto-perfil.jpeg" alt="Foto de perfil — Nikolas / Etherial_Art" style="width:100%;border-radius:16px;display:block;object-fit:cover;aspect-ratio:3/4">
+        <img src="img/foto-perfil.jpeg" alt="Foto de perfil — Etherial_Mango" style="width:100%;border-radius:16px;display:block;object-fit:cover;aspect-ratio:3/4">
       </div>
       <div>
         <div class="about-eyebrow">Quién soy</div>
@@ -398,9 +376,12 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <div class="about-divider"></div>
         <div class="about-section-label" id="about-findme">Encuéntrame en</div>
         <div class="about-contact-row">
-          <a href="https://instagram.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-brand-instagram"></i> @etherial_art</a>
+          <a href="https://bsky.app/profile/etherial-mango.bsky.social" target="_blank" class="about-contact-chip"><i class="ti ti-brand-bluesky"></i> @etherial-mango</a>
+          <a href="https://instagram.com/etherial_mango" target="_blank" class="about-contact-chip"><i class="ti ti-brand-instagram"></i> @etherial_mango</a>
+          <a href="https://etherial-mango.tumblr.com" target="_blank" class="about-contact-chip"><i class="ti ti-brand-tumblr"></i> etherial-mango</a>
+          <a href="https://x.com/etherial_mango" target="_blank" class="about-contact-chip pending"><i class="ti ti-brand-x"></i> @etherial_mango</a>
+          <a href="https://ko-fi.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
           <a href="mailto:etherial_art@proton.me" class="about-contact-chip"><i class="ti ti-mail"></i> etherial_art@proton.me</a>
-          <a href="https://ko-fi.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> ko-fi.com/etherial_art</a>
         </div>
       </div>
     </div>
@@ -776,7 +757,8 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
       <p id="success-track">Con este folio puedes rastrear tu comisión en <strong>Servicios → Tracker</strong>.</p>
       <p style="margin-top:1rem" id="success-time">Revisaré tu solicitud en las próximas <strong>48 horas</strong>.</p>
       <div style="margin-top:2rem;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <a href="https://instagram.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-brand-instagram"></i> @etherial_art</a>
+        <a href="https://bsky.app/profile/etherial-mango.bsky.social" target="_blank" class="about-contact-chip"><i class="ti ti-brand-bluesky"></i> @etherial-mango</a>
+        <a href="https://instagram.com/etherial_mango" target="_blank" class="about-contact-chip"><i class="ti ti-brand-instagram"></i> @etherial_mango</a>
         <a href="https://ko-fi.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
       </div>
     </div>
@@ -816,10 +798,10 @@ const i18n={
 es:{
   'nav.home':'Inicio','nav.about':'Sobre mí','nav.services':'Servicios',
   'nav.portfolio':'Portafolio','nav.commissions':'Comisiones','nav.contact':'Contactar',
-  'home.eyebrow':'Arte · Diseño · Creación','home.title':'Lo que sale de mis <em>manos.</em>',
-  'footer.copy':'© 2026 Etherial_Art · Todos los derechos reservados',
-  'about.eyebrow':'Quién soy','about.role':'"Niko/Etherial" · Artista · Diseñador · Creador',
-  'about.bio':'<p>Soy artista visual enfocado en ilustración y diseño. Mi trabajo nace de la observación del entorno natural y la búsqueda de formas que comuniquen sin palabras.</p><p>Dibujo mundos detallados, a veces botánicos, a veces fantásticos — siempre con intención. Cada comisión es una conversación: me cuentas tu idea y yo la convierto en imagen.</p><p>Trabajo principalmente en digital con Procreate e Illustrator, y también en técnicas tradicionales como acuarela y tinta. Entrego todo en alta resolución listo para imprimir.</p>',
+  'home.eyebrow':'Arte personal · OC · Exploración','home.title':'Mis <em>proyectos.</em>',
+  'footer.copy':'© 2026 Etherial_Mango · Todos los derechos reservados',
+  'about.eyebrow':'Quién soy','about.role':'"Mango" · Arte Personal · OC Art',
+  'about.bio':'<p>Etherial_Mango es mi universo personal. Aquí viven mis propios proyectos, exploración creativa y los personajes que nacen de mi imaginación — sin encargo, sin cliente.</p><p>Desde OCs hasta experimentos estilísticos, este es el espacio donde me permito crear por el puro placer de crear.</p><p>Si resonas con esto, bienvenido a mi mundo más cercano.</p>',
   'about.tools':'Herramientas & medios','about.stats.label':'En números','about.findme':'Encuéntrame en',
   'about.stat.delivered':'Comisiones entregadas','about.stat.experience':'Años de experiencia','about.stat.delivery':'Días de entrega',
   'services.eyebrow':'Lo que ofrezco','services.title':'Servicios & productos','services.from':'desde',
@@ -898,7 +880,6 @@ es:{
   'sum.content':'Contenido','sum.material':'Material','sum.format':'Formato','sum.piece':'Pieza',
   'sum.use':'Uso','sum.desc':'Descripción','sum.mood':'Mood','sum.refs':'Referencias',
   'sum.priority':'Prioridad','sum.contact':'Contacto','sum.discord':'Discord','sum.how':'Cómo llegó',
-  'worlds.eyebrow':'Mis universos','worlds.mango.tag':'Proyectos personales','worlds.wuff.tag':'Arte anthro · Furry','worlds.static.tag':'18+ · Próximamente',
   'tos.title':'Condiciones de la comisión',
   'tos.1':'Me reservo el derecho de rechazar cualquier solicitud sin necesidad de justificación.',
   'tos.2':'No acepto diseños con complejidad excesiva (muchos detalles intrincados, múltiples outfits, etc.) que excedan el alcance de la pieza solicitada.',
@@ -909,10 +890,10 @@ es:{
 en:{
   'nav.home':'Home','nav.about':'About','nav.services':'Services',
   'nav.portfolio':'Portfolio','nav.commissions':'Commissions','nav.contact':'Contact',
-  'home.eyebrow':'Art · Design · Creation','home.title':'What comes from my <em>hands.</em>',
-  'footer.copy':'© 2026 Etherial_Art · All rights reserved',
-  'about.eyebrow':'Who I am','about.role':'"Niko/Etherial" · Artist · Designer · Creator',
-  'about.bio':'<p>I am a visual artist focused on illustration and design. My work comes from observing the natural world and searching for shapes that communicate without words.</p><p>I draw detailed worlds, sometimes botanical, sometimes fantastical — always with intention. Every commission is a conversation: you tell me your idea and I turn it into an image.</p><p>I work mainly digitally with Procreate and Illustrator, and also with traditional techniques like watercolor and ink. I deliver everything in high resolution, ready to print.</p>',
+  'home.eyebrow':'Personal art · OC · Exploration','home.title':'My <em>projects.</em>',
+  'footer.copy':'© 2026 Etherial_Mango · All rights reserved',
+  'about.eyebrow':'Who I am','about.role':'"Mango" · Personal Art · OC Art',
+  'about.bio':'<p>Etherial_Mango is my personal universe. Here live my own projects, creative exploration, and characters born from my imagination — no commission, no client.</p><p>From OCs to stylistic experiments, this is the space where I let myself create for the pure joy of creating.</p><p>If this resonates with you, welcome to my closest world.</p>',
   'about.tools':'Tools & Media','about.stats.label':'By the numbers','about.findme':'Find me at',
   'about.stat.delivered':'Commissions delivered','about.stat.experience':'Years of experience','about.stat.delivery':'Delivery days',
   'services.eyebrow':'What I offer','services.title':'Services & products','services.from':'from',
@@ -991,7 +972,6 @@ en:{
   'sum.content':'Content','sum.material':'Material','sum.format':'Format','sum.piece':'Piece',
   'sum.use':'Use','sum.desc':'Description','sum.mood':'Mood','sum.refs':'References',
   'sum.priority':'Priority','sum.contact':'Contact','sum.discord':'Discord','sum.how':'How you found me',
-  'worlds.eyebrow':'My worlds','worlds.mango.tag':'Personal projects','worlds.wuff.tag':'Anthro · Furry art','worlds.static.tag':'18+ · Coming soon',
   'tos.title':'Commission terms',
   'tos.1':'I reserve the right to decline any request without obligation to provide a reason.',
   'tos.2':'I do not accept designs with excessive complexity (too many intricate details, multiple outfits, etc.) that go beyond the scope of the piece requested.',
@@ -1002,10 +982,10 @@ en:{
 de:{
   'nav.home':'Start','nav.about':'Über mich','nav.services':'Leistungen',
   'nav.portfolio':'Portfolio','nav.commissions':'Aufträge','nav.contact':'Kontakt',
-  'home.eyebrow':'Kunst · Design · Kreation','home.title':'Was aus meinen <em>Händen entsteht.</em>',
-  'footer.copy':'© 2026 Etherial_Art · Alle Rechte vorbehalten',
-  'about.eyebrow':'Wer ich bin','about.role':'"Niko/Etherial" · Künstler · Designer · Schöpfer',
-  'about.bio':'<p>Ich bin ein visueller Künstler mit Schwerpunkt Illustration und Design. Meine Arbeit entsteht aus der Beobachtung der Natur und der Suche nach Formen, die ohne Worte kommunizieren.</p><p>Ich zeichne detailreiche Welten, mal botanisch, mal fantastisch — immer mit Absicht. Jeder Auftrag ist ein Gespräch: Du erzählst mir deine Idee und ich verwandle sie in ein Bild.</p><p>Ich arbeite hauptsächlich digital mit Procreate und Illustrator, sowie traditionell mit Aquarell und Tusche. Alles wird druckfertig in hoher Auflösung geliefert.</p>',
+  'home.eyebrow':'Persönliche Kunst · OC · Erkundung','home.title':'Meine <em>Projekte.</em>',
+  'footer.copy':'© 2026 Etherial_Mango · Alle Rechte vorbehalten',
+  'about.eyebrow':'Wer ich bin','about.role':'"Mango" · Persönliche Kunst · OC Art',
+  'about.bio':'<p>Etherial_Mango ist mein persönliches Universum. Hier leben meine eigenen Projekte, kreative Erkundungen und Charaktere, die aus meiner Fantasie entstehen — ohne Auftrag, ohne Kunden.</p><p>Von OCs bis zu stilistischen Experimenten ist dies der Raum, in dem ich einfach aus Freude am Schaffen gestalte.</p><p>Wenn dich das anspricht, willkommen in meiner nächsten Welt.</p>',
   'about.tools':'Werkzeuge & Medien','about.stats.label':'In Zahlen','about.findme':'Finde mich auf',
   'about.stat.delivered':'Gelieferte Aufträge','about.stat.experience':'Jahre Erfahrung','about.stat.delivery':'Liefertage',
   'services.eyebrow':'Was ich anbiete','services.title':'Leistungen & Produkte','services.from':'ab',
@@ -1084,7 +1064,6 @@ de:{
   'sum.content':'Inhalt','sum.material':'Material','sum.format':'Format','sum.piece':'Stück',
   'sum.use':'Verwendung','sum.desc':'Beschreibung','sum.mood':'Stimmung','sum.refs':'Referenzen',
   'sum.priority':'Priorität','sum.contact':'Kontakt','sum.discord':'Discord','sum.how':'Wie gefunden',
-  'worlds.eyebrow':'Meine Welten','worlds.mango.tag':'Persönliche Projekte','worlds.wuff.tag':'Anthro · Furry-Kunst','worlds.static.tag':'18+ · Demnächst',
   'tos.title':'Auftragsbedingungen',
   'tos.1':'Ich behalte mir das Recht vor, jede Anfrage ohne Angabe von Gründen abzulehnen.',
   'tos.2':'Ich nehme keine Designs mit übermäßiger Komplexität an (zu viele Details, mehrere Outfits usw.), die über den Rahmen des bestellten Stücks hinausgehen.',
@@ -1135,11 +1114,6 @@ function applyTranslations(){
   setHTML('home-title',t('home.title'));
   setText('home-eyebrow',t('home.eyebrow'));
   setText('footer-copy',t('footer.copy'));
-  // Worlds hub
-  setText('worlds-eyebrow',t('worlds.eyebrow'));
-  setText('worlds-mango-tag',t('worlds.mango.tag'));
-  setText('worlds-wuff-tag',t('worlds.wuff.tag'));
-  setText('worlds-static-tag',t('worlds.static.tag'));
 
   // About
   setText('about-role',t('about.role'));

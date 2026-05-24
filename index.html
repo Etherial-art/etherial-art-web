@@ -1202,10 +1202,14 @@ async function cargarFolios(){
 }
 
 function buscarFolio(){
-  const q=document.getElementById('folio-input').value.trim().toLowerCase();
+  const q=document.getElementById('folio-input').value.trim().toLowerCase().replace('#','');
   const res=document.getElementById('tracker-result');
   if(!q){if(res) res.style.display='none';renderFolios(foliosGlobales);return;}
-  const found=foliosGlobales.filter(f=>String(f.folio).includes(q)||(f.cliente_tag||'').toLowerCase().includes(q));
+  const found=foliosGlobales.filter(f=>
+    String(f.folio).padStart(4,'0').includes(q)||
+    String(f.folio).includes(q)||
+    (f.cliente_tag||'').toLowerCase().includes(q)
+  );
   if(res){res.style.display='block';res.textContent=found.length?t('tracker.found',{n:found.length}):t('tracker.notfound');}
   renderFolios(found);
 }

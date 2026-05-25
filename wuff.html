@@ -315,13 +315,13 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
     <h1 class="gallery-hero-title" id="home-title">Lo que sale de mis <em>manos.</em></h1>
   </div>
   <div class="gallery-grid">
-    <div class="gallery-item" data-href="img/galeria-01f.jpg"><div class="gallery-img" style="height:260px"><img src="img/galeria-01f.jpg" style="width:100%;display:block;object-fit:cover;height:260px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 01</span></div></div>
-    <div class="gallery-item" data-href="img/galeria-02f.jpg"><div class="gallery-img" style="height:200px"><img src="img/galeria-02f.jpg" style="width:100%;display:block;object-fit:cover;height:200px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 02</span></div></div>
-    <div class="gallery-item" data-href="img/galeria-03f.jpg"><div class="gallery-img" style="height:300px"><img src="img/galeria-03f.jpg" style="width:100%;display:block;object-fit:cover;height:300px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 03</span></div></div>
-    <div class="gallery-item" data-href="img/galeria-04f.jpg"><div class="gallery-img" style="height:180px"><img src="img/galeria-04f.jpg" style="width:100%;display:block;object-fit:cover;height:180px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 04</span></div></div>
-    <div class="gallery-item" data-href="img/galeria-05f.jpg"><div class="gallery-img" style="height:240px"><img src="img/galeria-05f.jpg" style="width:100%;display:block;object-fit:cover;height:240px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 05</span></div></div>
-    <div class="gallery-item" data-href="img/galeria-06f.jpg"><div class="gallery-img" style="height:200px"><img src="img/galeria-06f.jpg" style="width:100%;display:block;object-fit:cover;height:200px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 06</span></div></div>
-    <div class="gallery-item" data-href="img/galeria-07f.jpg"><div class="gallery-img" style="height:220px"><img src="img/galeria-07f.jpg" style="width:100%;display:block;object-fit:cover;height:220px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 07</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-01f.jpg"><div class="gallery-img" style="height:260px"><img src="img/galeria-01f.jpg" style="width:100%;display:block;object-fit:cover;height:260px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 01</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-02f.jpg"><div class="gallery-img" style="height:200px"><img src="img/galeria-02f.jpg" style="width:100%;display:block;object-fit:cover;height:200px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 02</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-03f.jpg"><div class="gallery-img" style="height:300px"><img src="img/galeria-03f.jpg" style="width:100%;display:block;object-fit:cover;height:300px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 03</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-04f.jpg"><div class="gallery-img" style="height:180px"><img src="img/galeria-04f.jpg" style="width:100%;display:block;object-fit:cover;height:180px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 04</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-05f.jpg"><div class="gallery-img" style="height:240px"><img src="img/galeria-05f.jpg" style="width:100%;display:block;object-fit:cover;height:240px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 05</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-06f.jpg"><div class="gallery-img" style="height:200px"><img src="img/galeria-06f.jpg" style="width:100%;display:block;object-fit:cover;height:200px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 06</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-07f.jpg"><div class="gallery-img" style="height:220px"><img src="img/galeria-07f.jpg" style="width:100%;display:block;object-fit:cover;height:220px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 07</span></div></div>
   </div>
   <div class="page-footer">
     <div class="footer-brand">Etherial_Wuff</div>
@@ -539,7 +539,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
           <tr><td>Sticker single</td><td>$5 USD</td></tr>
           <tr><td>Icon / Asset spot</td><td>$10 USD</td></tr>
           <tr><td>Sticker Bundle x5</td><td>$20 USD <span style="color:var(--hint);font-size:11px" id="lbl-bundle-promo">(Buy 4 Get 1 FREE)</span></td></tr>
-          <tr><td>Sticker animado</td><td>$20 USD</td></tr>
+          <tr><td id="illus-td-anim">Sticker animado</td><td>$20 USD</td></tr>
           <tr><td>PFP / Profile Picture</td><td>$40 USD</td></tr>
           <tr><td>Badge</td><td>$50 USD</td></tr>
           <tr><td>Half Body</td><td>$65 USD</td></tr>
@@ -553,7 +553,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Sticker single"><div class="opt-radio"></div>Sticker single<span class="opt-price">$5</span></div>
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Icon / Asset spot"><div class="opt-radio"></div>Icon / Asset spot<span class="opt-price">$10</span></div>
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Sticker Bundle x5"><div class="opt-radio"></div>Sticker Bundle x5<span class="opt-price">$20</span></div>
-          <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Sticker animado"><div class="opt-radio"></div>Sticker animado<span class="opt-price">$20</span></div>
+          <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Sticker animado" id="illus-opt-anim"><div class="opt-radio"></div>Sticker animado<span class="opt-price">$20</span></div>
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="PFP / Profile Picture"><div class="opt-radio"></div>PFP / Profile Picture<span class="opt-price">$40</span></div>
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Badge"><div class="opt-radio"></div>Badge<span class="opt-price">$50</span></div>
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Half Body"><div class="opt-radio"></div>Half Body<span class="opt-price">$65</span></div>
@@ -625,7 +625,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <label class="field-label" id="lbl-edit-format">Formato de entrega *</label>
         <div class="options-grid">
           <div class="opt" onclick="selectOpt(this,'formato_edit')" data-val="Digital"><div class="opt-radio"></div>Digital</div>
-          <div class="opt disabled"><div class="opt-radio"></div>Impresión<span class="opt-lock">🔒</span></div>
+          <div class="opt disabled" id="edit-format-print"><div class="opt-radio"></div>Impresión<span class="opt-lock">🔒</span></div>
         </div>
       </div>
       <div class="form-nav"><button class="btn-back" onclick="backSection(2)">← Atrás</button><button class="btn-next" onclick="nextSection(2)">Siguiente →</button></div>
@@ -762,7 +762,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:1.5rem" id="contact-intro">¿Tienes un proyecto en mente? Cuéntame tu idea y encontramos la forma de darle vida.</p>
         <div style="display:flex;flex-direction:column;gap:12px">
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-mail" style="font-size:18px;color:var(--teal)"></i> etherial_art@proton.me</div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-brand-instagram" style="font-size:18px;color:var(--teal)"></i> @etherial_art</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-brand-instagram" style="font-size:18px;color:var(--teal)"></i> @etherial_wuff</div>
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-coffee" style="font-size:18px;color:var(--teal)"></i> ko-fi.com/etherial_art</div>
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gl)"><i class="ti ti-clock" style="font-size:18px;color:var(--teal)"></i><span id="contact-time">Respondo en 24–48 hrs</span></div>
         </div>
@@ -810,7 +810,7 @@ es:{
   'form.eyebrow':'Solicitud de comisión','form.intro':'Cuéntame tu idea y nos ponemos en contacto en 48hrs para confirmar detalles y enviarte tu invoice.',
   'form.back':'← Atrás','form.next':'Siguiente →','form.submit':'Enviar solicitud ✓',
   'form.sending':'Enviando...','form.error':'Hubo un error. Intenta de nuevo.','form.conn.error':'Error de conexión. Intenta de nuevo.',
-  'form.success.title':'¡Solicitud enviada!','form.success.track':'Con este folio puedes rastrear tu comisión en Servicios → Tracker.','form.success.time':'Revisaré tu solicitud en las próximas 48 horas.',
+  'form.success.title':'¡Solicitud enviada!','form.success.track':'Con este folio puedes rastrear tu comisión en <strong>Servicios → Tracker</strong>.','form.success.time':'Revisaré tu solicitud en las próximas <strong>48 horas</strong>.',
   'contact.eyebrow':'Hablemos','contact.title':'Contacto','contact.intro':'¿Tienes un proyecto en mente? Cuéntame tu idea y encontramos la forma de darle vida.',
   'contact.send':'Enviar mensaje','contact.val':'Por favor llena todos los campos.','contact.time':'Respondo en 24–48 hrs',
   'lbl.name':'Nombre','lbl.email':'Correo','lbl.msg':'Mensaje',
@@ -828,7 +828,7 @@ es:{
   'lbl.f_email':'Correo electrónico *','note.f_email':'Aquí recibirás tu número de folio.',
   'lbl.f_lang':'Idioma de preferencia *','lbl.f_first':'¿Es tu primera comisión conmigo? *',
   'opt.first_yes':'Sí, es mi primera vez','opt.first_no':'Ya he comisionado antes',
-  'lbl.f_service':'Tipo de servicio solicitado *','srv.opt_4':'Productos físicos','srv.opt_lock':'🔒 Próximamente','srv.opt_5':'Otro',
+  'lbl.f_service':'Tipo de servicio solicitado *','srv.opt_4':'Productos físicos','srv.opt_lock':'🔒 Próximamente','srv.opt_1':'Ilustración digital','srv.opt_2':'Diseño Editorial','srv.opt_3':'Arte Digital para Imprimir (Print)','illus.sticker_anim':'Sticker animado','srv.opt_5':'Otro',
   'fs2a.title':'Ilustración digital','fs2a.sub':'Selecciona el tipo de pieza y acabado.',
   'fs2a.notice':'ℹ️ Precios para <strong>Full Render, 1 personaje, fondo simple</strong>. Sketch y Línea+color son más económicos y se ajustan en tu invoice.',
   'th.type':'Tipo','th.price':'Precio base','lbl.bundle_promo':'(Compra 4 y Llévate 1 GRATIS)',
@@ -842,7 +842,7 @@ es:{
   'note.nsfw':'El contenido NSFW está sujeto a aprobación. Me reservo el derecho de declinar.',
   'fs2b.title':'Diseño Editorial','fs2b.sub':'Cuéntame qué tipo de material necesitas.',
   'lbl.edit_type':'Tipo de material *','edit.opt_1':'Portada de libro/zine','edit.opt_2':'Revista/publicación',
-  'edit.opt_3':'Identidad visual','edit.opt_4':'Libro infantil','lbl.edit_format':'Formato de entrega *',
+  'edit.opt_3':'Identidad visual','edit.opt_4':'Libro infantil','lbl.edit_format':'Formato de entrega *','edit.format_print':'Impresión',
   'fs2c.title':'Arte Digital para Imprimir','fs2c.sub':'Arte en alta resolución listo para tu imprenta local. No incluye impresión ni envío.',
   'fs2c.notice':'📄 Entrego en 300 DPI con perfil de color y márgenes de sangrado.',
   'lbl.print_type':'Tipo de pieza *','print.opt_1':'Portada','lbl.print_use':'Uso final *','print.opt_2':'Personal','print.opt_3':'Comercial',
@@ -902,7 +902,7 @@ en:{
   'form.eyebrow':'Commission request','form.intro':"Tell me your idea and I'll get back to you within 48hrs to confirm details and send your invoice.",
   'form.back':'← Back','form.next':'Next →','form.submit':'Submit request ✓',
   'form.sending':'Sending...','form.error':'Something went wrong. Please try again.','form.conn.error':'Connection error. Please try again.',
-  'form.success.title':'Request sent!','form.success.track':'Use this folio to track your commission in Services → Tracker.','form.success.time':"I'll review your request within the next 48 hours.",
+  'form.success.title':'Request sent!','form.success.track':'Use this folio to track your commission in <strong>Services → Tracker</strong>.','form.success.time':"I'll review your request within the next <strong>48 hours</strong>.",
   'contact.eyebrow':"Let's talk",'contact.title':'Contact','contact.intro':'Have a project in mind? Tell me your idea and we will find a way to bring it to life.',
   'contact.send':'Send message','contact.val':'Please fill in all fields.','contact.time':'I respond within 24–48 hrs',
   'lbl.name':'Name','lbl.email':'Email','lbl.msg':'Message',
@@ -920,7 +920,7 @@ en:{
   'lbl.f_email':'Email address *','note.f_email':'You will receive your folio number here.',
   'lbl.f_lang':'Preferred language *','lbl.f_first':'Is this your first commission with me? *',
   'opt.first_yes':"Yes, it's my first time",'opt.first_no':'I have commissioned before',
-  'lbl.f_service':'Requested service type *','srv.opt_4':'Physical products','srv.opt_lock':'🔒 Coming soon','srv.opt_5':'Other',
+  'lbl.f_service':'Requested service type *','srv.opt_4':'Physical products','srv.opt_lock':'🔒 Coming soon','srv.opt_1':'Digital illustration','srv.opt_2':'Editorial Design','srv.opt_3':'Print-Ready Digital Art (Print)','illus.sticker_anim':'Animated sticker','srv.opt_5':'Other',
   'fs2a.title':'Digital illustration','fs2a.sub':'Select the piece type and finish.',
   'fs2a.notice':'ℹ️ Prices for <strong>Full Render, 1 character, simple background</strong>. Sketch and Line+flat color are cheaper and adjusted in your invoice.',
   'th.type':'Type','th.price':'Base price','lbl.bundle_promo':'(Buy 4 Get 1 FREE)',
@@ -934,7 +934,7 @@ en:{
   'note.nsfw':'NSFW content is subject to approval. I reserve the right to decline.',
   'fs2b.title':'Editorial Design','fs2b.sub':'Tell me what type of material you need.',
   'lbl.edit_type':'Material type *','edit.opt_1':'Book/zine cover','edit.opt_2':'Magazine/publication',
-  'edit.opt_3':'Visual identity','edit.opt_4':"Children's book",'lbl.edit_format':'Delivery format *',
+  'edit.opt_3':'Visual identity','edit.opt_4':"Children's book",'lbl.edit_format':'Delivery format *','edit.format_print':'Print',
   'fs2c.title':'Print-Ready Digital Art','fs2c.sub':'High-resolution art ready for your local print shop. Printing and shipping not included.',
   'fs2c.notice':'📄 Delivered at 300 DPI with color profile and bleed margins.',
   'lbl.print_type':'Piece type *','print.opt_1':'Cover','lbl.print_use':'Final use *','print.opt_2':'Personal','print.opt_3':'Commercial',
@@ -976,8 +976,8 @@ de:{
   'about.tools':'Werkzeuge & Medien','about.stats.label':'In Zahlen','about.findme':'Finde mich auf',
   'about.stat.delivered':'Gelieferte Aufträge','about.stat.experience':'Jahre Erfahrung','about.stat.delivery':'Liefertage',
   'services.eyebrow':'Was ich anbiete','services.title':'Leistungen & Produkte','services.from':'ab',
-  'services.illus.name':'Digitale Illustration','services.illus.hint':'Einzigartige Stücke auf Bestellung',
-  'services.illus.desc':'Völlig einzigartige Stücke, die von Grund auf nach deiner Idee erstellt werden. Sticker, Icons, PFPs, Badges, Half/Full Body und filmische Szenen. Inklusive Erstskizze und bis zu 2 Korrekturrunden.',
+  'services.illus.name':'Digitale Illustration','services.illus.hint':'Einzigartige Werke auf Bestellung',
+  'services.illus.desc':'Völlig einzigartige Werke, die von Grund auf nach deiner Idee erstellt werden. Sticker, Icons, PFPs, Badges, Half/Full Body und filmische Szenen. Inklusive Erstskizze und bis zu 2 Korrekturrunden.',
   'services.edit.name':'Buchgestaltung','services.edit.hint':'Cover und digitale Materialien',
   'services.edit.desc':'Cover-Design, Layout von Büchern, Magazinen und Zines. Geliefert in veröffentlichungsfertigen digitalen Formaten.',
   'services.print.name':'Druckfertige Kunst','services.print.hint':'Digitale Kunst in hoher Auflösung',
@@ -994,7 +994,7 @@ de:{
   'form.eyebrow':'Auftragsanfrage','form.intro':'Erzähl mir deine Idee und ich melde mich innerhalb von 48 Std.',
   'form.back':'← Zurück','form.next':'Weiter →','form.submit':'Anfrage senden ✓',
   'form.sending':'Wird gesendet...','form.error':'Ein Fehler ist aufgetreten. Bitte versuche es erneut.','form.conn.error':'Verbindungsfehler. Bitte versuche es erneut.',
-  'form.success.title':'Anfrage gesendet!','form.success.track':'Mit dieser Folionummer kannst du deinen Auftrag unter Leistungen → Tracker verfolgen.','form.success.time':'Ich werde deine Anfrage innerhalb der nächsten 48 Stunden prüfen.',
+  'form.success.title':'Anfrage gesendet!','form.success.track':'Mit dieser Folionummer kannst du deinen Auftrag unter <strong>Leistungen → Tracker</strong> verfolgen.','form.success.time':'Ich werde deine Anfrage innerhalb der nächsten <strong>48 Stunden</strong> prüfen.',
   'contact.eyebrow':'Lass uns reden','contact.title':'Kontakt','contact.intro':'Hast du ein Projekt im Sinn? Erzähl mir deine Idee und wir finden einen Weg, sie umzusetzen.',
   'contact.send':'Nachricht senden','contact.val':'Bitte fülle alle Felder aus.','contact.time':'Ich antworte innerhalb von 24–48 Std.',
   'lbl.name':'Name','lbl.email':'E-Mail','lbl.msg':'Nachricht',
@@ -1012,7 +1012,7 @@ de:{
   'lbl.f_email':'E-Mail-Adresse *','note.f_email':'Hier erhältst du deine Folio-Nummer.',
   'lbl.f_lang':'Bevorzugte Sprache *','lbl.f_first':'Ist dies dein erster Auftrag bei mir? *',
   'opt.first_yes':'Ja, zum ersten Mal','opt.first_no':'Ich habe schon bestellt',
-  'lbl.f_service':'Gewünschte Leistungsart *','srv.opt_4':'Physische Produkte','srv.opt_lock':'🔒 Demnächst','srv.opt_5':'Sonstiges',
+  'lbl.f_service':'Gewünschte Leistungsart *','srv.opt_4':'Physische Produkte','srv.opt_lock':'🔒 Demnächst','srv.opt_1':'Digitale Illustration','srv.opt_2':'Buchgestaltung','srv.opt_3':'Druckfertige digitale Kunst (Print)','illus.sticker_anim':'Animierter Sticker','srv.opt_5':'Sonstiges',
   'fs2a.title':'Digitale Illustration','fs2a.sub':'Wähle die Stückart und Ausführung.',
   'fs2a.notice':'ℹ️ Preise für <strong>Full Render, 1 Figur, einfacher Hintergrund</strong>. Skizze und Lineart+Farbe sind günstiger.',
   'th.type':'Typ','th.price':'Grundpreis','lbl.bundle_promo':'(Kaufe 4, erhalte 1 GRATIS)',
@@ -1026,7 +1026,7 @@ de:{
   'note.nsfw':'NSFW-Inhalte bedürfen der Genehmigung. Ich behalte mir das Recht vor, abzulehnen.',
   'fs2b.title':'Buchgestaltung','fs2b.sub':'Teile mir mit, welche Art von Material du benötigst.',
   'lbl.edit_type':'Materialart *','edit.opt_1':'Buch-/Zine-Cover','edit.opt_2':'Magazin/Publikation',
-  'edit.opt_3':'Visuelle Identität','edit.opt_4':'Kinderbuch','lbl.edit_format':'Lieferformat *',
+  'edit.opt_3':'Visuelle Identität','edit.opt_4':'Kinderbuch','lbl.edit_format':'Lieferformat *','edit.format_print':'Druck',
   'fs2c.title':'Druckfertige digitale Kunst','fs2c.sub':'Hochauflösende Kunst für deine Druckerei. Druck und Versand nicht inbegriffen.',
   'fs2c.notice':'📄 Geliefert in 300 DPI mit Farbprofil und Schnittmarken.',
   'lbl.print_type':'Stückart *','print.opt_1':'Cover','lbl.print_use':'Endnutzung *','print.opt_2':'Persönlich','print.opt_3':'Kommerziell',
@@ -1085,7 +1085,7 @@ function applyTranslations(){
     const children=[...el.childNodes];
     const textNodes=children.filter(n=>n.nodeType===Node.TEXT_NODE&&n.textContent.trim());
     if(textNodes.length) textNodes.forEach(n=>n.textContent=text);
-    else if(!el.querySelector('.opt-radio,.opt-check,.opt-lock,.opt-price')) el.textContent=text;
+    else{const ls=[...el.children].find(c=>c.tagName==='SPAN'&&!c.className);if(ls)ls.textContent=text;else if(!el.querySelector('.opt-radio,.opt-check,.opt-lock,.opt-price'))el.textContent=text;}
   }
   function setHTML(id,html){const el=document.getElementById(id);if(el) el.innerHTML=html;}
 
@@ -1155,7 +1155,7 @@ function applyTranslations(){
     'lbl-chars':'lbl.chars','note-chars':'note.chars','lbl-bg-addons':'lbl.bg_addons',
     'lbl-comp-addons':'lbl.comp_addons','comp-persp':'comp.persp','comp-fore':'comp.fore',
     'lbl-nsfw':'lbl.nsfw','note-nsfw':'note.nsfw','fs2b-title':'fs2b.title','fs2b-sub':'fs2b.sub',
-    'lbl-edit-type':'lbl.edit_type','lbl-edit-format':'lbl.edit_format',
+    'lbl-edit-type':'lbl.edit_type','lbl-edit-format':'lbl.edit_format','edit-format-print':'edit.format_print',
     'fs2c-sub':'fs2c.sub','lbl-print-type':'lbl.print_type','lbl-print-use':'lbl.print_use',
     'fs2e-title':'fs2e.title','fs2e-sub':'fs2e.sub','lbl-other-idea':'lbl.other_idea',
     'fs3-title':'fs3.title','fs3-sub':'fs3.sub','lbl-char-exist':'lbl.char_exist',
@@ -1164,10 +1164,10 @@ function applyTranslations(){
     'lbl-mood':'lbl.mood','lbl-omit':'lbl.omit','lbl-priority':'lbl.priority',
     'fs4-title':'fs4.title','fs4-sub':'fs4.sub','lbl-contact-channel':'lbl.contact_channel',
     'lbl-discord-user':'lbl.discord_user','lbl-discount':'lbl.discount',
-    'lbl-findme-channel':'lbl.findme_channel',
+    'lbl-findme-channel':'lbl.findme_channel','illus-td-anim':'illus.sticker_anim',
     'fs5-title':'fs5.title','fs5-sub':'fs5.sub',
     'tos-title':'tos.title','tos-1':'tos.1','tos-2':'tos.2','tos-3':'tos.3','tos-accept':'tos.accept',
-    'success-title':'form.success.title','success-track':'form.success.track','success-time':'form.success.time',
+    'success-title':'form.success.title',
     'contact-eyebrow':'contact.eyebrow','contact-title':'contact.title','contact-intro':'contact.intro',
     'contact-time':'contact.time','lbl-contact-name':'lbl.name','lbl-contact-email':'lbl.email','lbl-contact-msg':'lbl.msg'
   };
@@ -1180,11 +1180,14 @@ function applyTranslations(){
   setHTML('fs2c-notice',t('fs2c.notice'));
   setHTML('fs5-notice',t('fs5.notice'));
   setHTML('rush-notice',t('rush.notice'));
+  setHTML('success-track',t('form.success.track'));
+  setHTML('success-time',t('form.success.time'));
 
   // Opts con texto propio
   const optTexts={
     'opt-first-yes':'opt.first_yes','opt-first-no':'opt.first_no',
-    'srv-opt-4':'srv.opt_4','srv-opt-5':'srv.opt_5',
+    'srv-opt-1':'srv.opt_1','srv-opt-2':'srv.opt_2','srv-opt-3':'srv.opt_3',
+    'srv-opt-4':'srv.opt_4','srv-opt-5':'srv.opt_5','illus-opt-anim':'illus.sticker_anim',
     'bg-opt-1':'bg.opt_1','bg-opt-2':'bg.opt_2','bg-opt-3':'bg.opt_3','bg-opt-4':'bg.opt_4',
     'edit-opt-1':'edit.opt_1','edit-opt-2':'edit.opt_2','edit-opt-3':'edit.opt_3','edit-opt-4':'edit.opt_4',
     'print-opt-1':'print.opt_1','print-opt-2':'print.opt_2','print-opt-3':'print.opt_3',

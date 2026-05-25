@@ -301,10 +301,10 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
 // Para cambiar la contraseña, genera el hash SHA-256 de tu clave en la consola del navegador:
 // crypto.subtle.digest('SHA-256',new TextEncoder().encode('tu_contraseña')).then(b=>console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
 // Luego reemplaza el valor de PWD_HASH abajo.
-const PWD_HASH='8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'; // hash de "admin" — CAMBIA ESTO
+const PWD_HASH='23afbfa36b94e007031a27187d8e7aab4f835ab18515bd9f268d4cac39bd840b';
 
 // Token para las llamadas de escritura a Railway (debe coincidir con tu env var ADMIN_TOKEN en Railway)
-const ADMIN_TOKEN='REEMPLAZA_CON_TU_TOKEN_SECRETO';
+const ADMIN_TOKEN='3RNhJapePn2x5Jgo4XDi';
 
 const SUPABASE_URL='https://eliyhtdwmeghfslijwgh.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaXlodGR3bWVnaGZzbGlqd2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTU2MDMsImV4cCI6MjA5MTMzMTYwM30.QxWx1uHhEZJCvrFcvSfOzlPLUBA39uaRdl80NKEsjZc';

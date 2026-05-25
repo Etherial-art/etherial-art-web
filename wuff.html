@@ -261,18 +261,31 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 @media(max-width:768px){
   .topbar{padding:0 1rem}
   .topbar-cta{display:none}
+  .hub-btn{display:none}
   .tabbar{padding:0 .5rem;overflow-x:auto}
   .tab{padding:0 .9rem;font-size:11px}
   .tab span{display:none}
+  .gallery-hero{padding:2rem 1.5rem 1.25rem}
+  .gallery-hero-title{font-size:26px}
   .gallery-grid{columns:2;padding:1.5rem}
   .about-page,.services-page,.portfolio-page,.form-page{padding:2rem 1.5rem}
-  .about-layout{grid-template-columns:1fr}
+  .about-layout{grid-template-columns:1fr;gap:2rem}
+  .about-name{font-size:28px}
   .about-stats{grid-template-columns:repeat(3,1fr)}
   .port-grid{grid-template-columns:repeat(2,1fr)}
+  .page-title{font-size:26px}
   .options-grid{grid-template-columns:1fr}
   .options-grid.three{grid-template-columns:repeat(3,1fr)}
   .lang-selector{gap:0}
   .contact-grid{grid-template-columns:1fr}
+  .page-footer{padding:1.25rem 1.5rem;flex-direction:column;gap:.75rem;align-items:flex-start}
+  .tracker-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
+@media(max-width:480px){
+  .gallery-grid{columns:1}
+  .port-grid{grid-template-columns:1fr}
+  .gallery-hero-title{font-size:22px}
+  .about-stats{grid-template-columns:repeat(3,1fr)}
 }
 </style>
 </head>
@@ -327,6 +340,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
     <div class="footer-brand">Etherial_Wuff</div>
     <div class="footer-social">
       <a href="https://bsky.app/profile/etherial-wuff.bsky.social" target="_blank"><i class="ti ti-brand-bluesky"></i></a>
+      <a href="https://www.furaffinity.net/user/etherialwuff/" target="_blank"><i class="ti ti-paw"></i></a>
       <a href="https://instagram.com/etherial_wuff" target="_blank" style="opacity:.4;pointer-events:none"><i class="ti ti-brand-instagram"></i></a>
       <a href="https://etherial-wuff.tumblr.com" target="_blank" style="opacity:.4;pointer-events:none"><i class="ti ti-brand-tumblr"></i></a>
       <a href="https://x.com/etherial_wuff" target="_blank" style="opacity:.4;pointer-events:none"><i class="ti ti-brand-x"></i></a>
@@ -371,6 +385,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <div class="about-section-label" id="about-findme">Encuéntrame en</div>
         <div class="about-contact-row">
           <a href="https://bsky.app/profile/etherial-wuff.bsky.social" target="_blank" class="about-contact-chip"><i class="ti ti-brand-bluesky"></i> @etherial-wuff</a>
+          <a href="https://www.furaffinity.net/user/etherialwuff/" target="_blank" class="about-contact-chip"><i class="ti ti-paw"></i> etherialwuff</a>
           <a href="https://instagram.com/etherial_wuff" target="_blank" class="about-contact-chip pending"><i class="ti ti-brand-instagram"></i> @etherial_wuff</a>
           <a href="https://etherial-wuff.tumblr.com" target="_blank" class="about-contact-chip pending"><i class="ti ti-brand-tumblr"></i> etherial-wuff</a>
           <a href="https://x.com/etherial_wuff" target="_blank" class="about-contact-chip pending"><i class="ti ti-brand-x"></i> @etherial_wuff</a>

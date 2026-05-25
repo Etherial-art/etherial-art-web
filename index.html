@@ -273,15 +273,27 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
   .tabbar{padding:0 .5rem;overflow-x:auto}
   .tab{padding:0 .9rem;font-size:11px}
   .tab span{display:none}
+  .gallery-hero{padding:2rem 1.5rem 1.25rem}
+  .gallery-hero-title{font-size:26px}
   .gallery-grid{columns:2;padding:1.5rem}
   .about-page,.services-page,.portfolio-page,.form-page{padding:2rem 1.5rem}
-  .about-layout{grid-template-columns:1fr}
+  .about-layout{grid-template-columns:1fr;gap:2rem}
+  .about-name{font-size:28px}
   .about-stats{grid-template-columns:repeat(3,1fr)}
   .port-grid{grid-template-columns:repeat(2,1fr)}
+  .page-title{font-size:26px}
   .options-grid{grid-template-columns:1fr}
   .options-grid.three{grid-template-columns:repeat(3,1fr)}
   .lang-selector{gap:0}
   .contact-grid{grid-template-columns:1fr}
+  .page-footer{padding:1.25rem 1.5rem;flex-direction:column;gap:.75rem;align-items:flex-start}
+  .tracker-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
+@media(max-width:480px){
+  .gallery-grid{columns:1}
+  .port-grid{grid-template-columns:1fr}
+  .gallery-hero-title{font-size:22px}
+  .about-stats{grid-template-columns:repeat(3,1fr)}
 }
 </style>
 </head>

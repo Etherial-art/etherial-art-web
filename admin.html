@@ -154,6 +154,29 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
   .stats-row{grid-template-columns:1fr 1fr}
   .stat-card{padding:1rem}
 }
+
+/* ══ COTIZACIÓN ══════════════════════════════════════════ */
+.s-quoted{background:#FFF9E0;color:#7A5900}
+[data-theme="dark"] .s-quoted{background:#3A2E00;color:#F5D000}
+.act-btn.quote{border-color:var(--gold)}
+.act-btn.quote:hover{border-color:var(--warn);color:var(--warn);background:var(--warnbg)}
+.q-summary{background:var(--gp);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;flex-direction:column;gap:.5rem}
+.q-row{display:flex;gap:.75rem;font-size:13px;align-items:baseline}
+.q-lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);min-width:80px;flex-shrink:0}
+.q-breakdown{border:0.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:1rem}
+.q-brow{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;border-bottom:0.5px solid var(--border);font-size:13px;color:var(--dark)}
+.q-brow span{flex:1}
+.q-brow input{width:120px;padding:6px 10px;border:0.5px solid var(--border);border-radius:6px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none;text-align:right;transition:border-color .2s}
+.q-brow input:focus{border-color:var(--gl)}
+.q-total-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:var(--gp)}
+.q-total-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dg);font-weight:500}
+#q-total{font-family:var(--serif);font-size:20px;font-weight:500;color:var(--gl)}
+.q-paypal-block{border:0.5px solid rgba(0,112,186,.3);border-radius:10px;padding:1rem 1.25rem;background:rgba(0,112,186,.05);margin-top:1rem}
+[data-theme="dark"] .q-paypal-block{background:rgba(0,112,186,.1)}
+.q-paypal-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#0070BA;margin-bottom:.75rem;display:flex;align-items:center;gap:6px;font-weight:500}
+[data-theme="dark"] .q-paypal-label{color:#5BB8FF}
+.q-paypal-link-row{display:flex;gap:8px;align-items:center}
+#q-paypal-link{flex:1;padding:8px 12px;border:0.5px solid rgba(0,112,186,.3);border-radius:8px;font-size:11px;background:var(--card);color:var(--dark);font-family:monospace;outline:none}
 </style>
 </head>
 <body>
@@ -178,6 +201,7 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
   <div class="topbar">
     <div class="brand">Etherial_<b>Art</b> <span class="brand-badge">ADMIN</span></div>
     <div class="topbar-right">
+      <a href="index.html" class="icon-btn" title="Volver al sitio"><i class="ti ti-arrow-left"></i></a>
       <button class="icon-btn" onclick="toggleTheme()" id="theme-btn"><i class="ti ti-moon" id="theme-icon"></i></button>
       <button class="icon-btn" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
     </div>
@@ -200,6 +224,7 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
         <button class="filter-btn active" onclick="setFilter('all',this)">Todas</button>
         <button class="filter-btn" onclick="setFilter('waiting',this)">En espera</button>
         <button class="filter-btn" onclick="setFilter('notified',this)">Notificadas</button>
+        <button class="filter-btn" onclick="setFilter('quoted',this)">Cotizadas</button>
         <button class="filter-btn" onclick="setFilter('active',this)">Activas</button>
         <button class="filter-btn" onclick="setFilter('completed',this)">Completadas</button>
         <button class="filter-btn" onclick="setFilter('cancelled',this)">Canceladas</button>
@@ -293,6 +318,45 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
   </div>
 </div>
 
+<!-- ══ MODAL: COTIZACIÓN ════════════════════════════════ -->
+<div class="modal-overlay" id="quote-overlay" onclick="if(event.target===this)cerrarCotizacion()">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-head">
+      <div class="modal-title">Cotización <span id="q-folio-title" style="color:var(--gl)"></span></div>
+      <button class="modal-close" onclick="cerrarCotizacion()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="q-summary">
+        <div class="q-row"><span class="q-lbl">Cliente</span><span id="q-client">—</span></div>
+        <div class="q-row"><span class="q-lbl">Servicio</span><span id="q-service">—</span></div>
+        <div class="q-row"><span class="q-lbl">Descripción</span><span id="q-desc" style="color:var(--muted)">—</span></div>
+      </div>
+      <div class="q-breakdown">
+        <div class="q-brow"><span>Precio base</span><input type="number" id="q-base" min="0" step="0.01" placeholder="0.00" oninput="calcularTotal()"></div>
+        <div class="q-brow" id="q-rush-row"><span>⚡ Cargo Rush</span><input type="number" id="q-rush-fee" min="0" step="0.01" placeholder="0.00" oninput="calcularTotal()"></div>
+        <div class="q-brow"><span>Extras / add-ons</span><input type="number" id="q-extras" min="0" step="0.01" placeholder="0.00" oninput="calcularTotal()"></div>
+        <div class="q-brow"><span>Descuento</span><input type="number" id="q-discount" min="0" step="0.01" placeholder="0.00" oninput="calcularTotal()"></div>
+        <div class="q-total-row"><span class="q-total-label">Total</span><span id="q-total">$0.00 USD</span></div>
+      </div>
+      <div class="mfield">
+        <label>Notas para el cliente (opcional)</label>
+        <textarea id="q-notes" placeholder="Ej: Incluye 2 rondas de revisión, entrega en 4 semanas..."></textarea>
+      </div>
+      <div class="q-paypal-block">
+        <div class="q-paypal-label"><i class="ti ti-brand-paypal"></i> Link de pago PayPal</div>
+        <div class="q-paypal-link-row">
+          <input type="text" id="q-paypal-link" readonly placeholder="El link aparece al ingresar un monto">
+          <button class="act-btn" onclick="copiarLinkPaypal()" id="btn-copy-paypal"><i class="ti ti-copy"></i> Copiar</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarCotizacion()">Cancelar</button>
+      <button class="btn-save" id="btn-save-quote" onclick="guardarCotizacion()"><i class="ti ti-send"></i> Guardar cotización</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ TOAST ═════════════════════════════════════════════ -->
 <div class="toast" id="toast"></div>
 
@@ -305,6 +369,7 @@ const PWD_HASH='23afbfa36b94e007031a27187d8e7aab4f835ab18515bd9f268d4cac39bd840b
 
 // Token para las llamadas de escritura a Railway (debe coincidir con tu env var ADMIN_TOKEN en Railway)
 const ADMIN_TOKEN='3RNhJapePn2x5Jgo4XDi';
+const PAYPAL_ME='etherart';
 
 const SUPABASE_URL='https://eliyhtdwmeghfslijwgh.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaXlodGR3bWVnaGZzbGlqd2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTU2MDMsImV4cCI6MjA5MTMzMTYwM30.QxWx1uHhEZJCvrFcvSfOzlPLUBA39uaRdl80NKEsjZc';
@@ -360,8 +425,8 @@ function showToast(msg,type=''){
 let comisiones=[];
 let filtroActual='all';
 
-const statusLabel={waiting:'En espera',notified:'Notificada',active:'En progreso',completed:'Completada',cancelled:'Cancelada',expired:'Expirada'};
-const statusClass={waiting:'s-waiting',notified:'s-notified',active:'s-active',completed:'s-completed',cancelled:'s-cancelled',expired:'s-expired'};
+const statusLabel={waiting:'En espera',notified:'Notificada',quoted:'Cotizada',active:'En progreso',completed:'Completada',cancelled:'Cancelada',expired:'Expirada'};
+const statusClass={waiting:'s-waiting',notified:'s-notified',quoted:'s-quoted',active:'s-active',completed:'s-completed',cancelled:'s-cancelled',expired:'s-expired'};
 
 async function cargarComisiones(){
   const tbody=document.getElementById('admin-tbody');
@@ -401,6 +466,7 @@ function renderComisiones(){
     const rush=c.es_rush?'<span class="rush-badge">⚡ RUSH</span>':'';
     const st=c.status||'waiting';
     const folio=String(c.folio).padStart(4,'0');
+    const quoteBtn=necesitaCotizacion(c)?`<button class="act-btn quote" onclick="abrirCotizacion(${c.folio})" title="Generar cotización"><i class="ti ti-calculator"></i> ${st==='quoted'?'Recotizar':'Cotizar'}</button>`:'';
     return `<tr data-folio="${c.folio}" data-status="${st}">
       <td class="folio-num">#${folio}</td>
       <td>${c.cliente_tag||'—'}</td>
@@ -414,11 +480,13 @@ function renderComisiones(){
             <option value="">Estado →</option>
             <option value="waiting">En espera</option>
             <option value="notified">Notificada</option>
+            <option value="quoted">Cotizada</option>
             <option value="active">En progreso</option>
             <option value="completed">Completada</option>
             <option value="cancelled">Cancelada</option>
             <option value="expired">Expirada</option>
           </select>
+          ${quoteBtn}
           <button class="act-btn notify" onclick="notificarCliente(${c.folio})" title="Enviar email al cliente"><i class="ti ti-mail"></i> Notificar</button>
         </div>
       </td>
@@ -468,6 +536,64 @@ async function notificarCliente(folio){
     console.error(e);
     showToast('Error al enviar notificación. Revisa que el endpoint de Railway exista.','error');
   }
+}
+
+// ━━ COTIZACIÓN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function necesitaCotizacion(c){
+  const s=(c.tipo_servicio||'').toLowerCase();
+  return s.includes('editorial')||s.includes('imprimir')||c.es_nsfw===true;
+}
+
+let qFolioActual=null;
+
+function abrirCotizacion(folio){
+  const c=comisiones.find(x=>x.folio===folio);
+  if(!c) return;
+  qFolioActual=folio;
+  document.getElementById('q-folio-title').textContent=`#${String(folio).padStart(4,'0')}`;
+  document.getElementById('q-client').textContent=c.cliente_tag||'—';
+  document.getElementById('q-service').textContent=c.tipo_servicio||'—';
+  document.getElementById('q-desc').textContent=c.descripcion_adicional||'—';
+  document.getElementById('q-rush-row').style.display=c.es_rush?'flex':'none';
+  ['q-base','q-rush-fee','q-extras','q-discount'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('q-notes').value='';
+  document.getElementById('q-total').textContent='$0.00 USD';
+  document.getElementById('q-paypal-link').value='';
+  document.getElementById('quote-overlay').classList.add('open');
+}
+
+function cerrarCotizacion(){
+  document.getElementById('quote-overlay').classList.remove('open');
+  qFolioActual=null;
+}
+
+function calcularTotal(){
+  const base=parseFloat(document.getElementById('q-base').value)||0;
+  const rush=parseFloat(document.getElementById('q-rush-fee').value)||0;
+  const extras=parseFloat(document.getElementById('q-extras').value)||0;
+  const discount=parseFloat(document.getElementById('q-discount').value)||0;
+  const total=Math.max(0,base+rush+extras-discount);
+  document.getElementById('q-total').textContent=`$${total.toFixed(2)} USD`;
+  document.getElementById('q-paypal-link').value=total>0?`https://paypal.me/${PAYPAL_ME}/${total.toFixed(2)}`:'';
+}
+
+function copiarLinkPaypal(){
+  const link=document.getElementById('q-paypal-link').value;
+  if(!link){showToast('Ingresa un monto primero.','error');return;}
+  navigator.clipboard.writeText(link).then(()=>{
+    showToast('Link de PayPal copiado','ok');
+    const btn=document.getElementById('btn-copy-paypal');
+    btn.innerHTML='<i class="ti ti-check"></i> ¡Copiado!';
+    setTimeout(()=>{btn.innerHTML='<i class="ti ti-copy"></i> Copiar';},2000);
+  });
+}
+
+async function guardarCotizacion(){
+  const link=document.getElementById('q-paypal-link').value;
+  if(!link){showToast('Ingresa un monto para generar el link de pago.','error');return;}
+  const folio=qFolioActual;
+  cerrarCotizacion();
+  await cambiarEstado(folio,'quoted');
 }
 
 // ━━ MODAL ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -157,6 +157,8 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .s-paid{background:#E0F5F0;color:#085041}
 .s-progress{background:#E8F0FF;color:#1A3A8A}
 .s-expired{background:#F0F0F0;color:#777}
+.s-quoted{background:#FFF0E0;color:#C25A00}
+[data-theme="dark"] .s-quoted{background:#3A1800;color:#F5A050}
 [data-theme="dark"] .s-pending{background:#3A2E00;color:#F5D000}
 [data-theme="dark"] .s-sent{background:#0D2E1A;color:#4DBDB5}
 [data-theme="dark"] .s-progress{background:#0D1A3A;color:#7BB8D4}
@@ -436,7 +438,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <button class="service-trigger" onclick="toggleSrv('srv-2')">
           <div class="srv-icon"><i class="ti ti-layout"></i></div>
           <div class="srv-text"><span class="srv-name" id="srv2-name">Diseño editorial</span><span class="srv-hint" id="srv2-hint">Portadas y materiales digitales</span></div>
-          <span class="srv-price"><span class="srv-from-lbl">desde</span> $1,200 MXN</span>
+          <span class="srv-price"><span class="srv-from-lbl">desde</span> $75 USD</span>
           <i class="ti ti-chevron-down srv-chevron"></i>
         </button>
         <div class="srv-body">
@@ -451,7 +453,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <button class="service-trigger" onclick="toggleSrv('srv-3')">
           <div class="srv-icon"><i class="ti ti-photo"></i></div>
           <div class="srv-text"><span class="srv-name" id="srv3-name">Print — Arte para imprimir</span><span class="srv-hint" id="srv3-hint">Arte digital en alta resolución</span></div>
-          <span class="srv-price"><span class="srv-from-lbl">desde</span> $350 MXN</span>
+          <span class="srv-price"><span class="srv-from-lbl">desde</span> $22 USD</span>
           <i class="ti ti-chevron-down srv-chevron"></i>
         </button>
         <div class="srv-body">
@@ -853,7 +855,7 @@ es:{
   'val.tipo_print':'Selecciona el tipo de pieza','val.uso':'Selecciona el uso final',
   'val.desc':'Ingresa la descripción de tu idea','val.rush':'Indica la prioridad',
   'val.contacto':'Selecciona tu canal de contacto','val.discord':'Ingresa tu usuario de Discord',
-  'status.waiting':'En espera','status.notified':'Notificado','status.active':'En proceso','status.completed':'Completado','status.expired':'Expirado',
+  'status.waiting':'En espera','status.notified':'Notificado','status.quoted':'Cotización enviada','status.active':'En proceso','status.completed':'Completado','status.expired':'Expirado',
   'step.label':'Paso {n} de 5','step.1':'Información básica','step.2':'Tipo de servicio','step.3':'Detalles','step.4':'Contacto','step.5':'Resumen',
   'fs1.title':'Información básica','fs1.sub':'Cuéntame quién eres y qué tipo de servicio necesitas.',
   'lbl.f_tag':'Tu nombre o @ de red social *','note.f_tag':'El nombre con el que prefieras que me dirija a ti.',
@@ -945,7 +947,7 @@ en:{
   'val.tipo_print':'Select the piece type','val.uso':'Select the final use',
   'val.desc':'Enter a description of your idea','val.rush':'Indicate the order priority',
   'val.contacto':'Select your contact channel','val.discord':'Enter your Discord username',
-  'status.waiting':'Waiting','status.notified':'Notified','status.active':'In progress','status.completed':'Completed','status.expired':'Expired',
+  'status.waiting':'Waiting','status.notified':'Notified','status.quoted':'Quote sent','status.active':'In progress','status.completed':'Completed','status.expired':'Expired',
   'step.label':'Step {n} of 5','step.1':'Basic info','step.2':'Service type','step.3':'Details','step.4':'Contact','step.5':'Summary',
   'fs1.title':'Basic info','fs1.sub':'Tell me who you are and what type of service you need.',
   'lbl.f_tag':'Your name or social @ *','note.f_tag':'The name you prefer me to use when addressing you.',
@@ -1037,7 +1039,7 @@ de:{
   'val.tipo_print':'Wähle die Stückart','val.uso':'Wähle die Endnutzung',
   'val.desc':'Gib eine Beschreibung deiner Idee ein','val.rush':'Gib die Auftragspriorität an',
   'val.contacto':'Wähle deinen Kontaktkanal','val.discord':'Gib deinen Discord-Nutzernamen ein',
-  'status.waiting':'Wartend','status.notified':'Benachrichtigt','status.active':'In Bearbeitung','status.completed':'Abgeschlossen','status.expired':'Abgelaufen',
+  'status.waiting':'Wartend','status.notified':'Benachrichtigt','status.quoted':'Angebot gesendet','status.active':'In Bearbeitung','status.completed':'Abgeschlossen','status.expired':'Abgelaufen',
   'step.label':'Schritt {n} von 5','step.1':'Grundinfos','step.2':'Auftragsart','step.3':'Projektdetails','step.4':'Kontakt','step.5':'Übersicht',
   'fs1.title':'Grundinfos','fs1.sub':'Erzähl mir, wer du bist und welche Leistung du benötigst.',
   'lbl.f_tag':'Dein Name oder Social-@ *','note.f_tag':'Der Name, mit dem du gern angesprochen werden möchtest.',
@@ -1281,7 +1283,7 @@ function filterPort(idx){
 const _url='https://eliyhtdwmeghfslijwgh.supabase.co';
 const _key='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaXlodGR3bWVnaGZzbGlqd2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTU2MDMsImV4cCI6MjA5MTMzMTYwM30.QxWx1uHhEZJCvrFcvSfOzlPLUBA39uaRdl80NKEsjZc';
 const db=window.supabase.createClient(_url,_key);
-const eClass={waiting:'s-pending',notified:'s-progress',active:'s-sent',completed:'s-paid',expired:'s-expired'};
+const eClass={waiting:'s-pending',notified:'s-progress',quoted:'s-quoted',active:'s-sent',completed:'s-paid',expired:'s-expired'};
 let foliosGlobales=[];
 
 function renderFolios(lista){

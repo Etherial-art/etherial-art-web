@@ -236,6 +236,7 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
       <input type="password" id="pwd-input" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
     <button class="login-btn" onclick="doLogin()">Entrar →</button>
+    <button class="login-btn" onclick="history.length>1?history.back():location.href='index.html'" style="margin-top:.5rem;background:transparent;color:var(--muted);border-color:var(--border);">← Volver</button>
     <div class="login-error" id="login-error">Contraseña incorrecta.</div>
   </div>
 </div>

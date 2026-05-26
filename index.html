@@ -548,6 +548,17 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 <!-- ══ COMISIONES ════════════════════════════════ -->
 <div class="page" id="page-comisiones">
   <div class="form-page">
+    <div id="form-closed-banner" style="display:none;text-align:center;padding:4rem 2rem">
+      <i class="ti ti-lock" style="font-size:48px;color:var(--hint);display:block;margin-bottom:1.25rem"></i>
+      <div style="font-family:var(--serif);font-size:32px;font-weight:300;color:var(--dark);margin-bottom:.5rem" id="closed-title">Comisiones cerradas</div>
+      <p style="font-size:13px;color:var(--muted);max-width:400px;margin:0 auto 1.75rem;line-height:1.7" id="closed-msg">Por el momento no estoy aceptando nuevas comisiones. ¡Vuelve pronto!</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a href="https://instagram.com/etherial_mango" target="_blank" class="about-contact-chip"><i class="ti ti-brand-instagram"></i> @etherial_mango</a>
+        <a href="#" onclick="navigator.clipboard.writeText('ethemango');event.preventDefault();" class="about-contact-chip"><i class="ti ti-brand-discord"></i> ethemango</a>
+        <a href="https://ko-fi.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
+      </div>
+    </div>
+    <div id="form-wrap">
     <div class="page-eyebrow" id="form-eyebrow">Solicitud de comisión</div>
     <h2 class="page-title" style="margin-bottom:.25rem" id="form-main-title">Comisiones</h2>
     <p style="font-size:13px;color:var(--muted);margin-bottom:2rem;line-height:1.6" id="form-intro">Cuéntame tu idea y nos ponemos en contacto en 48hrs para confirmar detalles y enviarte tu invoice.</p>
@@ -810,6 +821,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <a href="https://ko-fi.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
       </div>
     </div>
+    </div><!-- /form-wrap -->
   </div>
 </div>
 
@@ -883,6 +895,7 @@ es:{
   'val.desc':'Ingresa la descripción de tu idea','val.desc.short':'La descripción debe tener al menos 10 caracteres','val.rush':'Indica la prioridad',
   'val.contacto':'Selecciona tu canal de contacto','val.discord':'Ingresa tu usuario de Discord','val.discord.format':'El usuario de Discord debe tener 2–32 caracteres sin espacios',
   'status.waiting':'En espera','status.notified':'Notificado','status.quoted':'Cotización enviada','status.active':'En proceso','status.completed':'Completado','status.expired':'Expirado','status.cancelled':'Cancelado',
+  'commissions.closed.title':'Comisiones cerradas','commissions.closed.msg':'Por el momento no estoy aceptando nuevas comisiones. ¡Vuelve pronto y sígueme para enterarte cuando abra!',
   'step.label':'Paso {n} de 5','step.1':'Información básica','step.2':'Tipo de servicio','step.3':'Detalles','step.4':'Contacto','step.5':'Resumen',
   'fs1.title':'Información básica','fs1.sub':'Cuéntame quién eres y qué tipo de servicio necesitas.',
   'lbl.f_tag':'Tu nombre o @ de red social *','note.f_tag':'El nombre con el que prefieras que me dirija a ti.',
@@ -976,6 +989,7 @@ en:{
   'val.desc':'Enter a description of your idea','val.desc.short':'Description must be at least 10 characters','val.rush':'Indicate the order priority',
   'val.contacto':'Select your contact channel','val.discord':'Enter your Discord username','val.discord.format':'Discord username must be 2–32 characters with no spaces',
   'status.waiting':'Waiting','status.notified':'Notified','status.quoted':'Quote sent','status.active':'In progress','status.completed':'Completed','status.expired':'Expired','status.cancelled':'Cancelled',
+  'commissions.closed.title':'Commissions closed','commissions.closed.msg':'I\'m not accepting new commissions right now. Check back soon and follow me to know when they open!',
   'step.label':'Step {n} of 5','step.1':'Basic info','step.2':'Service type','step.3':'Details','step.4':'Contact','step.5':'Summary',
   'fs1.title':'Basic info','fs1.sub':'Tell me who you are and what type of service you need.',
   'lbl.f_tag':'Your name or social @ *','note.f_tag':'The name you prefer me to use when addressing you.',
@@ -1069,6 +1083,7 @@ de:{
   'val.desc':'Gib eine Beschreibung deiner Idee ein','val.desc.short':'Die Beschreibung muss mindestens 10 Zeichen haben','val.rush':'Gib die Auftragspriorität an',
   'val.contacto':'Wähle deinen Kontaktkanal','val.discord':'Gib deinen Discord-Nutzernamen ein','val.discord.format':'Discord-Nutzername muss 2–32 Zeichen ohne Leerzeichen haben',
   'status.waiting':'Wartend','status.notified':'Benachrichtigt','status.quoted':'Angebot gesendet','status.active':'In Bearbeitung','status.completed':'Abgeschlossen','status.expired':'Abgelaufen','status.cancelled':'Abgebrochen',
+  'commissions.closed.title':'Aufträge geschlossen','commissions.closed.msg':'Momentan nehme ich keine neuen Aufträge an. Schau bald wieder vorbei und folge mir, um zu wissen, wann sie öffnen!',
   'step.label':'Schritt {n} von 5','step.1':'Grundinfos','step.2':'Auftragsart','step.3':'Projektdetails','step.4':'Kontakt','step.5':'Übersicht',
   'fs1.title':'Grundinfos','fs1.sub':'Erzähl mir, wer du bist und welche Leistung du benötigst.',
   'lbl.f_tag':'Dein Name oder Social-@ *','note.f_tag':'Der Name, mit dem du gern angesprochen werden möchtest.',
@@ -1210,6 +1225,7 @@ function applyTranslations(){
   // Form
   setText('form-eyebrow',t('form.eyebrow'));setText('form-main-title',t('nav.commissions'));
   setText('form-intro',t('form.intro'));
+  setText('closed-title',t('commissions.closed.title'));setText('closed-msg',t('commissions.closed.msg'));
   document.querySelectorAll('.btn-back').forEach(b=>b.textContent=t('form.back'));
   document.querySelectorAll('.btn-next').forEach(b=>b.textContent=t('form.next'));
   const sub=document.getElementById('btn-submit');if(sub&&!sub.disabled) sub.textContent=t('form.submit');
@@ -1302,10 +1318,24 @@ function applyTheme(dark){
 function toggleTheme(){applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');}
 
 // ━━ NAVEGACIÓN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let comisionesAbiertas=true;
+
+async function cargarEstadoComisiones(){
+  try{
+    const{data}=await db.from('config').select('value').eq('key','commissions_open').single();
+    comisionesAbiertas=data?.value!=='false';
+  }catch(e){/* default open */}
+}
+
 function goTab(name){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+name));
   document.getElementById('main').scrollTop=0;
+  if(name==='comisiones'){
+    const closed=!comisionesAbiertas;
+    document.getElementById('form-closed-banner').style.display=closed?'block':'none';
+    document.getElementById('form-wrap').style.display=closed?'none':'block';
+  }
 }
 
 // ━━ ACORDEÓN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1571,6 +1601,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const fi=document.getElementById('folio-input');
   if(fi) fi.addEventListener('keydown',e=>{if(e.key==='Enter') buscarFolio();});
   cargarFolios();
+  cargarEstadoComisiones();
   // URL params
   const p=new URLSearchParams(window.location.search);
   const tab=p.get('tab'),comision=p.get('comision');

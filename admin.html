@@ -200,6 +200,8 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
 [data-theme="dark"] .q-paypal-label{color:#5BB8FF}
 .q-paypal-link-row{display:flex;gap:8px;align-items:center}
 #q-paypal-link{flex:1;padding:8px 12px;border:0.5px solid rgba(0,112,186,.3);border-radius:8px;font-size:11px;background:var(--card);color:var(--dark);font-family:monospace;outline:none}
+.icon-btn.closed{border-color:var(--danger)!important;color:var(--danger)!important}
+.icon-btn.closed:hover{background:var(--dangerbg)!important}
 
 /* ══ PORTAFOLIO ADMIN ════════════════════════════════════ */
 .view-tabs{display:flex;gap:4px;background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:3px;align-self:flex-start}
@@ -287,6 +289,7 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
         </div>
         <div class="spacer"></div>
         <button class="icon-btn" onclick="cargarComisiones()"><i class="ti ti-refresh"></i> Actualizar</button>
+        <button class="icon-btn" id="toggle-comisiones" onclick="toggleComisiones()"><i class="ti ti-lock-open" id="toggle-icon"></i> <span id="toggle-label">Abiertas</span></button>
         <button class="add-btn" onclick="abrirModal()"><i class="ti ti-plus"></i> Nueva comisión</button>
       </div>
 
@@ -469,6 +472,20 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
   </div>
 </div>
 
+<!-- ══ MODAL: DETALLES ══════════════════════════════════ -->
+<div class="modal-overlay" id="detail-overlay" onclick="if(event.target===this)cerrarDetalle()">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-head">
+      <div class="modal-title">Comisión <span id="d-folio" style="color:var(--gl)"></span></div>
+      <button class="modal-close" onclick="cerrarDetalle()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body" id="d-body"></div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarDetalle()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ TOAST ═════════════════════════════════════════════ -->
 <div class="toast" id="toast"></div>
 
@@ -503,7 +520,7 @@ async function doLogin(){
     document.getElementById('login-screen').style.display='none';
     const panel=document.getElementById('admin-panel');
     panel.style.display='flex';
-    cargarComisiones();
+    cargarComisiones();cargarEstadoComisiones();
   }else{
     document.getElementById('login-error').style.display='block';
     document.getElementById('pwd-input').value='';
@@ -600,6 +617,7 @@ function renderComisiones(){
             <option value="expired">Expirada</option>
           </select>
           ${quoteBtn}
+          <button class="act-btn" onclick="abrirDetalle(${c.folio})" title="Ver detalles"><i class="ti ti-eye"></i> Ver</button>
           <button class="act-btn notify" onclick="notificarCliente(${c.folio})" title="Enviar email al cliente"><i class="ti ti-mail"></i> Notificar</button>
         </div>
       </td>
@@ -708,6 +726,77 @@ async function guardarCotizacion(){
   cerrarCotizacion();
   await cambiarEstado(folio,'quoted');
 }
+
+// ━━ ESTADO COMISIONES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let comisionesAbiertasAdmin=true;
+
+async function cargarEstadoComisiones(){
+  try{
+    const{data}=await db.from('config').select('value').eq('key','commissions_open').single();
+    comisionesAbiertasAdmin=data?.value!=='false';
+  }catch(e){console.warn('Tabla config no encontrada, asumiendo abierto.');}
+  actualizarToggleUI();
+}
+
+function actualizarToggleUI(){
+  const btn=document.getElementById('toggle-comisiones');
+  const icon=document.getElementById('toggle-icon');
+  const lbl=document.getElementById('toggle-label');
+  if(comisionesAbiertasAdmin){
+    btn.classList.remove('closed');icon.className='ti ti-lock-open';lbl.textContent='Abiertas';
+  }else{
+    btn.classList.add('closed');icon.className='ti ti-lock';lbl.textContent='Cerradas';
+  }
+}
+
+async function toggleComisiones(){
+  const nuevo=!comisionesAbiertasAdmin;
+  try{
+    const{error}=await db.from('config').upsert({key:'commissions_open',value:nuevo?'true':'false'});
+    if(error) throw error;
+    comisionesAbiertasAdmin=nuevo;
+    actualizarToggleUI();
+    showToast(nuevo?'Comisiones abiertas ✓':'Comisiones cerradas',nuevo?'ok':'');
+  }catch(e){
+    console.error(e);
+    showToast('Error al actualizar. ¿Existe la tabla "config" en Supabase?','error');
+  }
+}
+
+// ━━ DETALLES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function abrirDetalle(folio){
+  const c=comisiones.find(x=>x.folio===folio);
+  if(!c) return;
+  document.getElementById('d-folio').textContent=`#${String(folio).padStart(4,'0')}`;
+  const f=(lbl,val)=>val!=null&&val!==''&&val!==false?`<div class="q-row"><span class="q-lbl">${lbl}</span><span style="color:var(--dark)">${val}</span></div>`:'';
+  const arr=(lbl,val)=>Array.isArray(val)&&val.length?f(lbl,val.join(', ')):'';
+  document.getElementById('d-body').innerHTML=`
+    <div class="q-summary">
+      ${f('Cliente',c.cliente_tag)}
+      ${f('Email',c.email)}
+      ${f('Idioma',c.idioma_preferido)}
+      ${f('Primera vez',c.es_primera_comision===true?'Sí':c.es_primera_comision===false?'No':null)}
+      ${f('Canal',c.canal_contacto)}
+      ${f('Cómo llegó',c.como_encontro)}
+      ${f('Descuento',c.descuento)}
+    </div>
+    <div class="q-summary" style="margin-top:.75rem">
+      ${f('Servicio',c.tipo_servicio)}
+      ${f('Tipo',c.tipo_ilustracion||c.tipo_editorial||c.tipo_print)}
+      ${f('Acabado',c.acabado)}
+      ${f('Personajes',c.personajes)}
+      ${f('Pers. existentes',c.pers_exist?'Sí':null)}
+      ${f('Rush',c.es_rush?'⚡ Sí':null)}
+      ${f('NSFW',c.es_nsfw?'Sí':null)}
+    </div>
+    ${c.descripcion_adicional?`<div class="mfield" style="margin-top:.75rem"><label>Descripción</label><div style="padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;line-height:1.6;color:var(--dark);white-space:pre-wrap">${c.descripcion_adicional}</div></div>`:''}
+    ${arr('Fondo',c.fondo)}
+    ${arr('Composición',c.composicion)}
+  `;
+  document.getElementById('detail-overlay').classList.add('open');
+}
+
+function cerrarDetalle(){document.getElementById('detail-overlay').classList.remove('open');}
 
 // ━━ PORTAFOLIO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -863,7 +952,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('login-screen').style.display='none';
     const panel=document.getElementById('admin-panel');
     panel.style.display='flex';
-    cargarComisiones();
+    cargarComisiones();cargarEstadoComisiones();
   }
   document.getElementById('pwd-input').focus();
   document.getElementById('admin-tbody').addEventListener('click',function(e){

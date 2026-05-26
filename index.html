@@ -1277,7 +1277,9 @@ function applyTranslations(){
   const fe=document.getElementById('f-email');if(fe) fe.placeholder=lang==='en'?'your@email.com':lang==='de'?'deine@email.de':'tu@correo.com';
   // Placeholder tag formulario
   const ft=document.getElementById('f-tag');if(ft) ft.placeholder=lang==='en'?'e.g. @username or Name':lang==='de'?'z.B. @nutzername oder Name':'ej: @usuario o Nombre';
-  
+  const fdis=document.getElementById('f-discord');if(fdis) fdis.placeholder=lang==='en'?'username or username#0000':lang==='de'?'Nutzername oder Nutzername#0000':'usuario o usuario#0000';
+  const fdesc=document.getElementById('f-descuento');if(fdesc) fdesc.placeholder=lang==='en'?'Enter your code if you have one':lang==='de'?'Gib deinen Code ein, falls vorhanden':'Ingresa tu código si tienes uno';
+
   renderFolios(foliosGlobales);
   actualizarProgreso();
 }

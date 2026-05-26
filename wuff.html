@@ -390,6 +390,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <div class="about-contact-row">
           <a href="https://bsky.app/profile/etherial-wuff.bsky.social" target="_blank" class="about-contact-chip"><i class="ti ti-brand-bluesky"></i> @etherial-wuff</a>
           <a href="https://www.furaffinity.net/user/etherialwuff/" target="_blank" class="about-contact-chip"><i class="ti ti-paw"></i> etherialwuff</a>
+          <a href="#" onclick="navigator.clipboard.writeText('ethemango');event.preventDefault();" class="about-contact-chip"><i class="ti ti-brand-discord"></i> ethemango</a>
           <a href="https://instagram.com/etherial_wuff" target="_blank" class="about-contact-chip pending"><i class="ti ti-brand-instagram"></i> @etherial_wuff</a>
           <a href="https://etherial-wuff.tumblr.com" target="_blank" class="about-contact-chip pending"><i class="ti ti-brand-tumblr"></i> etherial-wuff</a>
           <a href="https://x.com/etherial_wuff" target="_blank" class="about-contact-chip pending"><i class="ti ti-brand-x"></i> @etherial_wuff</a>
@@ -833,13 +834,13 @@ es:{
   'contact.eyebrow':'Hablemos','contact.title':'Contacto','contact.intro':'¿Tienes un proyecto en mente? Cuéntame tu idea y encontramos la forma de darle vida.',
   'contact.send':'Enviar mensaje','contact.sending':'Enviando...','contact.ok':'¡Mensaje enviado!','contact.error':'Error al enviar. Intenta de nuevo.','contact.val':'Por favor llena todos los campos.','contact.time':'Respondo en 24–48 hrs',
   'lbl.name':'Nombre','lbl.email':'Correo','lbl.msg':'Mensaje',
-  'val.tag':'Ingresa tu nombre o @','val.email':'Ingresa tu correo','val.lang':'Selecciona tu idioma',
+  'val.tag':'Ingresa tu nombre o @','val.tag.short':'El nombre debe tener al menos 2 caracteres','val.email':'Ingresa tu correo','val.email.invalid':'Ingresa un correo válido','val.lang':'Selecciona tu idioma',
   'val.first':'Indica si es tu primera comisión','val.service':'Selecciona el tipo de servicio',
   'val.tipo_ilus':'Selecciona el tipo de ilustración','val.acabado':'Selecciona el acabado',
   'val.personajes':'Indica cuántos personajes','val.tipo_edit':'Selecciona el tipo de material',
   'val.tipo_print':'Selecciona el tipo de pieza','val.uso':'Selecciona el uso final',
-  'val.desc':'Ingresa la descripción de tu idea','val.rush':'Indica la prioridad',
-  'val.contacto':'Selecciona tu canal de contacto','val.discord':'Ingresa tu usuario de Discord',
+  'val.desc':'Ingresa la descripción de tu idea','val.desc.short':'La descripción debe tener al menos 10 caracteres','val.rush':'Indica la prioridad',
+  'val.contacto':'Selecciona tu canal de contacto','val.discord':'Ingresa tu usuario de Discord','val.discord.format':'El usuario de Discord debe tener 2–32 caracteres sin espacios',
   'status.waiting':'En espera','status.notified':'Notificado','status.quoted':'Cotización enviada','status.active':'En proceso','status.completed':'Completado','status.expired':'Expirado','status.cancelled':'Cancelado',
   'step.label':'Paso {n} de 5','step.1':'Información básica','step.2':'Tipo de servicio','step.3':'Detalles','step.4':'Contacto','step.5':'Resumen',
   'fs1.title':'Información básica','fs1.sub':'Cuéntame quién eres y qué tipo de servicio necesitas.',
@@ -925,13 +926,13 @@ en:{
   'contact.eyebrow':"Let's talk",'contact.title':'Contact','contact.intro':'Have a project in mind? Tell me your idea and we will find a way to bring it to life.',
   'contact.send':'Send message','contact.sending':'Sending...','contact.ok':'Message sent!','contact.error':'Error sending. Please try again.','contact.val':'Please fill in all fields.','contact.time':'I respond within 24–48 hrs',
   'lbl.name':'Name','lbl.email':'Email','lbl.msg':'Message',
-  'val.tag':'Enter your name or @','val.email':'Enter your email','val.lang':'Select your language',
+  'val.tag':'Enter your name or @','val.tag.short':'Name must be at least 2 characters','val.email':'Enter your email','val.email.invalid':'Enter a valid email address','val.lang':'Select your language',
   'val.first':'Let me know if this is your first commission','val.service':'Select a service type',
   'val.tipo_ilus':'Select the illustration type','val.acabado':'Select a finish',
   'val.personajes':'Indicate number of characters','val.tipo_edit':'Select the material type',
   'val.tipo_print':'Select the piece type','val.uso':'Select the final use',
-  'val.desc':'Enter a description of your idea','val.rush':'Indicate the order priority',
-  'val.contacto':'Select your contact channel','val.discord':'Enter your Discord username',
+  'val.desc':'Enter a description of your idea','val.desc.short':'Description must be at least 10 characters','val.rush':'Indicate the order priority',
+  'val.contacto':'Select your contact channel','val.discord':'Enter your Discord username','val.discord.format':'Discord username must be 2–32 characters with no spaces',
   'status.waiting':'Waiting','status.notified':'Notified','status.quoted':'Quote sent','status.active':'In progress','status.completed':'Completed','status.expired':'Expired','status.cancelled':'Cancelled',
   'step.label':'Step {n} of 5','step.1':'Basic info','step.2':'Service type','step.3':'Details','step.4':'Contact','step.5':'Summary',
   'fs1.title':'Basic info','fs1.sub':'Tell me who you are and what type of service you need.',
@@ -1017,13 +1018,13 @@ de:{
   'contact.eyebrow':'Lass uns reden','contact.title':'Kontakt','contact.intro':'Hast du ein Projekt im Sinn? Erzähl mir deine Idee und wir finden einen Weg, sie umzusetzen.',
   'contact.send':'Nachricht senden','contact.sending':'Wird gesendet...','contact.ok':'Nachricht gesendet!','contact.error':'Fehler beim Senden. Bitte erneut versuchen.','contact.val':'Bitte fülle alle Felder aus.','contact.time':'Ich antworte innerhalb von 24–48 Std.',
   'lbl.name':'Name','lbl.email':'E-Mail','lbl.msg':'Nachricht',
-  'val.tag':'Gib deinen Namen oder @ ein','val.email':'Gib deine E-Mail ein','val.lang':'Wähle deine Sprache',
+  'val.tag':'Gib deinen Namen oder @ ein','val.tag.short':'Der Name muss mindestens 2 Zeichen haben','val.email':'Gib deine E-Mail ein','val.email.invalid':'Gib eine gültige E-Mail-Adresse ein','val.lang':'Wähle deine Sprache',
   'val.first':'Gib an, ob es dein erster Auftrag ist','val.service':'Wähle eine Auftragsart',
   'val.tipo_ilus':'Wähle die Illustrationsart','val.acabado':'Wähle eine Ausführung',
   'val.personajes':'Gib die Anzahl der Figuren an','val.tipo_edit':'Wähle die Materialart',
   'val.tipo_print':'Wähle die Stückart','val.uso':'Wähle die Endnutzung',
-  'val.desc':'Gib eine Beschreibung deiner Idee ein','val.rush':'Gib die Auftragspriorität an',
-  'val.contacto':'Wähle deinen Kontaktkanal','val.discord':'Gib deinen Discord-Nutzernamen ein',
+  'val.desc':'Gib eine Beschreibung deiner Idee ein','val.desc.short':'Die Beschreibung muss mindestens 10 Zeichen haben','val.rush':'Gib die Auftragspriorität an',
+  'val.contacto':'Wähle deinen Kontaktkanal','val.discord':'Gib deinen Discord-Nutzernamen ein','val.discord.format':'Discord-Nutzername muss 2–32 Zeichen ohne Leerzeichen haben',
   'status.waiting':'Wartend','status.notified':'Benachrichtigt','status.quoted':'Angebot gesendet','status.active':'In Bearbeitung','status.completed':'Abgeschlossen','status.expired':'Abgelaufen','status.cancelled':'Abgebrochen',
   'step.label':'Schritt {n} von 5','step.1':'Grundinfos','step.2':'Auftragsart','step.3':'Projektdetails','step.4':'Kontakt','step.5':'Übersicht',
   'fs1.title':'Grundinfos','fs1.sub':'Erzähl mir, wer du bist und welche Leistung du benötigst.',
@@ -1357,7 +1358,9 @@ function toggleOpt(el,grupo){
 function validarSeccion(n){
   if(n===1){
     if(!document.getElementById('f-tag').value.trim()){showToast(t('val.tag'));return false;}
+    if(document.getElementById('f-tag').value.trim().length<2){showToast(t('val.tag.short'));return false;}
     if(!document.getElementById('f-email').value.trim()){showToast(t('val.email'));return false;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('f-email').value.trim())){showToast(t('val.email.invalid'));return false;}
     if(!formData.idioma){showToast(t('val.lang'));return false;}
     if(!formData.primera){showToast(t('val.first'));return false;}
     if(!formData.servicio){showToast(t('val.service'));return false;}
@@ -1375,8 +1378,8 @@ function validarSeccion(n){
       if(!formData.uso){showToast(t('val.uso'));return false;}
     }
   }
-  if(n===3){if(!document.getElementById('f-desc').value.trim()){showToast(t('val.desc'));return false;}if(!formData.rush){showToast(t('val.rush'));return false;}}
-  if(n===4){if(!formData.contacto){showToast(t('val.contacto'));return false;}if(formData.contacto==='Discord'&&!document.getElementById('f-discord').value.trim()){showToast(t('val.discord'));return false;}}
+  if(n===3){if(!document.getElementById('f-desc').value.trim()){showToast(t('val.desc'));return false;}if(document.getElementById('f-desc').value.trim().length<10){showToast(t('val.desc.short'));return false;}if(!formData.rush){showToast(t('val.rush'));return false;}}
+  if(n===4){if(!formData.contacto){showToast(t('val.contacto'));return false;}if(formData.contacto==='Discord'){const dv=document.getElementById('f-discord').value.trim();if(!dv){showToast(t('val.discord'));return false;}if(dv.length<2||dv.length>32||/\s/.test(dv)){showToast(t('val.discord.format'));return false;}}}
   return true;
 }
 

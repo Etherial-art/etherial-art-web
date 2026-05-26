@@ -872,7 +872,7 @@ es:{
   'form.sending':'Enviando...','form.error':'Hubo un error. Intenta de nuevo.','form.conn.error':'Error de conexión. Intenta de nuevo.',
   'form.success.title':'¡Solicitud enviada!','form.success.track':'Con este folio puedes rastrear tu comisión en <strong>Servicios → Tracker</strong>.','form.success.time':'Revisaré tu solicitud en las próximas <strong>48 horas</strong>.',
   'contact.eyebrow':'Hablemos','contact.title':'Contacto','contact.intro':'¿Tienes un proyecto en mente? Cuéntame tu idea y encontramos la forma de darle vida.',
-  'contact.send':'Enviar mensaje','contact.val':'Por favor llena todos los campos.','contact.time':'Respondo en 24–48 hrs',
+  'contact.send':'Enviar mensaje','contact.sending':'Enviando...','contact.ok':'¡Mensaje enviado!','contact.error':'Error al enviar. Intenta de nuevo.','contact.val':'Por favor llena todos los campos.','contact.time':'Respondo en 24–48 hrs',
   'lbl.name':'Nombre','lbl.email':'Correo','lbl.msg':'Mensaje',
   'val.tag':'Ingresa tu nombre o @','val.email':'Ingresa tu correo','val.lang':'Selecciona tu idioma',
   'val.first':'Indica si es tu primera comisión','val.service':'Selecciona el tipo de servicio',
@@ -965,7 +965,7 @@ en:{
   'form.sending':'Sending...','form.error':'Something went wrong. Please try again.','form.conn.error':'Connection error. Please try again.',
   'form.success.title':'Request sent!','form.success.track':'Use this folio to track your commission in <strong>Services → Tracker</strong>.','form.success.time':"I'll review your request within the next <strong>48 hours</strong>.",
   'contact.eyebrow':"Let's talk",'contact.title':'Contact','contact.intro':'Have a project in mind? Tell me your idea and we will find a way to bring it to life.',
-  'contact.send':'Send message','contact.val':'Please fill in all fields.','contact.time':'I respond within 24–48 hrs',
+  'contact.send':'Send message','contact.sending':'Sending...','contact.ok':'Message sent!','contact.error':'Error sending. Please try again.','contact.val':'Please fill in all fields.','contact.time':'I respond within 24–48 hrs',
   'lbl.name':'Name','lbl.email':'Email','lbl.msg':'Message',
   'val.tag':'Enter your name or @','val.email':'Enter your email','val.lang':'Select your language',
   'val.first':'Let me know if this is your first commission','val.service':'Select a service type',
@@ -1058,7 +1058,7 @@ de:{
   'form.sending':'Wird gesendet...','form.error':'Ein Fehler ist aufgetreten. Bitte versuche es erneut.','form.conn.error':'Verbindungsfehler. Bitte versuche es erneut.',
   'form.success.title':'Anfrage gesendet!','form.success.track':'Mit dieser Folionummer kannst du deinen Auftrag unter <strong>Leistungen → Tracker</strong> verfolgen.','form.success.time':'Ich werde deine Anfrage innerhalb der nächsten <strong>48 Stunden</strong> prüfen.',
   'contact.eyebrow':'Lass uns reden','contact.title':'Kontakt','contact.intro':'Hast du ein Projekt im Sinn? Erzähl mir deine Idee und wir finden einen Weg, sie umzusetzen.',
-  'contact.send':'Nachricht senden','contact.val':'Bitte fülle alle Felder aus.','contact.time':'Ich antworte innerhalb von 24–48 Std.',
+  'contact.send':'Nachricht senden','contact.sending':'Wird gesendet...','contact.ok':'Nachricht gesendet!','contact.error':'Fehler beim Senden. Bitte erneut versuchen.','contact.val':'Bitte fülle alle Felder aus.','contact.time':'Ich antworte innerhalb von 24–48 Std.',
   'lbl.name':'Name','lbl.email':'E-Mail','lbl.msg':'Nachricht',
   'val.tag':'Gib deinen Namen oder @ ein','val.email':'Gib deine E-Mail ein','val.lang':'Wähle deine Sprache',
   'val.first':'Gib an, ob es dein erster Auftrag ist','val.service':'Wähle eine Auftragsart',
@@ -1514,12 +1514,26 @@ async function enviarComision(){
 }
 
 // ━━ CONTACTO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function enviarCorreo(){
+async function enviarCorreo(){
   const n=document.getElementById('f-nombre').value.trim();
   const c=document.getElementById('f-correo').value.trim();
   const m=document.getElementById('f-msg').value.trim();
   if(!n||!c||!m){showToast(t('contact.val'));return;}
-  window.location.href=`mailto:etherial_inqueries@etherialart.com?subject=${encodeURIComponent('Comisión – '+n)}&body=${encodeURIComponent('Nombre: '+n+'\nCorreo: '+c+'\n\nMensaje:\n'+m)}`;
+  const btn=document.getElementById('contact-send-btn');
+  btn.disabled=true;btn.textContent=t('contact.sending');
+  try{
+    const res=await fetch(`${RAILWAY_URL}/contacto`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre:n,correo:c,mensaje:m})});
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    showToast(t('contact.ok'),'ok');
+    document.getElementById('f-nombre').value='';
+    document.getElementById('f-correo').value='';
+    document.getElementById('f-msg').value='';
+  }catch(e){
+    console.error(e);
+    showToast(t('contact.error'),'error');
+  }finally{
+    btn.disabled=false;btn.textContent=t('contact.send');
+  }
 }
 
 // ━━ TOAST ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1279,6 +1279,13 @@ function applyTranslations(){
   const ft=document.getElementById('f-tag');if(ft) ft.placeholder=lang==='en'?'e.g. @username or Name':lang==='de'?'z.B. @nutzername oder Name':'ej: @usuario o Nombre';
   const fdis=document.getElementById('f-discord');if(fdis) fdis.placeholder=lang==='en'?'username or username#0000':lang==='de'?'Nutzername oder Nutzername#0000':'usuario o usuario#0000';
   const fdesc=document.getElementById('f-descuento');if(fdesc) fdesc.placeholder=lang==='en'?'Enter your code if you have one':lang==='de'?'Gib deinen Code ein, falls vorhanden':'Ingresa tu código si tienes uno';
+  const fot=document.getElementById('f-otro');if(fot) fot.placeholder=lang==='en'?'Describe your idea, the format, the purpose...':lang==='de'?'Beschreibe deine Idee, das Format, den Zweck...':'Describe tu idea, el formato, el propósito...';
+  const fesp=document.getElementById('f-especie');if(fesp) fesp.placeholder=lang==='en'?'e.g. anthro wolf, human, dragon...':lang==='de'?'z.B. Anthro-Wolf, Mensch, Drache...':'ej: lobo anthro, humano, dragón...';
+  const fref=document.getElementById('f-refs');if(fref) fref.placeholder=lang==='en'?'Links to Pinterest, Toyhouse, Drive, sta.sh...':lang==='de'?'Links zu Pinterest, Toyhouse, Drive, sta.sh...':'Links a Pinterest, Toyhouse, Drive, sta.sh...';
+  const fde=document.getElementById('f-desc');if(fde) fde.placeholder=lang==='en'?'Describe the scene: character, pose, expression, outfit, colors, mood...':lang==='de'?'Beschreibe die Szene: Charakter, Pose, Ausdruck, Kleidung, Farben, Atmosphäre...':'Describe la escena: personaje, pose, expresión, vestimenta, colores, ambiente...';
+  const fmo=document.getElementById('f-mood');if(fmo) fmo.placeholder=lang==='en'?'e.g. dark, cheerful, epic, tender...':lang==='de'?'z.B. dunkel, fröhlich, episch, sanft...':'ej: oscuro, alegre, épico, tierno...';
+  const fnq=document.getElementById('f-no-quiere');if(fnq) fnq.placeholder=lang==='en'?'What you do NOT want: colors, elements, styles...':lang==='de'?'Was du NICHT möchtest: Farben, Elemente, Stile...':'Qué NO quieres que aparezca: colores, elementos, estilos...';
+  const fcor=document.getElementById('f-correo');if(fcor) fcor.placeholder=lang==='en'?'your@email.com':lang==='de'?'deine@email.de':'tu@correo.com';
 
   renderFolios(foliosGlobales);
   actualizarProgreso();

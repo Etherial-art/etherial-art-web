@@ -856,7 +856,7 @@ es:{
   'val.tipo_print':'Selecciona el tipo de pieza','val.uso':'Selecciona el uso final',
   'val.desc':'Ingresa la descripción de tu idea','val.rush':'Indica la prioridad',
   'val.contacto':'Selecciona tu canal de contacto','val.discord':'Ingresa tu usuario de Discord',
-  'status.waiting':'En espera','status.notified':'Notificado','status.quoted':'Cotización enviada','status.active':'En proceso','status.completed':'Completado','status.expired':'Expirado',
+  'status.waiting':'En espera','status.notified':'Notificado','status.quoted':'Cotización enviada','status.active':'En proceso','status.completed':'Completado','status.expired':'Expirado','status.cancelled':'Cancelado',
   'step.label':'Paso {n} de 5','step.1':'Información básica','step.2':'Tipo de servicio','step.3':'Detalles','step.4':'Contacto','step.5':'Resumen',
   'fs1.title':'Información básica','fs1.sub':'Cuéntame quién eres y qué tipo de servicio necesitas.',
   'lbl.f_tag':'Tu nombre o @ de red social *','note.f_tag':'El nombre con el que prefieras que me dirija a ti.',
@@ -948,7 +948,7 @@ en:{
   'val.tipo_print':'Select the piece type','val.uso':'Select the final use',
   'val.desc':'Enter a description of your idea','val.rush':'Indicate the order priority',
   'val.contacto':'Select your contact channel','val.discord':'Enter your Discord username',
-  'status.waiting':'Waiting','status.notified':'Notified','status.quoted':'Quote sent','status.active':'In progress','status.completed':'Completed','status.expired':'Expired',
+  'status.waiting':'Waiting','status.notified':'Notified','status.quoted':'Quote sent','status.active':'In progress','status.completed':'Completed','status.expired':'Expired','status.cancelled':'Cancelled',
   'step.label':'Step {n} of 5','step.1':'Basic info','step.2':'Service type','step.3':'Details','step.4':'Contact','step.5':'Summary',
   'fs1.title':'Basic info','fs1.sub':'Tell me who you are and what type of service you need.',
   'lbl.f_tag':'Your name or social @ *','note.f_tag':'The name you prefer me to use when addressing you.',
@@ -1040,7 +1040,7 @@ de:{
   'val.tipo_print':'Wähle die Stückart','val.uso':'Wähle die Endnutzung',
   'val.desc':'Gib eine Beschreibung deiner Idee ein','val.rush':'Gib die Auftragspriorität an',
   'val.contacto':'Wähle deinen Kontaktkanal','val.discord':'Gib deinen Discord-Nutzernamen ein',
-  'status.waiting':'Wartend','status.notified':'Benachrichtigt','status.quoted':'Angebot gesendet','status.active':'In Bearbeitung','status.completed':'Abgeschlossen','status.expired':'Abgelaufen',
+  'status.waiting':'Wartend','status.notified':'Benachrichtigt','status.quoted':'Angebot gesendet','status.active':'In Bearbeitung','status.completed':'Abgeschlossen','status.expired':'Abgelaufen','status.cancelled':'Abgebrochen',
   'step.label':'Schritt {n} von 5','step.1':'Grundinfos','step.2':'Auftragsart','step.3':'Projektdetails','step.4':'Kontakt','step.5':'Übersicht',
   'fs1.title':'Grundinfos','fs1.sub':'Erzähl mir, wer du bist und welche Leistung du benötigst.',
   'lbl.f_tag':'Dein Name oder Social-@ *','note.f_tag':'Der Name, mit dem du gern angesprochen werden möchtest.',
@@ -1286,7 +1286,7 @@ function filterPort(idx){
 const _url='https://eliyhtdwmeghfslijwgh.supabase.co';
 const _key='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaXlodGR3bWVnaGZzbGlqd2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTU2MDMsImV4cCI6MjA5MTMzMTYwM30.QxWx1uHhEZJCvrFcvSfOzlPLUBA39uaRdl80NKEsjZc';
 const db=window.supabase.createClient(_url,_key);
-const eClass={waiting:'s-pending',notified:'s-progress',quoted:'s-quoted',active:'s-sent',completed:'s-paid',expired:'s-expired'};
+const eClass={waiting:'s-pending',notified:'s-progress',quoted:'s-quoted',active:'s-sent',completed:'s-paid',expired:'s-expired',cancelled:'s-expired'};
 let foliosGlobales=[];
 
 function renderFolios(lista){

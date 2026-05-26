@@ -167,6 +167,15 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
   .admin-table tr[data-status="completed"] td:first-child{border-left-color:#059669}
   .admin-table tr[data-status="cancelled"] td:first-child,
   .admin-table tr[data-status="expired"] td:first-child{border-left-color:#999}
+  .admin-table tr[data-status]{cursor:pointer}
+  .admin-table tr[data-status].peeking td{background:var(--sc)!important;transition:background .15s}
+  .admin-table tr[data-status].peeking td *{visibility:hidden}
+  .admin-table tr[data-status].peeking td:nth-child(2){position:relative}
+  .admin-table tr[data-status].peeking td:nth-child(2)::after{
+    content:attr(data-lbl);visibility:visible;
+    position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);
+    text-align:center;color:#fff;font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  }
 }
 
 /* ══ COTIZACIÓN ══════════════════════════════════════════ */
@@ -529,6 +538,7 @@ let filtroActual='all';
 
 const statusLabel={waiting:'En espera',notified:'Notificada',quoted:'Cotizada',active:'En progreso',completed:'Completada',cancelled:'Cancelada',expired:'Expirada'};
 const statusClass={waiting:'s-waiting',notified:'s-notified',quoted:'s-quoted',active:'s-active',completed:'s-completed',cancelled:'s-cancelled',expired:'s-expired'};
+const statusColor={waiting:'#B8860B',notified:'#3D5FC0',quoted:'#D97706',active:'#1F8F85',completed:'#059669',cancelled:'#666',expired:'#666'};
 
 async function cargarComisiones(){
   const tbody=document.getElementById('admin-tbody');
@@ -569,9 +579,9 @@ function renderComisiones(){
     const st=c.status||'waiting';
     const folio=String(c.folio).padStart(4,'0');
     const quoteBtn=necesitaCotizacion(c)?`<button class="act-btn quote" onclick="abrirCotizacion(${c.folio})" title="Generar cotización"><i class="ti ti-calculator"></i> ${st==='quoted'?'Recotizar':'Cotizar'}</button>`:'';
-    return `<tr data-folio="${c.folio}" data-status="${st}">
+    return `<tr data-folio="${c.folio}" data-status="${st}" style="--sc:${statusColor[st]||'#666'}">
       <td class="folio-num">#${folio}</td>
-      <td>${c.cliente_tag||'—'}</td>
+      <td data-lbl="${statusLabel[st]||st}">${c.cliente_tag||'—'}</td>
       <td>${tipo}</td>
       <td>${rush||'—'}</td>
       <td><span class="pill ${statusClass[st]||'s-waiting'}">${statusLabel[st]||st}</span></td>
@@ -855,6 +865,13 @@ document.addEventListener('DOMContentLoaded',()=>{
     cargarComisiones();
   }
   document.getElementById('pwd-input').focus();
+  document.getElementById('admin-tbody').addEventListener('click',function(e){
+    if(window.innerWidth>600) return;
+    const tr=e.target.closest('tr[data-status]');
+    if(!tr) return;
+    document.querySelectorAll('#admin-tbody tr.peeking').forEach(r=>{if(r!==tr)r.classList.remove('peeking');});
+    tr.classList.toggle('peeking');
+  });
 });
 </script>
 </body>

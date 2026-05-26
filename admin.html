@@ -177,6 +177,29 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
 [data-theme="dark"] .q-paypal-label{color:#5BB8FF}
 .q-paypal-link-row{display:flex;gap:8px;align-items:center}
 #q-paypal-link{flex:1;padding:8px 12px;border:0.5px solid rgba(0,112,186,.3);border-radius:8px;font-size:11px;background:var(--card);color:var(--dark);font-family:monospace;outline:none}
+
+/* ══ PORTAFOLIO ADMIN ════════════════════════════════════ */
+.view-tabs{display:flex;gap:4px;background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:3px;align-self:flex-start}
+.view-tab{background:none;border:none;border-radius:7px;padding:5px 16px;font-size:11px;letter-spacing:.06em;cursor:pointer;color:var(--muted);font-family:var(--sans);transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.view-tab.active{background:var(--gl);color:#fff}
+.view-tab:hover:not(.active){background:var(--gp);color:var(--dg)}
+.view-tab i{font-size:15px}
+.port-add-card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:1.5rem;transition:background .3s}
+.port-add-title{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--dark);margin-bottom:1.25rem}
+.port-add-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.port-grid-admin{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.port-item-card{background:var(--card);border:0.5px solid var(--border);border-radius:10px;overflow:hidden;position:relative;transition:background .3s}
+.port-item-thumb{height:130px;object-fit:cover;width:100%;display:block;background:var(--gp)}
+.port-item-placeholder{height:130px;display:flex;align-items:center;justify-content:center;background:var(--gp);color:var(--hint);font-size:28px}
+.port-item-info{padding:.65rem .75rem}
+.port-item-name{font-size:12px;font-weight:500;color:var(--dark);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.port-item-meta{font-size:10px;color:var(--hint);display:flex;justify-content:space-between}
+.port-item-del{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.55);border:none;border-radius:6px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;font-size:13px;transition:background .2s}
+.port-item-del:hover{background:var(--danger)}
+.port-hint{font-size:10px;color:var(--hint);margin-top:3px}
+.port-empty{text-align:center;padding:2.5rem;color:var(--hint);font-size:13px}
+.port-empty i{font-size:32px;display:block;margin-bottom:.5rem;color:var(--border)}
+@media(max-width:768px){.port-add-form{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -210,47 +233,112 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
   <!-- Main -->
   <div class="main">
 
-    <!-- Stats -->
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-icon"><i class="ti ti-files"></i></div><div><div class="stat-num" id="stat-total">—</div><div class="stat-label">Total</div></div></div>
-      <div class="stat-card"><div class="stat-icon"><i class="ti ti-clock"></i></div><div><div class="stat-num" id="stat-waiting">—</div><div class="stat-label">En cola</div></div></div>
-      <div class="stat-card"><div class="stat-icon"><i class="ti ti-pencil"></i></div><div><div class="stat-num" id="stat-active">—</div><div class="stat-label">Activas</div></div></div>
-      <div class="stat-card"><div class="stat-icon"><i class="ti ti-circle-check"></i></div><div><div class="stat-num" id="stat-completed">—</div><div class="stat-label">Completadas</div></div></div>
+    <!-- View tabs -->
+    <div class="view-tabs">
+      <button class="view-tab active" id="tab-comisiones" onclick="switchView('comisiones')"><i class="ti ti-files"></i> Comisiones</button>
+      <button class="view-tab" id="tab-portafolio" onclick="switchView('portafolio')"><i class="ti ti-layout-grid"></i> Portafolio</button>
     </div>
 
-    <!-- Toolbar -->
-    <div class="toolbar">
-      <div class="filter-group">
-        <button class="filter-btn active" onclick="setFilter('all',this)">Todas</button>
-        <button class="filter-btn" onclick="setFilter('waiting',this)">En espera</button>
-        <button class="filter-btn" onclick="setFilter('notified',this)">Notificadas</button>
-        <button class="filter-btn" onclick="setFilter('quoted',this)">Cotizadas</button>
-        <button class="filter-btn" onclick="setFilter('active',this)">Activas</button>
-        <button class="filter-btn" onclick="setFilter('completed',this)">Completadas</button>
-        <button class="filter-btn" onclick="setFilter('cancelled',this)">Canceladas</button>
+    <!-- Comisiones section -->
+    <div id="comisiones-section" style="display:flex;flex-direction:column;gap:1.5rem">
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-icon"><i class="ti ti-files"></i></div><div><div class="stat-num" id="stat-total">—</div><div class="stat-label">Total</div></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="ti ti-clock"></i></div><div><div class="stat-num" id="stat-waiting">—</div><div class="stat-label">En cola</div></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="ti ti-pencil"></i></div><div><div class="stat-num" id="stat-active">—</div><div class="stat-label">Activas</div></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="ti ti-circle-check"></i></div><div><div class="stat-num" id="stat-completed">—</div><div class="stat-label">Completadas</div></div></div>
       </div>
-      <div class="spacer"></div>
-      <button class="icon-btn" onclick="cargarComisiones()"><i class="ti ti-refresh"></i> Actualizar</button>
-      <button class="add-btn" onclick="abrirModal()"><i class="ti ti-plus"></i> Nueva comisión</button>
-    </div>
 
-    <!-- Table -->
-    <div class="table-wrap">
-      <table class="admin-table">
-        <thead><tr>
-          <th>Folio</th>
-          <th>Cliente</th>
-          <th>Tipo</th>
-          <th>Rush</th>
-          <th>Estado</th>
-          <th>Fecha</th>
-          <th>Acciones</th>
-        </tr></thead>
-        <tbody id="admin-tbody">
-          <tr class="empty-row"><td colspan="7"><i class="ti ti-loader-2"></i> Cargando...</td></tr>
-        </tbody>
-      </table>
-    </div>
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="filter-group">
+          <button class="filter-btn active" onclick="setFilter('all',this)">Todas</button>
+          <button class="filter-btn" onclick="setFilter('waiting',this)">En espera</button>
+          <button class="filter-btn" onclick="setFilter('notified',this)">Notificadas</button>
+          <button class="filter-btn" onclick="setFilter('quoted',this)">Cotizadas</button>
+          <button class="filter-btn" onclick="setFilter('active',this)">Activas</button>
+          <button class="filter-btn" onclick="setFilter('completed',this)">Completadas</button>
+          <button class="filter-btn" onclick="setFilter('cancelled',this)">Canceladas</button>
+        </div>
+        <div class="spacer"></div>
+        <button class="icon-btn" onclick="cargarComisiones()"><i class="ti ti-refresh"></i> Actualizar</button>
+        <button class="add-btn" onclick="abrirModal()"><i class="ti ti-plus"></i> Nueva comisión</button>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead><tr>
+            <th>Folio</th>
+            <th>Cliente</th>
+            <th>Tipo</th>
+            <th>Rush</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+          </tr></thead>
+          <tbody id="admin-tbody">
+            <tr class="empty-row"><td colspan="7"><i class="ti ti-loader-2"></i> Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- /comisiones-section -->
+
+    <!-- Portfolio section -->
+    <div id="port-section" style="display:none;flex-direction:column;gap:1.5rem">
+
+      <!-- Agregar obra -->
+      <div class="port-add-card">
+        <div class="port-add-title">Agregar obra</div>
+        <div class="port-add-form">
+          <div class="mfield">
+            <label>Nombre de la obra</label>
+            <input type="text" id="p-nombre" placeholder="Ej: Comisión de personaje">
+          </div>
+          <div class="mfield">
+            <label>Nombre de archivo</label>
+            <input type="text" id="p-imagen" placeholder="galeria-14.jpg">
+            <div class="port-hint">Nombre del archivo que subirás a /img/ en GitHub</div>
+          </div>
+          <div class="mfield">
+            <label>Categoría</label>
+            <select id="p-categoria">
+              <option value="ilustracion">Ilustración</option>
+              <option value="furry">Furry</option>
+              <option value="editorial">Editorial</option>
+              <option value="print">Print</option>
+              <option value="sticker">Sticker</option>
+            </select>
+          </div>
+          <div class="mfield">
+            <label>Sitio</label>
+            <select id="p-site">
+              <option value="art">Etherial Art / Mango</option>
+              <option value="wuff">Etherial Wuff</option>
+            </select>
+          </div>
+          <div class="mfield">
+            <label>Año</label>
+            <input type="text" id="p-anio" value="2026" placeholder="2026">
+          </div>
+          <div class="mfield" style="display:flex;align-items:flex-end;padding-bottom:2px">
+            <label class="mfield-check"><input type="checkbox" id="p-galeria" checked> Mostrar en galería principal</label>
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;display:flex;justify-content:flex-end">
+          <button class="btn-save" id="btn-agregar" onclick="agregarObra()"><i class="ti ti-plus"></i> Agregar obra</button>
+        </div>
+      </div>
+
+      <!-- Lista actual -->
+      <div class="port-add-card">
+        <div class="port-add-title">Portafolio actual</div>
+        <div id="port-list"><div class="port-empty"><i class="ti ti-loader-2"></i> Cargando...</div></div>
+      </div>
+
+    </div><!-- /port-section -->
 
   </div><!-- /main -->
 </div><!-- /admin-panel -->
@@ -594,6 +682,96 @@ async function guardarCotizacion(){
   const folio=qFolioActual;
   cerrarCotizacion();
   await cambiarEstado(folio,'quoted');
+}
+
+// ━━ PORTAFOLIO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function switchView(v){
+  const isCom=v==='comisiones';
+  document.getElementById('tab-comisiones').classList.toggle('active',isCom);
+  document.getElementById('tab-portafolio').classList.toggle('active',!isCom);
+  const cs=document.getElementById('comisiones-section');
+  const ps=document.getElementById('port-section');
+  cs.style.display=isCom?'flex':'none';
+  ps.style.display=isCom?'none':'flex';
+  if(!isCom) cargarPortfolio();
+}
+
+let portItems=[];
+
+async function cargarPortfolio(){
+  const list=document.getElementById('port-list');
+  list.innerHTML='<div class="port-empty"><i class="ti ti-loader-2"></i> Cargando...</div>';
+  try{
+    const{data,error}=await db.from('portfolio').select('*').order('orden',{ascending:true}).order('created_at',{ascending:false});
+    if(error) throw error;
+    portItems=data||[];
+    renderPortfolio();
+  }catch(e){
+    console.error(e);
+    list.innerHTML='<div class="port-empty" style="color:var(--danger)"><i class="ti ti-database-off"></i> Error al cargar. ¿Existe la tabla "portfolio" en Supabase?</div>';
+  }
+}
+
+function renderPortfolio(){
+  const list=document.getElementById('port-list');
+  if(!portItems.length){
+    list.innerHTML='<div class="port-empty"><i class="ti ti-photo-off"></i> Sin obras aún. ¡Agrega la primera!</div>';
+    return;
+  }
+  list.innerHTML=`<div class="port-grid-admin">${portItems.map(p=>`
+    <div class="port-item-card">
+      <img src="img/${p.imagen}" class="port-item-thumb"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${p.nombre}">
+      <div class="port-item-placeholder" style="display:none"><i class="ti ti-photo-off"></i></div>
+      <div class="port-item-info">
+        <div class="port-item-name">${p.nombre}</div>
+        <div class="port-item-meta">
+          <span>${p.categoria} · ${p.site==='wuff'?'Wuff':'Art/Mango'}</span>
+          <span>${p.anio||'—'}</span>
+        </div>
+        ${!p.en_galeria?'<div class="port-hint">Solo portafolio</div>':''}
+      </div>
+      <button class="port-item-del" onclick="eliminarObra('${p.id}')" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>`).join('')}</div>`;
+}
+
+async function agregarObra(){
+  const nombre=document.getElementById('p-nombre').value.trim();
+  const imagen=document.getElementById('p-imagen').value.trim();
+  const categoria=document.getElementById('p-categoria').value;
+  const site=document.getElementById('p-site').value;
+  const anio=document.getElementById('p-anio').value.trim()||'2026';
+  const en_galeria=document.getElementById('p-galeria').checked;
+  if(!nombre||!imagen){showToast('Nombre y nombre de archivo son obligatorios.','error');return;}
+  const btn=document.getElementById('btn-agregar');
+  btn.disabled=true;btn.textContent='Guardando...';
+  try{
+    const{error}=await db.from('portfolio').insert({nombre,imagen,categoria,site,anio,en_galeria,orden:portItems.length});
+    if(error) throw error;
+    showToast('Obra agregada al portafolio','ok');
+    document.getElementById('p-nombre').value='';
+    document.getElementById('p-imagen').value='';
+    await cargarPortfolio();
+  }catch(e){
+    console.error(e);
+    showToast('Error al guardar. Revisa que la tabla "portfolio" exista en Supabase con RLS habilitado.','error');
+  }finally{
+    btn.disabled=false;btn.innerHTML='<i class="ti ti-plus"></i> Agregar obra';
+  }
+}
+
+async function eliminarObra(id){
+  if(!confirm('¿Eliminar esta obra del portafolio?')) return;
+  try{
+    const{error}=await db.from('portfolio').delete().eq('id',id);
+    if(error) throw error;
+    showToast('Obra eliminada','ok');
+    await cargarPortfolio();
+  }catch(e){
+    console.error(e);
+    showToast('Error al eliminar.','error');
+  }
 }
 
 // ━━ MODAL ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

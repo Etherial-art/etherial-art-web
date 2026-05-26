@@ -337,6 +337,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
     <div class="gallery-item" data-type="image" data-href="img/galeria-05f.jpg"><div class="gallery-img" style="height:240px"><img src="img/galeria-05f.jpg" style="width:100%;display:block;object-fit:cover;height:240px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 05</span></div></div>
     <div class="gallery-item" data-type="image" data-href="img/galeria-06f.jpg"><div class="gallery-img" style="height:200px"><img src="img/galeria-06f.jpg" style="width:100%;display:block;object-fit:cover;height:200px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 06</span></div></div>
     <div class="gallery-item" data-type="image" data-href="img/galeria-07f.jpg"><div class="gallery-img" style="height:220px"><img src="img/galeria-07f.jpg" style="width:100%;display:block;object-fit:cover;height:220px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 07</span></div></div>
+    <div id="gallery-extra-items"></div>
   </div>
   <div class="page-footer">
     <div class="footer-brand">Etherial_Wuff</div>
@@ -497,6 +498,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
       <div class="port-card" data-cat="ilustracion"><div class="port-img" style="background-image:url('img/galeria-05f.jpg')"><span>Obra 05</span></div><div class="port-info"><div><div class="port-title">Obra 05</div><div class="port-tag">Ilustración</div></div><span class="port-year">2026</span></div></div>
       <div class="port-card" data-cat="ilustracion"><div class="port-img" style="background-image:url('img/galeria-06f.jpg')"><span>Obra 06</span></div><div class="port-info"><div><div class="port-title">Obra 06</div><div class="port-tag">Ilustración</div></div><span class="port-year">2026</span></div></div>
       <div class="port-card" data-cat="ilustracion"><div class="port-img" style="background-image:url('img/galeria-07f.jpg')"><span>Obra 07</span></div><div class="port-info"><div><div class="port-title">Obra 07</div><div class="port-tag">Ilustración</div></div><span class="port-year">2026</span></div></div>
+      <div id="port-extra-items"></div>
     </div>
   </div>
 </div>
@@ -571,7 +573,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Sticker single"><div class="opt-radio"></div>Sticker single<span class="opt-price">$5</span></div>
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Icon / Asset spot"><div class="opt-radio"></div>Icon / Asset spot<span class="opt-price">$10</span></div>
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Sticker Bundle x5"><div class="opt-radio"></div>Sticker Bundle x5<span class="opt-price">$20</span></div>
-          <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Sticker animado" id="illus-opt-anim"><div class="opt-radio"></div>Sticker animado<span class="opt-price">$20</span></div>
+          <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Sticker animado" id="illus-opt-anim" data-i18n="illus.sticker_anim"><div class="opt-radio"></div>Sticker animado<span class="opt-price">$20</span></div>
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="PFP / Profile Picture"><div class="opt-radio"></div>PFP / Profile Picture<span class="opt-price">$40</span></div>
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Badge"><div class="opt-radio"></div>Badge<span class="opt-price">$50</span></div>
           <div class="opt" onclick="selectOpt(this,'tipo_ilus')" data-val="Half Body"><div class="opt-radio"></div>Half Body<span class="opt-price">$65</span></div>
@@ -586,7 +588,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <label class="field-label" id="lbl-finish">Nivel de acabado *</label>
         <div class="options-grid">
           <div class="opt" onclick="selectOpt(this,'acabado')" data-val="Sketch"><div class="opt-radio"></div>Sketch</div>
-          <div class="opt" onclick="selectOpt(this,'acabado')" data-val="Línea + color plano"><div class="opt-radio"></div><span id="finish-line">Línea + color plano</span></div>
+          <div class="opt" onclick="selectOpt(this,'acabado')" data-val="Línea + color plano" data-i18n="finish.line"><div class="opt-radio"></div><span id="finish-line">Línea + color plano</span></div>
           <div class="opt" onclick="selectOpt(this,'acabado')" data-val="Full Render"><div class="opt-radio"></div>Full Render</div>
           <div class="opt disabled"><div class="opt-radio"></div>Painterly Realism<span class="opt-lock">🔒</span></div>
         </div>
@@ -603,17 +605,17 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
       <div class="field">
         <label class="field-label" id="lbl-bg-addons">Add-ons de fondo (opcional)</label>
         <div class="options-grid single">
-          <div class="opt" onclick="toggleOpt(this,'fondo')" data-val="Fondo simple — flat/gradiente (incluido)" id="bg-opt-1"><div class="opt-check">✓</div><span>Fondo simple — flat/gradiente (incluido)</span></div>
-          <div class="opt" onclick="toggleOpt(this,'fondo')" data-val="Fondo PFP/Portrait (+$5)" id="bg-opt-2"><div class="opt-check">✓</div><span>Fondo PFP/Portrait</span><span class="opt-price">+$5</span></div>
-          <div class="opt" onclick="toggleOpt(this,'fondo')" data-val="Fondo Half Body (+$13)" id="bg-opt-3"><div class="opt-check">✓</div><span>Fondo Half Body</span><span class="opt-price">+$13</span></div>
-          <div class="opt" onclick="toggleOpt(this,'fondo')" data-val="Fondo Full Body (+$20)" id="bg-opt-4"><div class="opt-check">✓</div><span>Fondo Full Body</span><span class="opt-price">+$20</span></div>
+          <div class="opt" onclick="toggleOpt(this,'fondo')" data-val="Fondo simple — flat/gradiente (incluido)" id="bg-opt-1" data-i18n="bg.opt_1"><div class="opt-check">✓</div><span>Fondo simple — flat/gradiente (incluido)</span></div>
+          <div class="opt" onclick="toggleOpt(this,'fondo')" data-val="Fondo PFP/Portrait (+$5)" id="bg-opt-2" data-i18n="bg.opt_2"><div class="opt-check">✓</div><span>Fondo PFP/Portrait</span><span class="opt-price">+$5</span></div>
+          <div class="opt" onclick="toggleOpt(this,'fondo')" data-val="Fondo Half Body (+$13)" id="bg-opt-3" data-i18n="bg.opt_3"><div class="opt-check">✓</div><span>Fondo Half Body</span><span class="opt-price">+$13</span></div>
+          <div class="opt" onclick="toggleOpt(this,'fondo')" data-val="Fondo Full Body (+$20)" id="bg-opt-4" data-i18n="bg.opt_4"><div class="opt-check">✓</div><span>Fondo Full Body</span><span class="opt-price">+$20</span></div>
         </div>
       </div>
       <div class="field">
         <label class="field-label" id="lbl-comp-addons">Add-ons de composición — solo Cinematic (opcional)</label>
         <div class="options-grid single">
-          <div class="opt" onclick="toggleOpt(this,'composicion')" data-val="Perspectiva lineal avanzada (+$40)" id="comp-opt-1"><div class="opt-check">✓</div><span id="comp-persp">Perspectiva lineal avanzada</span><span class="opt-price">+$40</span></div>
-          <div class="opt" onclick="toggleOpt(this,'composicion')" data-val="Foreshortening / Escorzo (+$25)" id="comp-opt-2"><div class="opt-check">✓</div><span id="comp-fore">Foreshortening / Escorzo</span><span class="opt-price">+$25</span></div>
+          <div class="opt" onclick="toggleOpt(this,'composicion')" data-val="Perspectiva lineal avanzada (+$40)" id="comp-opt-1" data-i18n="comp.persp"><div class="opt-check">✓</div><span id="comp-persp">Perspectiva lineal avanzada</span><span class="opt-price">+$40</span></div>
+          <div class="opt" onclick="toggleOpt(this,'composicion')" data-val="Foreshortening / Escorzo (+$25)" id="comp-opt-2" data-i18n="comp.fore"><div class="opt-check">✓</div><span id="comp-fore">Foreshortening / Escorzo</span><span class="opt-price">+$25</span></div>
         </div>
       </div>
       <div class="field">
@@ -715,7 +717,6 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <label class="field-label" id="lbl-contact-channel">Canal de comunicación preferido *</label>
         <div class="options-grid single">
           <div class="opt" onclick="selectOpt(this,'contacto')" data-val="Email" id="contact-opt-1"><div class="opt-radio"></div>Por correo</div>
-          <div class="opt" onclick="selectOpt(this,'contacto')" data-val="Instagram DM"><div class="opt-radio"></div>Instagram DM</div>
           <div class="opt" onclick="selectOpt(this,'contacto')" data-val="Discord"><div class="opt-radio"></div>Discord</div>
         </div>
       </div>
@@ -1330,7 +1331,8 @@ function abrirFormulario(tipo){
 function selectOpt(el,grupo){
   if(el.classList.contains('disabled')) return;
   el.closest('.options-grid').querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');formData[grupo]=el.dataset.val;
+  el.classList.add('selected');
+  formData[grupo]=el.dataset.i18n?t(el.dataset.i18n):el.dataset.val;
   if(grupo==='contacto'){const fd=document.getElementById('field-discord');if(fd) fd.style.display=el.dataset.val==='Discord'?'block':'none';}
   if(grupo==='rush'){const rn=document.getElementById('rush-notice');if(rn) rn.style.display=el.dataset.val==='si'?'block':'none';}
 }
@@ -1338,10 +1340,11 @@ function selectOpt(el,grupo){
 function toggleOpt(el,grupo){
   if(el.classList.contains('disabled')) return;
   const val=el.dataset.val;
+  const stored=el.dataset.i18n?t(el.dataset.i18n):val;
   if(grupo==='nsfw'||grupo==='pers_exist'||grupo==='tos'){el.classList.toggle('selected');formData[grupo]=el.classList.contains('selected');return;}
   if(!Array.isArray(formData[grupo])) formData[grupo]=[];
-  if(el.classList.contains('selected')){el.classList.remove('selected');formData[grupo]=formData[grupo].filter(v=>v!==val);}
-  else{el.classList.add('selected');formData[grupo].push(val);}
+  if(el.classList.contains('selected')){el.classList.remove('selected');formData[grupo]=formData[grupo].filter(v=>v!==stored);}
+  else{el.classList.add('selected');formData[grupo].push(stored);}
 }
 
 function validarSeccion(n){
@@ -1515,7 +1518,22 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(tab==='comisiones'||comision) goTab('comisiones');
   if(comision) setTimeout(()=>abrirFormulario(comision),200);
   GLightbox({selector:'.gallery-item',touchNavigation:true,loop:true,zoomable:true});
+  loadExtraPortfolio();
 });
+
+async function loadExtraPortfolio(){
+  try{
+    const{data}=await db.from('portfolio').select('*').eq('site','wuff').order('orden',{ascending:true});
+    if(!data||!data.length) return;
+    const g=document.getElementById('gallery-extra-items');
+    if(g){
+      g.innerHTML=data.filter(p=>p.en_galeria).map(p=>`<div class="gallery-item" data-type="image" data-href="img/${p.imagen}"><div class="gallery-img" style="height:240px"><img src="img/${p.imagen}" style="width:100%;display:block;object-fit:cover;height:240px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">${p.nombre}</span></div></div>`).join('');
+      if(g.innerHTML) GLightbox({selector:'.gallery-item',touchNavigation:true,loop:true,zoomable:true});
+    }
+    const pg=document.getElementById('port-extra-items');
+    if(pg) pg.innerHTML=data.map(p=>`<div class="port-card" data-cat="${p.categoria}"><div class="port-img" style="background-image:url('img/${p.imagen}')"><span>${p.nombre}</span></div><div class="port-info"><div><div class="port-title">${p.nombre}</div><div class="port-tag">${p.categoria}</div></div><span class="port-year">${p.anio||'2026'}</span></div></div>`).join('');
+  }catch(e){console.error('portfolio:',e);}
+}
 </script>
 </body>
 </html>

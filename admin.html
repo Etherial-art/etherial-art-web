@@ -890,15 +890,17 @@ async function notificarWaitlist(id){
     showToast('Notificación enviada','ok');
   }catch(e){
     console.error(e);
-    showToast('Error al notificar. ¿Existe el endpoint en Railway?','error');
+    showToast('Error al notificar.','error');
   }
 }
 
 async function eliminarWaitlist(id){
   if(!confirm('¿Eliminar esta persona de la waitlist?')) return;
   try{
-    const{error}=await db.from('waitlist').delete().eq('id',id);
-    if(error) throw error;
+    const res=await fetch(`${RAILWAY_URL}/admin/waitlist/${id}`,{
+      method:'DELETE',headers:{'X-Admin-Key':ADMIN_TOKEN}
+    });
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
     showToast('Eliminado de la waitlist','ok');
     await cargarWaitlist();
   }catch(e){

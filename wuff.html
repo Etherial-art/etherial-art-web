@@ -116,6 +116,12 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .page-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem}
 .page-title{font-family:var(--serif);font-size:34px;font-weight:300;color:var(--dark);margin-bottom:2.5rem;letter-spacing:-.01em}
 .services-list{display:flex;flex-direction:column;margin-bottom:4rem}
+.comm-badge{display:inline-block;font-size:10px;letter-spacing:.07em;font-weight:500;padding:3px 10px;border-radius:20px;text-transform:uppercase;border:0.5px solid currentColor;white-space:nowrap}
+.comm-badge.badge-open{color:var(--gl);background:var(--gp)}
+.comm-badge.badge-closed{color:#b94040;background:rgba(185,64,64,.08)}
+.comm-badge.badge-full{color:#9a6a00;background:rgba(154,106,0,.08)}
+[data-theme="dark"] .comm-badge.badge-closed{color:#e07070}
+[data-theme="dark"] .comm-badge.badge-full{color:#d4a820}
 .service-item{border:0.5px solid var(--border);background:var(--card);overflow:hidden;transition:background .3s}
 .service-item:first-child{border-radius:12px 12px 0 0}
 .service-item:last-child{border-radius:0 0 12px 12px}
@@ -487,7 +493,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 <div class="page" id="page-comisiones">
   <div class="form-page">
     <div class="page-eyebrow" id="srv-eyebrow">Lo que ofrezco</div>
-    <h2 class="page-title" id="srv-title">Servicios & productos</h2>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:2.5rem"><h2 class="page-title" style="margin-bottom:0" id="srv-title">Servicios & productos</h2><span class="comm-badge badge-open" id="comm-status-badge"></span></div>
     <div class="services-list">
 
       <div class="service-item" id="srv-1">
@@ -895,6 +901,7 @@ es:{
   'val.contacto':'Selecciona tu canal de contacto','val.discord':'Ingresa tu usuario de Discord','val.discord.format':'El usuario de Discord debe tener 2–32 caracteres sin espacios',
   'status.waiting':'En espera','status.notified':'Notificado','status.quoted':'Cotización enviada','status.active':'En proceso','status.completed':'Completado','status.expired':'Expirado','status.cancelled':'Cancelado',
   'commissions.closed.title':'Comisiones cerradas','commissions.closed.msg':'Por el momento no estoy aceptando nuevas comisiones. ¡Vuelve pronto y sígueme para enterarte cuando abra!',
+  'comm.badge.open':'● Abiertas','comm.badge.closed':'● Cerradas','comm.badge.full':'● Slots llenos',
   'nav.seguimiento':'Seguimiento',
   'seg.eyebrow':'Estado de pedidos','seg.title':'Seguimiento',
   'wl.eyebrow':'Lista de espera','wl.title':'Únete a la waitlist',
@@ -997,6 +1004,7 @@ en:{
   'val.contacto':'Select your contact channel','val.discord':'Enter your Discord username','val.discord.format':'Discord username must be 2–32 characters with no spaces',
   'status.waiting':'Waiting','status.notified':'Notified','status.quoted':'Quote sent','status.active':'In progress','status.completed':'Completed','status.expired':'Expired','status.cancelled':'Cancelled',
   'commissions.closed.title':'Commissions closed','commissions.closed.msg':'I\'m not accepting new commissions right now. Check back soon and follow me to know when they open!',
+  'comm.badge.open':'● Open','comm.badge.closed':'● Closed','comm.badge.full':'● Slots full',
   'nav.seguimiento':'Tracking',
   'seg.eyebrow':'Order status','seg.title':'Tracking',
   'wl.eyebrow':'Waitlist','wl.title':'Join the waitlist',
@@ -1099,6 +1107,7 @@ de:{
   'val.contacto':'Wähle deinen Kontaktkanal','val.discord':'Gib deinen Discord-Nutzernamen ein','val.discord.format':'Discord-Nutzername muss 2–32 Zeichen ohne Leerzeichen haben',
   'status.waiting':'Wartend','status.notified':'Benachrichtigt','status.quoted':'Angebot gesendet','status.active':'In Bearbeitung','status.completed':'Abgeschlossen','status.expired':'Abgelaufen','status.cancelled':'Abgebrochen',
   'commissions.closed.title':'Aufträge geschlossen','commissions.closed.msg':'Momentan nehme ich keine neuen Aufträge an. Schau bald wieder rein und folge mir – so erfährst du als Erste:r, wann es wieder losgeht!',
+  'comm.badge.open':'● Offen','comm.badge.closed':'● Geschlossen','comm.badge.full':'● Plätze belegt',
   'nav.seguimiento':'Nachverfolgung',
   'seg.eyebrow':'Bestellstatus','seg.title':'Nachverfolgung',
   'wl.eyebrow':'Warteliste','wl.title':'Zur Warteliste beitreten',
@@ -1369,6 +1378,8 @@ async function cargarEstadoComisiones(){
   }else{
     slotsFull=false;
   }
+  const page=document.getElementById('page-comisiones');
+  if(page&&page.classList.contains('active')) goTab('comisiones');
 }
 
 function goTab(name){
@@ -1381,6 +1392,12 @@ function goTab(name){
     document.getElementById('form-slots-banner').style.display=full?'block':'none';
     document.getElementById('form-closed-banner').style.display=(!full&&closed)?'block':'none';
     document.getElementById('form-wrap').style.display=(!closed&&!full)?'block':'none';
+    const badge=document.getElementById('comm-status-badge');
+    if(badge){
+      if(closed){badge.textContent=t('comm.badge.closed');badge.className='comm-badge badge-closed';}
+      else if(full){badge.textContent=t('comm.badge.full');badge.className='comm-badge badge-full';}
+      else{badge.textContent=t('comm.badge.open');badge.className='comm-badge badge-open';}
+    }
   }
 }
 

@@ -319,7 +319,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 <div class="tabbar">
   <button class="tab active" data-tab="inicio" onclick="goTab('inicio')"><i class="ti ti-home"></i><span>Inicio</span></button>
   <button class="tab" data-tab="sobre" onclick="goTab('sobre')"><i class="ti ti-user"></i><span>Sobre mí</span></button>
-  <button class="tab" data-tab="servicios" onclick="goTab('servicios')"><i class="ti ti-brush"></i><span>Servicios</span></button>
+
   <button class="tab" data-tab="portafolio" onclick="goTab('portafolio')"><i class="ti ti-layout-grid"></i><span>Portafolio</span></button>
   <button class="tab" data-tab="comisiones" onclick="goTab('comisiones')"><i class="ti ti-pencil"></i><span>Comisiones</span></button>
   <button class="tab" data-tab="seguimiento" onclick="goTab('seguimiento')"><i class="ti ti-list-check"></i><span>Seguimiento</span></button>
@@ -409,65 +409,6 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 </div>
 
 <!-- ══ SERVICIOS ══════════════════════════════════ -->
-<div class="page" id="page-servicios">
-  <div class="services-page">
-    <div class="page-eyebrow" id="srv-eyebrow">Lo que ofrezco</div>
-    <h2 class="page-title" id="srv-title">Servicios & productos</h2>
-    <div class="services-list">
-
-      <div class="service-item" id="srv-1">
-        <button class="service-trigger" onclick="toggleSrv('srv-1')">
-          <div class="srv-icon"><i class="ti ti-brush"></i></div>
-          <div class="srv-text"><span class="srv-name" id="srv1-name">Ilustración digital</span><span class="srv-hint" id="srv1-hint">Piezas únicas por encargo</span></div>
-          <span class="srv-price"><span class="srv-from-lbl">desde</span> $5 USD</span>
-          <i class="ti ti-chevron-down srv-chevron"></i>
-        </button>
-        <div class="srv-body">
-          <div class="srv-body-inner">
-            <p class="srv-desc" id="srv1-desc">Piezas completamente únicas creadas desde cero según tu idea — con mi estilo propio o adaptado a tu visión. Stickers, icons, PFPs, badges, half/full body y escenas cinemáticas. Incluye boceto inicial para aprobación y hasta 2 rondas de ajustes.</p>
-            <div class="srv-btn-row">
-              <a href="https://ko-fi.com/etherial_art" target="_blank" class="srv-pay-outline"><i class="ti ti-coffee" style="font-size:13px"></i><span id="btn-kofi">Ver en Ko-fi</span></a>
-              <button class="srv-pay" id="btn-req-illus" onclick="abrirFormulario('ilustracion')">Solicitar comisión →</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="service-item" id="srv-2">
-        <button class="service-trigger" onclick="toggleSrv('srv-2')">
-          <div class="srv-icon"><i class="ti ti-layout"></i></div>
-          <div class="srv-text"><span class="srv-name" id="srv2-name">Diseño editorial</span><span class="srv-hint" id="srv2-hint">Portadas y materiales digitales</span></div>
-          <span class="srv-price"><span class="srv-from-lbl">desde</span> $75 USD</span>
-          <i class="ti ti-chevron-down srv-chevron"></i>
-        </button>
-        <div class="srv-body">
-          <div class="srv-body-inner">
-            <p class="srv-desc" id="srv2-desc">Diseño de portadas, maquetación de libros, revistas y zines con identidad visual propia. Entrega en formatos listos para publicación digital.</p>
-            <button class="srv-pay" id="btn-req-edit" onclick="abrirFormulario('editorial')">Solicitar comisión →</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="service-item" id="srv-3">
-        <button class="service-trigger" onclick="toggleSrv('srv-3')">
-          <div class="srv-icon"><i class="ti ti-photo"></i></div>
-          <div class="srv-text"><span class="srv-name" id="srv3-name">Print — Arte para imprimir</span><span class="srv-hint" id="srv3-hint">Arte digital en alta resolución</span></div>
-          <span class="srv-price"><span class="srv-from-lbl">desde</span> $22 USD</span>
-          <i class="ti ti-chevron-down srv-chevron"></i>
-        </button>
-        <div class="srv-body">
-          <div class="srv-body-inner">
-            <p class="srv-desc" id="srv3-desc">Arte digital listo para imprimir en tu imprenta local. Entrego en 300 DPI con perfil de color y márgenes de sangrado. No incluye impresión ni envío físico.</p>
-            <button class="srv-pay" id="btn-req-print" onclick="abrirFormulario('print')">Solicitar comisión →</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
 <!-- ══ PORTAFOLIO ════════════════════════════════ -->
 <div class="page" id="page-portafolio">
   <div class="portfolio-page">
@@ -545,6 +486,60 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 <!-- ══ COMISIONES ════════════════════════════════ -->
 <div class="page" id="page-comisiones">
   <div class="form-page">
+    <div class="page-eyebrow" id="srv-eyebrow">Lo que ofrezco</div>
+    <h2 class="page-title" id="srv-title">Servicios & productos</h2>
+    <div class="services-list">
+
+      <div class="service-item" id="srv-1">
+        <button class="service-trigger" onclick="toggleSrv('srv-1')">
+          <div class="srv-icon"><i class="ti ti-brush"></i></div>
+          <div class="srv-text"><span class="srv-name" id="srv1-name">Ilustración digital</span><span class="srv-hint" id="srv1-hint">Piezas únicas por encargo</span></div>
+          <span class="srv-price"><span class="srv-from-lbl">desde</span> $5 USD</span>
+          <i class="ti ti-chevron-down srv-chevron"></i>
+        </button>
+        <div class="srv-body">
+          <div class="srv-body-inner">
+            <p class="srv-desc" id="srv1-desc">Piezas completamente únicas creadas desde cero según tu idea — con mi estilo propio o adaptado a tu visión. Stickers, icons, PFPs, badges, half/full body y escenas cinemáticas. Incluye boceto inicial para aprobación y hasta 2 rondas de ajustes.</p>
+            <div class="srv-btn-row">
+              <a href="https://ko-fi.com/etherial_art" target="_blank" class="srv-pay-outline"><i class="ti ti-coffee" style="font-size:13px"></i><span id="btn-kofi">Ver en Ko-fi</span></a>
+              <button class="srv-pay" id="btn-req-illus" onclick="abrirFormulario('ilustracion')">Solicitar comisión →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-item" id="srv-2">
+        <button class="service-trigger" onclick="toggleSrv('srv-2')">
+          <div class="srv-icon"><i class="ti ti-layout"></i></div>
+          <div class="srv-text"><span class="srv-name" id="srv2-name">Diseño editorial</span><span class="srv-hint" id="srv2-hint">Portadas y materiales digitales</span></div>
+          <span class="srv-price"><span class="srv-from-lbl">desde</span> $75 USD</span>
+          <i class="ti ti-chevron-down srv-chevron"></i>
+        </button>
+        <div class="srv-body">
+          <div class="srv-body-inner">
+            <p class="srv-desc" id="srv2-desc">Diseño de portadas, maquetación de libros, revistas y zines con identidad visual propia. Entrega en formatos listos para publicación digital.</p>
+            <button class="srv-pay" id="btn-req-edit" onclick="abrirFormulario('editorial')">Solicitar comisión →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-item" id="srv-3">
+        <button class="service-trigger" onclick="toggleSrv('srv-3')">
+          <div class="srv-icon"><i class="ti ti-photo"></i></div>
+          <div class="srv-text"><span class="srv-name" id="srv3-name">Print — Arte para imprimir</span><span class="srv-hint" id="srv3-hint">Arte digital en alta resolución</span></div>
+          <span class="srv-price"><span class="srv-from-lbl">desde</span> $22 USD</span>
+          <i class="ti ti-chevron-down srv-chevron"></i>
+        </button>
+        <div class="srv-body">
+          <div class="srv-body-inner">
+            <p class="srv-desc" id="srv3-desc">Arte digital listo para imprimir en tu imprenta local. Entrego en 300 DPI con perfil de color y márgenes de sangrado. No incluye impresión ni envío físico.</p>
+            <button class="srv-pay" id="btn-req-print" onclick="abrirFormulario('print')">Solicitar comisión →</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div style="margin-top:3rem;border-top:0.5px solid var(--border);padding-top:2.5rem"></div>
     <div id="form-slots-banner" style="display:none;text-align:center;padding:4rem 2rem">
       <i class="ti ti-users" style="font-size:48px;color:var(--hint);display:block;margin-bottom:1.25rem"></i>
       <div style="font-family:var(--serif);font-size:32px;font-weight:300;color:var(--dark);margin-bottom:.5rem" id="slots-full-title">¡Slots ocupados!</div>
@@ -1197,7 +1192,7 @@ function applyTranslations(){
   function setHTML(id,html){const el=document.getElementById(id);if(el) el.innerHTML=html;}
 
   // Nav tabs
-  const tabMap={inicio:'nav.home',sobre:'nav.about',servicios:'nav.services',portafolio:'nav.portfolio',comisiones:'nav.commissions',seguimiento:'nav.seguimiento',contacto:'nav.contact'};
+  const tabMap={inicio:'nav.home',sobre:'nav.about',portafolio:'nav.portfolio',comisiones:'nav.commissions',seguimiento:'nav.seguimiento',contacto:'nav.contact'};
   document.querySelectorAll('.tab').forEach(tab=>{
     const key=tabMap[tab.dataset.tab];
     if(key){const span=tab.querySelector('span');if(span) span.textContent=t(key);}
@@ -1457,13 +1452,15 @@ function abrirFormulario(tipo){
   goTab('comisiones');if(!tipo) return;
   const mapa={ilustracion:'Ilustración digital',editorial:'Diseño Editorial',print:'Arte Digital para Imprimir',otro:'Otro'};
   const val=mapa[tipo];if(!val) return;
+  const fw=document.getElementById('form-wrap');
+  if(!fw||fw.style.display==='none') return;
   document.querySelectorAll('#fs-1 .opt').forEach(opt=>{
     if(opt.dataset.val===val&&!opt.classList.contains('disabled')){
       opt.closest('.options-grid').querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
       opt.classList.add('selected');formData.servicio=val;
     }
   });
-  setTimeout(()=>nextSection(1),100);
+  setTimeout(()=>{nextSection(1);fw.scrollIntoView({behavior:'smooth',block:'start'});},100);
 }
 
 function selectOpt(el,grupo){

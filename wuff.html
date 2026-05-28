@@ -188,7 +188,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .port-year{font-size:11px;color:var(--hint)}
 
 /* ══ FORMULARIO ══════════════════════════════════════ */
-.form-page{padding:3.5rem 2.5rem 3rem;max-width:720px;margin:0 auto}
+.form-page{padding:3.5rem 2.5rem 3rem;max-width:860px;margin:0 auto}
 .form-step-label{font-size:11px;color:var(--hint);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem}
 .form-progress{display:flex;gap:6px;margin-bottom:2rem}
 .form-step{height:3px;flex:1;border-radius:4px;background:var(--border);transition:background .3s}
@@ -855,7 +855,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 // ━━ TRADUCCIONES (de Gemini — más completas) ━━━━━━━━
 const i18n={
 es:{
-  'nav.home':'Inicio','nav.about':'Sobre mí','nav.services':'Servicios',
+  'nav.home':'Inicio','nav.about':'Sobre mí',
   'nav.portfolio':'Portafolio','nav.commissions':'Comisiones','nav.contact':'Contactar',
   'home.eyebrow':'Arte anthro · Furry · Comunidad','home.title':'El arte de tu <em>personaje.</em>',
   'footer.copy':'© 2026 Etherial_Wuff · Todos los derechos reservados',
@@ -957,7 +957,7 @@ es:{
   'tos.val':'Debes aceptar las condiciones para poder enviar tu solicitud.'
 },
 en:{
-  'nav.home':'Home','nav.about':'About','nav.services':'Services',
+  'nav.home':'Home','nav.about':'About',
   'nav.portfolio':'Portfolio','nav.commissions':'Commissions','nav.contact':'Contact',
   'home.eyebrow':'Anthro art · Furry · Community','home.title':'Art for your <em>character.</em>',
   'footer.copy':'© 2026 Etherial_Wuff · All rights reserved',
@@ -1059,7 +1059,7 @@ en:{
   'tos.val':'You must agree to the terms to submit your request.'
 },
 de:{
-  'nav.home':'Start','nav.about':'Über mich','nav.services':'Leistungen',
+  'nav.home':'Start','nav.about':'Über mich',
   'nav.portfolio':'Portfolio','nav.commissions':'Aufträge','nav.contact':'Kontakt',
   'home.eyebrow':'Anthro-Kunst · Furry · Community','home.title':'Kunst für deinen <em>Charakter.</em>',
   'footer.copy':'© 2026 Etherial_Wuff · Alle Rechte vorbehalten',
@@ -1683,7 +1683,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const p=new URLSearchParams(window.location.search);
   const tab=p.get('tab'),comision=p.get('comision');
   if(tab==='seguimiento') goTab('seguimiento');
-  else if(tab==='comisiones'||comision) goTab('comisiones');
+  else if(tab==='comisiones'||tab==='servicios'||comision) goTab('comisiones');
   if(comision) setTimeout(()=>abrirFormulario(comision),200);
   GLightbox({selector:'.gallery-item',touchNavigation:true,loop:true,zoomable:true});
   loadExtraPortfolio();

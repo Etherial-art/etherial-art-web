@@ -1769,9 +1769,17 @@ document.addEventListener('DOMContentLoaded',()=>{
   // URL params
   const p=new URLSearchParams(window.location.search);
   const tab=p.get('tab'),comision=p.get('comision');
+  const pNombre=p.get('nombre'),pEmail=p.get('email'),pTipo=p.get('tipo');
+  const tipoTarget=comision||pTipo;
   if(tab==='seguimiento') goTab('seguimiento');
-  else if(tab==='comisiones'||tab==='servicios'||comision) goTab('comisiones');
-  if(comision) setTimeout(()=>abrirFormulario(comision),200);
+  else if(tab==='comisiones'||tab==='servicios'||tipoTarget||pNombre||pEmail) goTab('comisiones');
+  if(tipoTarget||pNombre||pEmail){
+    setTimeout(()=>{
+      if(pNombre){const el=document.getElementById('f-tag');if(el) el.value=decodeURIComponent(pNombre);}
+      if(pEmail){const el=document.getElementById('f-email');if(el) el.value=decodeURIComponent(pEmail);}
+      if(tipoTarget) abrirFormulario(tipoTarget);
+    },200);
+  }
   GLightbox({selector:'.gallery-item',touchNavigation:true,loop:true,zoomable:true});
   loadExtraPortfolio();
 });

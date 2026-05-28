@@ -1388,6 +1388,12 @@ function applyTranslations(){
   const fnq=document.getElementById('f-no-quiere');if(fnq) fnq.placeholder=lang==='en'?'What you do NOT want: colors, elements, styles...':lang==='de'?'Was du NICHT möchtest: Farben, Elemente, Stile...':'Qué NO quieres que aparezca: colores, elementos, estilos...';
   const fcor=document.getElementById('f-correo');if(fcor) fcor.placeholder=lang==='en'?'your@email.com':lang==='de'?'deine@email.de':'tu@correo.com';
 
+  const badge=document.getElementById('comm-status-badge');
+  if(badge){
+    if(badge.classList.contains('badge-closed')) badge.textContent=t('comm.badge.closed');
+    else if(badge.classList.contains('badge-full')) badge.textContent=t('comm.badge.full');
+    else badge.textContent=t('comm.badge.open');
+  }
   renderFolios(foliosGlobales);
   actualizarProgreso();
 }

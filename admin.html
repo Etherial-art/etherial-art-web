@@ -507,6 +507,66 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
   </div>
 </div>
 
+<!-- ══ EDIT OVERLAY ══════════════════════════════════════ -->
+<div class="modal-overlay" id="edit-overlay" onclick="if(event.target===this)cerrarEditar()">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-head">
+      <div class="modal-title">Editar comisión <span id="e-folio" style="color:var(--gl)"></span></div>
+      <button class="modal-close" onclick="cerrarEditar()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="mfield-row">
+        <div class="mfield">
+          <label>Cliente / handle</label>
+          <input id="e-tag" type="text" placeholder="@usuario">
+        </div>
+        <div class="mfield">
+          <label>Email</label>
+          <input id="e-email" type="email" placeholder="cliente@email.com">
+        </div>
+      </div>
+      <div class="mfield-row">
+        <div class="mfield">
+          <label>Servicio</label>
+          <select id="e-servicio">
+            <option value="">—</option>
+            <option value="Ilustración digital">Ilustración digital</option>
+            <option value="Diseño Editorial">Diseño Editorial</option>
+            <option value="Arte Digital para Imprimir">Arte Digital para Imprimir</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+        <div class="mfield">
+          <label>Tipo / subtipo</label>
+          <input id="e-tipo" type="text" placeholder="ej: Busto, Fullbody…">
+        </div>
+      </div>
+      <div class="mfield">
+        <label>Descripción</label>
+        <textarea id="e-desc" style="height:100px"></textarea>
+      </div>
+      <div class="mfield-row" style="align-items:center;padding:.25rem 0">
+        <label class="mfield-check"><input type="checkbox" id="e-rush"> ⚡ Rush</label>
+        <label class="mfield-check"><input type="checkbox" id="e-nsfw"> NSFW</label>
+      </div>
+      <div class="mfield-row">
+        <div class="mfield">
+          <label>Canal de contacto</label>
+          <input id="e-canal" type="text" placeholder="Discord, Twitter…">
+        </div>
+        <div class="mfield">
+          <label>Código de descuento</label>
+          <input id="e-descuento" type="text">
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarEditar()">Cancelar</button>
+      <button class="btn-save" id="e-save-btn" onclick="guardarEdicion()"><i class="ti ti-check"></i> Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ TOAST ═════════════════════════════════════════════ -->
 <div class="toast" id="toast"></div>
 
@@ -642,6 +702,8 @@ function renderComisiones(){
           ${quoteBtn}
           <button class="act-btn" onclick="abrirDetalle(${c.folio})" title="Ver detalles"><i class="ti ti-eye"></i> Ver</button>
           <button class="act-btn notify" onclick="notificarCliente(${c.folio})" title="Enviar email al cliente"><i class="ti ti-mail"></i> Notificar</button>
+          <button class="act-btn" onclick="abrirEditar(${c.folio})" title="Editar comisión"><i class="ti ti-pencil"></i> Editar</button>
+          <button class="act-btn danger" onclick="eliminarComision(${c.folio})" title="Eliminar permanentemente"><i class="ti ti-trash"></i></button>
         </div>
       </td>
     </tr>`;
@@ -841,6 +903,90 @@ function abrirDetalle(folio){
 }
 
 function cerrarDetalle(){document.getElementById('detail-overlay').classList.remove('open');}
+
+// ━━ EDITAR COMISIÓN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let eFolioActual=null;
+
+function abrirEditar(folio){
+  const c=comisiones.find(x=>x.folio===folio);
+  if(!c) return;
+  eFolioActual=folio;
+  document.getElementById('e-folio').textContent=`#${String(folio).padStart(4,'0')}`;
+  document.getElementById('e-tag').value=c.cliente_tag||'';
+  document.getElementById('e-email').value=c.email||'';
+  document.getElementById('e-servicio').value=c.tipo_servicio||'';
+  document.getElementById('e-tipo').value=c.tipo_ilustracion||c.tipo_editorial||c.tipo_print||'';
+  document.getElementById('e-desc').value=c.descripcion_adicional||'';
+  document.getElementById('e-rush').checked=!!c.es_rush;
+  document.getElementById('e-nsfw').checked=!!c.es_nsfw;
+  document.getElementById('e-canal').value=c.canal_contacto||'';
+  document.getElementById('e-descuento').value=c.descuento||'';
+  document.getElementById('e-save-btn').disabled=false;
+  document.getElementById('edit-overlay').classList.add('open');
+}
+
+function cerrarEditar(){
+  document.getElementById('edit-overlay').classList.remove('open');
+  eFolioActual=null;
+}
+
+async function guardarEdicion(){
+  if(!eFolioActual) return;
+  const btn=document.getElementById('e-save-btn');
+  btn.disabled=true;
+  const servicio=document.getElementById('e-servicio').value;
+  const tipo=document.getElementById('e-tipo').value.trim();
+  const payload={};
+  const tag=document.getElementById('e-tag').value.trim();
+  const email=document.getElementById('e-email').value.trim();
+  const desc=document.getElementById('e-desc').value.trim();
+  const canal=document.getElementById('e-canal').value.trim();
+  const descuento=document.getElementById('e-descuento').value.trim();
+  if(tag) payload.cliente_tag=tag;
+  if(email) payload.email=email;
+  if(servicio) payload.tipo_servicio=servicio;
+  if(tipo){
+    if(servicio==='Ilustración digital') payload.tipo_ilustracion=tipo;
+    else if(servicio==='Diseño Editorial') payload.tipo_editorial=tipo;
+    else if(servicio==='Arte Digital para Imprimir') payload.tipo_print=tipo;
+  }
+  if(desc) payload.descripcion_adicional=desc;
+  payload.es_rush=document.getElementById('e-rush').checked;
+  payload.es_nsfw=document.getElementById('e-nsfw').checked;
+  if(canal) payload.canal_contacto=canal;
+  if(descuento) payload.descuento=descuento;
+  try{
+    const res=await fetch(`${RAILWAY_URL}/admin/comisiones/${eFolioActual}`,{
+      method:'PATCH',
+      headers:{'Content-Type':'application/json','X-Admin-Key':ADMIN_TOKEN},
+      body:JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    showToast(`Folio #${String(eFolioActual).padStart(4,'0')} actualizado`,'ok');
+    cerrarEditar();
+    await cargarComisiones();
+  }catch(e){
+    console.error(e);
+    showToast('Error al guardar. Revisa la consola.','error');
+    btn.disabled=false;
+  }
+}
+
+async function eliminarComision(folio){
+  if(!confirm(`¿Eliminar permanentemente la comisión #${String(folio).padStart(4,'0')}?\nEsta acción no se puede deshacer.`)) return;
+  try{
+    const res=await fetch(`${RAILWAY_URL}/admin/comisiones/${folio}`,{
+      method:'DELETE',
+      headers:{'X-Admin-Key':ADMIN_TOKEN}
+    });
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    showToast(`Comisión #${String(folio).padStart(4,'0')} eliminada`,'ok');
+    await cargarComisiones();
+  }catch(e){
+    console.error(e);
+    showToast('Error al eliminar. Revisa la consola.','error');
+  }
+}
 
 // ━━ WAITLIST ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 let waitlistItems=[];

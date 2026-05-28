@@ -375,6 +375,8 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
       <div class="toolbar">
         <div class="spacer"></div>
         <button class="icon-btn" onclick="cargarWaitlist()"><i class="ti ti-refresh"></i> Actualizar</button>
+        <span id="wl-counter" style="font-size:11px;color:var(--muted);border:0.5px solid var(--border);border-radius:8px;padding:5px 10px;white-space:nowrap">0/?</span>
+        <input type="number" id="wl-limit-input" min="1" max="500" value="50" title="Límite de waitlist" style="width:65px;padding:5px 8px;border:0.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none" onchange="actualizarMaxWaitlist(this.value)">
       </div>
       <div class="table-wrap">
         <table class="admin-table">
@@ -650,6 +652,7 @@ async function cargarComisiones(){
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const data=await res.json();
     comisiones=Array.isArray(data)?data:(data.comisiones||[]);
+    comisiones.sort((a,b)=>a.folio-b.folio);
     actualizarStats();
     renderComisiones();
   }catch(e){
@@ -682,7 +685,7 @@ function renderComisiones(){
     const quoteBtn=necesitaCotizacion(c)?`<button class="act-btn quote" onclick="abrirCotizacion(${c.folio})" title="Generar cotización"><i class="ti ti-calculator"></i> ${st==='quoted'?'Recotizar':'Cotizar'}</button>`:'';
     return `<tr data-folio="${c.folio}" data-status="${st}" style="--sc:${statusColor[st]||'#666'}">
       <td class="folio-num">#${folio}</td>
-      <td data-lbl="${statusLabel[st]||st}">${c.cliente_tag||'—'}</td>
+      <td data-lbl="${statusLabel[st]||st}">${c.cliente_tag||'—'}${c.email?`<br><span style="font-size:11px;color:var(--hint)">${c.email}</span>`:''}</td>
       <td>${tipo}</td>
       <td>${rush||'—'}</td>
       <td><span class="pill ${statusClass[st]||'s-waiting'}">${statusLabel[st]||st}</span></td>
@@ -855,6 +858,15 @@ async function actualizarMaxSlots(val){
   }catch(e){showToast('Error al guardar límite.','error');}
 }
 
+async function actualizarMaxWaitlist(val){
+  const v=parseInt(val);
+  if(isNaN(v)||v<1) return;
+  try{
+    await db.from('config').upsert({key:'max_waitlist',value:String(v)});
+    showToast(`Límite waitlist: ${v} personas`,'ok');
+  }catch(e){showToast('Error al guardar límite.','error');}
+}
+
 async function toggleComisiones(){
   const nuevo=!comisionesAbiertasAdmin;
   try{
@@ -999,6 +1011,10 @@ async function cargarWaitlist(){
     if(error) throw error;
     waitlistItems=data||[];
     renderWaitlist();
+    const wlLimitRow=await db.from('config').select('value').eq('key','max_waitlist').single();
+    const limit=parseInt(wlLimitRow?.data?.value)||50;
+    const inp=document.getElementById('wl-limit-input');if(inp) inp.value=limit;
+    const ctr=document.getElementById('wl-counter');if(ctr) ctr.textContent=`${waitlistItems.length}/${limit}`;
   }catch(e){
     console.error(e);
     tbody.innerHTML='<tr class="empty-row"><td colspan="6"><i class="ti ti-database-off"></i> Error al cargar. ¿Existe la tabla "waitlist"?</td></tr>';
@@ -1020,6 +1036,7 @@ function renderWaitlist(){
       <td>${w.tipo_interes||'—'}</td>
       <td>${fecha}</td>
       <td><div class="action-row">
+        <button class="act-btn" onclick="promoverWaitlist('${w.id}')" title="Promover a comisión" style="border-color:var(--gl);color:var(--gl)"><i class="ti ti-arrow-up"></i> Promover</button>
         <button class="act-btn notify" onclick="notificarWaitlist('${w.id}')" title="Notificar por email"><i class="ti ti-mail"></i> Notificar</button>
         <button class="act-btn danger" onclick="eliminarWaitlist('${w.id}')" title="Eliminar"><i class="ti ti-trash"></i></button>
       </div></td>
@@ -1037,6 +1054,25 @@ async function notificarWaitlist(id){
   }catch(e){
     console.error(e);
     showToast('Error al notificar.','error');
+  }
+}
+
+async function promoverWaitlist(id){
+  const w=waitlistItems.find(x=>x.id===id||String(x.id)===String(id));
+  const nombre=w?.nombre||id;
+  if(!confirm(`¿Promover a ${nombre} a comisión?\nSe creará un borrador con estado "En espera" y se eliminará de la waitlist.`)) return;
+  try{
+    const res=await fetch(`${RAILWAY_URL}/admin/waitlist/${id}/promover`,{
+      method:'POST',headers:{'X-Admin-Key':ADMIN_TOKEN}
+    });
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data=await res.json();
+    showToast(`Promovida → Folio ${data.folio_num||('#'+data.folio)}`,'ok');
+    await cargarWaitlist();
+    await cargarComisiones();
+  }catch(e){
+    console.error(e);
+    showToast('Error al promover. Revisa la consola.','error');
   }
 }
 

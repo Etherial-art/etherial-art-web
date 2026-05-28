@@ -502,7 +502,12 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
       <div class="page-eyebrow" id="wl-eyebrow">Lista de espera</div>
       <h2 class="page-title" id="wl-title">Únete a la waitlist</h2>
       <p style="font-size:13px;color:var(--muted);margin-bottom:2rem;line-height:1.6;max-width:560px" id="wl-intro">Cuando los slots estén llenos, apúntate aquí para ser el primero en saber cuándo hay lugar. No es necesario completar el formulario completo ahora.</p>
-      <div style="max-width:480px">
+      <div id="wl-full-banner" style="display:none;text-align:center;padding:2rem 0 1rem">
+        <i class="ti ti-users-group" style="font-size:36px;color:var(--hint);display:block;margin-bottom:.75rem"></i>
+        <div style="font-family:var(--serif);font-size:22px;font-weight:300;color:var(--dark);margin-bottom:.5rem" id="wl-full-title">Lista de espera completa</div>
+        <p style="font-size:13px;color:var(--muted);max-width:400px;line-height:1.7" id="wl-full-msg">La lista de espera está llena por ahora. Sígueme en redes para enterarte cuando vuelva a abrirse.</p>
+      </div>
+      <div id="wl-form-wrap" style="max-width:480px">
         <div class="field">
           <label class="field-label" id="lbl-wl-name">Tu nombre o @</label>
           <input type="text" id="wl-name" placeholder="@usuario o Nombre">
@@ -597,6 +602,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
       <i class="ti ti-lock" style="font-size:48px;color:var(--hint);display:block;margin-bottom:1.25rem"></i>
       <div style="font-family:var(--serif);font-size:32px;font-weight:300;color:var(--dark);margin-bottom:.5rem" id="closed-title">Comisiones cerradas</div>
       <p style="font-size:13px;color:var(--muted);max-width:400px;margin:0 auto 1.75rem;line-height:1.7" id="closed-msg">Por el momento no estoy aceptando nuevas comisiones. ¡Vuelve pronto!</p>
+      <button class="srv-pay" onclick="goTab('seguimiento')" id="closed-wl-btn" style="margin-bottom:1.5rem">Unirme a la waitlist →</button>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
         <a href="https://instagram.com/etherial_mango" target="_blank" class="about-contact-chip"><i class="ti ti-brand-instagram"></i> @etherial_mango</a>
         <a href="#" onclick="navigator.clipboard.writeText('ethemango');event.preventDefault();" class="about-contact-chip"><i class="ti ti-brand-discord"></i> ethemango</a>
@@ -917,7 +923,7 @@ es:{
   'services.edit.desc':'Diseño de portadas, maquetación de libros, revistas y zines con identidad visual propia. Entrega en formatos listos para publicación digital.',
   'services.print.name':'Print — Arte para imprimir','services.print.hint':'Arte digital en alta resolución',
   'services.print.desc':'Arte digital listo para imprimir en tu imprenta local. Entrego en 300 DPI con perfil de color y márgenes de sangrado. No incluye impresión ni envío físico.',
-  'services.kofi':'Ver en Ko-fi','services.request':'Solicitar comisión →',
+  'services.kofi':'Ver en Ko-fi','services.request':'Solicitar comisión →','services.waitlist':'Unirse a la waitlist →',
   'tracker.eyebrow':'Estado de pedidos','tracker.title':'Tracker de folios',
   'tracker.search':'Buscar','tracker.loading':'Cargando folios...','tracker.placeholder':'Ingresa tu número de folio o nombre, ej: #0001',
   'tracker.empty':'No hay folios para mostrar','tracker.error':'No se pudieron cargar los folios. Intenta más tarde.',
@@ -950,6 +956,7 @@ es:{
   'wl.name':'Tu nombre o @','wl.email':'Correo electrónico','wl.interest':'¿Qué te interesa?',
   'wl.int.general':'General / No sé aún',
   'wl.submit':'Unirme a la lista','wl.ok':'¡Estás en la lista! Te avisaremos cuando haya espacio disponible.','wl.error':'Hubo un error. Intenta de nuevo.',
+  'wl.full.title':'Lista de espera completa','wl.full.msg':'La lista de espera está llena por ahora. Sígueme en redes para enterarte cuando vuelva a abrirse.',
   'wl.val.name':'Ingresa tu nombre o @','wl.val.email':'Ingresa tu correo','wl.val.email.invalid':'Ingresa un correo válido','wl.val.interest':'Selecciona tu tipo de interés',
   'slots.full.title':'¡Slots ocupados!','slots.full.msg':'Todos los espacios de comisión activa están ocupados. Únete a la lista de espera y serás el primero en ser notificado cuando se abra un lugar.','slots.full.btn':'Unirme a la waitlist →',
   'step.label':'Paso {n} de 5','step.1':'Información básica','step.2':'Tipo de servicio','step.3':'Detalles','step.4':'Contacto','step.5':'Resumen',
@@ -1021,7 +1028,7 @@ en:{
   'services.edit.desc':'Cover design, book, magazine and zine layout with unique visual identity. Delivered in publication-ready digital formats.',
   'services.print.name':'Print-ready art','services.print.hint':'High-resolution digital art',
   'services.print.desc':'Digital art ready to print at your local print shop. Delivered at 300 DPI with color profile and bleed margins. Does not include printing or shipping.',
-  'services.kofi':'View on Ko-fi','services.request':'Request commission →',
+  'services.kofi':'View on Ko-fi','services.request':'Request commission →','services.waitlist':'Join the waitlist →',
   'tracker.eyebrow':'Order status','tracker.title':'Order tracker',
   'tracker.search':'Search','tracker.loading':'Loading orders...','tracker.placeholder':'Enter your folio number or name, e.g. #0001',
   'tracker.empty':'No orders to display','tracker.error':'Could not load orders. Please try again later.',
@@ -1054,6 +1061,7 @@ en:{
   'wl.name':'Your name or @','wl.email':'Email address','wl.interest':'What are you interested in?',
   'wl.int.general':'General / Not sure yet',
   'wl.submit':'Join the list','wl.ok':'You\'re on the list! We\'ll let you know when a spot opens up.','wl.error':'Something went wrong. Please try again.',
+  'wl.full.title':'Waitlist is full','wl.full.msg':'The waitlist is currently full. Follow me on social media to find out when it reopens.',
   'wl.val.name':'Enter your name or @','wl.val.email':'Enter your email','wl.val.email.invalid':'Enter a valid email','wl.val.interest':'Select your area of interest',
   'slots.full.title':'All slots are full!','slots.full.msg':'All active commission slots are currently full. Join the waitlist and you\'ll be the first to know when a spot opens up.','slots.full.btn':'Join the waitlist →',
   'step.label':'Step {n} of 5','step.1':'Basic info','step.2':'Service type','step.3':'Details','step.4':'Contact','step.5':'Summary',
@@ -1125,7 +1133,7 @@ de:{
   'services.edit.desc':'Cover-Design, Layout von Büchern, Magazinen und Zines. Geliefert in veröffentlichungsfertigen digitalen Formaten.',
   'services.print.name':'Druckfertige Kunst','services.print.hint':'Digitale Kunst in hoher Auflösung',
   'services.print.desc':'Digitale Kunst für deine Druckerei. Lieferung in 300 DPI mit Farbprofil und Schnittmarken. Ohne Druck und Versand.',
-  'services.kofi':'Auf Ko-fi ansehen','services.request':'Auftrag anfragen →',
+  'services.kofi':'Auf Ko-fi ansehen','services.request':'Auftrag anfragen →','services.waitlist':'Zur Warteliste →',
   'tracker.eyebrow':'Bestellstatus','tracker.title':'Auftrags-Tracker',
   'tracker.search':'Suchen','tracker.loading':'Aufträge werden geladen...','tracker.placeholder':'Folio-Nummer oder Name eingeben, z.B. #0001',
   'tracker.empty':'Keine Aufträge vorhanden','tracker.error':'Aufträge konnten nicht geladen werden.',
@@ -1158,6 +1166,7 @@ de:{
   'wl.name':'Dein Name oder @','wl.email':'E-Mail-Adresse','wl.interest':'Was interessiert dich?',
   'wl.int.general':'Allgemein / Noch unsicher',
   'wl.submit':'Zur Liste beitreten','wl.ok':'Du bist auf der Liste! Wir melden uns, sobald ein Platz frei wird.','wl.error':'Da ist etwas schiefgelaufen. Bitte noch mal versuchen.',
+  'wl.full.title':'Warteliste voll','wl.full.msg':'Die Warteliste ist derzeit voll. Folg mir in den sozialen Medien, um zu erfahren, wann sie wieder öffnet.',
   'wl.val.name':'Gib deinen Namen oder @ ein','wl.val.email':'Gib deine E-Mail ein','wl.val.email.invalid':'Gib eine gültige E-Mail ein','wl.val.interest':'Wähle dein Interessengebiet',
   'slots.full.title':'Alle Plätze belegt!','slots.full.msg':'Alle Plätze sind gerade vergeben. Trag dich in die Warteliste ein – wir melden uns, sobald wieder etwas frei ist.','slots.full.btn':'Zur Warteliste →',
   'step.label':'Schritt {n} von 5','step.1':'Grundinfos','step.2':'Auftragsart','step.3':'Projektdetails','step.4':'Kontakt','step.5':'Übersicht',
@@ -1281,9 +1290,7 @@ function applyTranslations(){
   setText('srv3-name',t('services.print.name'));setText('srv3-hint',t('services.print.hint'));setText('srv3-desc',t('services.print.desc'));
   document.querySelectorAll('.srv-from-lbl').forEach(el=>el.textContent=t('services.from'));
   setText('btn-kofi',t('services.kofi'));
-  setText('btn-req-illus',t('services.request'));
-  setText('btn-req-edit',t('services.request'));
-  setText('btn-req-print',t('services.request'));
+  actualizarBotonesSrv();
 
   // Seguimiento & Waitlist
   setText('seg-eyebrow',t('seg.eyebrow'));setText('seg-title',t('seg.title'));
@@ -1293,6 +1300,8 @@ function applyTranslations(){
   setText('wl-int-general',t('wl.int.general'));
   const wlsb=document.getElementById('wl-submit-btn');if(wlsb&&!wlsb.disabled) wlsb.textContent=t('wl.submit');
   setText('wl-ok-msg',t('wl.ok'));
+  setText('wl-full-title',t('wl.full.title'));setText('wl-full-msg',t('wl.full.msg'));
+  const cwb=document.getElementById('closed-wl-btn');if(cwb) cwb.textContent=t('slots.full.btn');
   setText('slots-full-title',t('slots.full.title'));setText('slots-full-msg',t('slots.full.msg'));
   const sfb=document.getElementById('slots-full-btn');if(sfb) sfb.textContent=t('slots.full.btn');
 
@@ -1413,15 +1422,19 @@ let comisionesAbiertas=true;
 let maxSlots=25;
 let activeCount=0;
 let slotsFull=false;
+let maxWaitlist=50;
+let waitlistFull=false;
 
 async function cargarEstadoComisiones(){
   try{
-    const{data}=await db.from('config').select('key,value').in('key',['commissions_open','max_slots']);
+    const{data}=await db.from('config').select('key,value').in('key',['commissions_open','max_slots','max_waitlist']);
     if(data){
       const openRow=data.find(r=>r.key==='commissions_open');
       const slotsRow=data.find(r=>r.key==='max_slots');
+      const wlRow=data.find(r=>r.key==='max_waitlist');
       comisionesAbiertas=!openRow||openRow.value!=='false';
       if(slotsRow) maxSlots=parseInt(slotsRow.value)||25;
+      if(wlRow) maxWaitlist=parseInt(wlRow.value)||50;
     }
   }catch(e){}
   if(comisionesAbiertas){
@@ -1433,8 +1446,14 @@ async function cargarEstadoComisiones(){
   }else{
     slotsFull=false;
   }
+  try{
+    const{count:wlCount}=await db.from('waitlist').select('id',{count:'exact',head:true});
+    waitlistFull=(wlCount||0)>=maxWaitlist;
+  }catch(e){waitlistFull=false;}
   const page=document.getElementById('page-comisiones');
   if(page&&page.classList.contains('active')) goTab('comisiones');
+  const pageSeg=document.getElementById('page-seguimiento');
+  if(pageSeg&&pageSeg.classList.contains('active')) goTab('seguimiento');
 }
 
 function goTab(name){
@@ -1453,7 +1472,31 @@ function goTab(name){
       else if(full){badge.textContent=t('comm.badge.full');badge.className='comm-badge badge-full';}
       else{badge.textContent=t('comm.badge.open');badge.className='comm-badge badge-open';}
     }
+    actualizarBotonesSrv();
   }
+  if(name==='seguimiento'){
+    const wlFull=document.getElementById('wl-full-banner');
+    const wlForm=document.getElementById('wl-form-wrap');
+    if(wlFull) wlFull.style.display=waitlistFull?'block':'none';
+    if(wlForm) wlForm.style.display=waitlistFull?'none':'block';
+  }
+}
+
+function actualizarBotonesSrv(){
+  const needWaitlist=!comisionesAbiertas||slotsFull;
+  const tipos={'btn-req-illus':'ilustracion','btn-req-edit':'editorial','btn-req-print':'print'};
+  Object.keys(tipos).forEach(id=>{
+    const btn=document.getElementById(id);
+    if(!btn) return;
+    if(needWaitlist){
+      btn.textContent=t('services.waitlist');
+      btn.onclick=()=>goTab('seguimiento');
+    }else{
+      btn.textContent=t('services.request');
+      const tipo=tipos[id];
+      btn.onclick=()=>abrirFormulario(tipo);
+    }
+  });
 }
 
 // ━━ ACORDEÓN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -736,7 +736,7 @@ async function cambiarEstado(folio,nuevoStatus){
     await cargarComisiones();
   }catch(e){
     console.error(e);
-    showToast('Error al cambiar estado. Revisa que el endpoint de Railway exista.','error');
+    showToast('Error al cambiar estado. Revisa la consola.','error');
   }
 }
 
@@ -750,7 +750,7 @@ async function notificarCliente(folio){
     showToast(`Email enviado al cliente del folio #${String(folio).padStart(4,'0')}`,'ok');
   }catch(e){
     console.error(e);
-    showToast('Error al enviar notificación. Revisa que el endpoint de Railway exista.','error');
+    showToast('Error al enviar notificación. Revisa la consola.','error');
   }
 }
 

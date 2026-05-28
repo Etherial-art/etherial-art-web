@@ -263,6 +263,7 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
     <div class="view-tabs">
       <button class="view-tab active" id="tab-comisiones" onclick="switchView('comisiones')"><i class="ti ti-files"></i> Comisiones</button>
       <button class="view-tab" id="tab-portafolio" onclick="switchView('portafolio')"><i class="ti ti-layout-grid"></i> Portafolio</button>
+      <button class="view-tab" id="tab-waitlist" onclick="switchView('waitlist')"><i class="ti ti-list"></i> Waitlist</button>
     </div>
 
     <!-- Comisiones section -->
@@ -290,6 +291,8 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
         <div class="spacer"></div>
         <button class="icon-btn" onclick="cargarComisiones()"><i class="ti ti-refresh"></i> Actualizar</button>
         <button class="icon-btn" id="toggle-comisiones" onclick="toggleComisiones()"><i class="ti ti-lock-open" id="toggle-icon"></i> <span id="toggle-label">Abiertas</span></button>
+        <span id="slot-counter" style="font-size:11px;color:var(--muted);border:0.5px solid var(--border);border-radius:8px;padding:5px 10px;white-space:nowrap">0/25</span>
+        <input type="number" id="slot-limit-input" min="1" max="100" value="25" title="Límite de comisiones activas" style="width:65px;padding:5px 8px;border:0.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none" onchange="actualizarMaxSlots(this.value)">
         <button class="add-btn" onclick="abrirModal()"><i class="ti ti-plus"></i> Nueva comisión</button>
       </div>
 
@@ -366,6 +369,24 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
       </div>
 
     </div><!-- /port-section -->
+
+    <!-- Waitlist section -->
+    <div id="waitlist-section" style="display:none;flex-direction:column;gap:1.5rem">
+      <div class="toolbar">
+        <div class="spacer"></div>
+        <button class="icon-btn" onclick="cargarWaitlist()"><i class="ti ti-refresh"></i> Actualizar</button>
+      </div>
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead><tr>
+            <th>#</th><th>Nombre</th><th>Email</th><th>Interés</th><th>Fecha</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="waitlist-tbody">
+            <tr class="empty-row"><td colspan="6"><i class="ti ti-loader-2"></i> Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- /waitlist-section -->
 
   </div><!-- /main -->
 </div><!-- /admin-panel -->
@@ -553,6 +574,7 @@ function showToast(msg,type=''){
 // ━━ DATOS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 let comisiones=[];
 let filtroActual='all';
+let maxSlots=25;
 
 const statusLabel={waiting:'En espera',notified:'Notificada',quoted:'Cotizada',active:'En progreso',completed:'Completada',cancelled:'Cancelada',expired:'Expirada'};
 const statusClass={waiting:'s-waiting',notified:'s-notified',quoted:'s-quoted',active:'s-active',completed:'s-completed',cancelled:'s-cancelled',expired:'s-expired'};
@@ -581,6 +603,7 @@ function actualizarStats(){
   document.getElementById('stat-waiting').textContent=comisiones.filter(c=>c.status==='waiting'||c.status==='notified').length;
   document.getElementById('stat-active').textContent=comisiones.filter(c=>c.status==='active').length;
   document.getElementById('stat-completed').textContent=comisiones.filter(c=>c.status==='completed').length;
+  actualizarToggleUI();
 }
 
 function renderComisiones(){
@@ -732,9 +755,14 @@ let comisionesAbiertasAdmin=true;
 
 async function cargarEstadoComisiones(){
   try{
-    const{data}=await db.from('config').select('value').eq('key','commissions_open').single();
-    comisionesAbiertasAdmin=data?.value!=='false';
-  }catch(e){console.warn('Tabla config no encontrada, asumiendo abierto.');}
+    const{data}=await db.from('config').select('key,value').in('key',['commissions_open','max_slots']);
+    if(data){
+      const openRow=data.find(r=>r.key==='commissions_open');
+      const slotsRow=data.find(r=>r.key==='max_slots');
+      comisionesAbiertasAdmin=!openRow||openRow.value!=='false';
+      if(slotsRow) maxSlots=parseInt(slotsRow.value)||25;
+    }
+  }catch(e){console.warn('Tabla config no encontrada.');}
   actualizarToggleUI();
 }
 
@@ -747,6 +775,22 @@ function actualizarToggleUI(){
   }else{
     btn.classList.add('closed');icon.className='ti ti-lock';lbl.textContent='Cerradas';
   }
+  const activas=comisiones.filter(c=>!['completed','cancelled','expired'].includes(c.status)).length;
+  const counter=document.getElementById('slot-counter');
+  const limitInput=document.getElementById('slot-limit-input');
+  if(counter) counter.textContent=`${activas}/${maxSlots}`;
+  if(limitInput&&limitInput!==document.activeElement) limitInput.value=maxSlots;
+}
+
+async function actualizarMaxSlots(val){
+  const v=parseInt(val);
+  if(isNaN(v)||v<1) return;
+  maxSlots=v;
+  try{
+    await db.from('config').upsert({key:'max_slots',value:String(v)});
+    actualizarToggleUI();
+    showToast(`Límite: ${v} slots activos`,'ok');
+  }catch(e){showToast('Error al guardar límite.','error');}
 }
 
 async function toggleComisiones(){
@@ -798,17 +842,85 @@ function abrirDetalle(folio){
 
 function cerrarDetalle(){document.getElementById('detail-overlay').classList.remove('open');}
 
+// ━━ WAITLIST ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let waitlistItems=[];
+
+async function cargarWaitlist(){
+  const tbody=document.getElementById('waitlist-tbody');
+  tbody.innerHTML='<tr class="empty-row"><td colspan="6"><i class="ti ti-loader-2"></i> Cargando...</td></tr>';
+  try{
+    const{data,error}=await db.from('waitlist').select('*').order('created_at',{ascending:true});
+    if(error) throw error;
+    waitlistItems=data||[];
+    renderWaitlist();
+  }catch(e){
+    console.error(e);
+    tbody.innerHTML='<tr class="empty-row"><td colspan="6"><i class="ti ti-database-off"></i> Error al cargar. ¿Existe la tabla "waitlist"?</td></tr>';
+  }
+}
+
+function renderWaitlist(){
+  const tbody=document.getElementById('waitlist-tbody');
+  if(!waitlistItems.length){
+    tbody.innerHTML='<tr class="empty-row"><td colspan="6"><i class="ti ti-inbox"></i> La waitlist está vacía.</td></tr>';
+    return;
+  }
+  tbody.innerHTML=waitlistItems.map((w,i)=>{
+    const fecha=w.created_at?new Date(w.created_at).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}):'—';
+    return `<tr>
+      <td class="folio-num">${i+1}</td>
+      <td>${w.nombre||'—'}</td>
+      <td style="font-size:12px;color:var(--muted)">${w.email||'—'}</td>
+      <td>${w.tipo_interes||'—'}</td>
+      <td>${fecha}</td>
+      <td><div class="action-row">
+        <button class="act-btn notify" onclick="notificarWaitlist('${w.id}')" title="Notificar por email"><i class="ti ti-mail"></i> Notificar</button>
+        <button class="act-btn danger" onclick="eliminarWaitlist('${w.id}')" title="Eliminar"><i class="ti ti-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+async function notificarWaitlist(id){
+  try{
+    const res=await fetch(`${RAILWAY_URL}/admin/waitlist/${id}/notificar`,{
+      method:'POST',headers:{'X-Admin-Key':ADMIN_TOKEN}
+    });
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    showToast('Notificación enviada','ok');
+  }catch(e){
+    console.error(e);
+    showToast('Error al notificar. ¿Existe el endpoint en Railway?','error');
+  }
+}
+
+async function eliminarWaitlist(id){
+  if(!confirm('¿Eliminar esta persona de la waitlist?')) return;
+  try{
+    const{error}=await db.from('waitlist').delete().eq('id',id);
+    if(error) throw error;
+    showToast('Eliminado de la waitlist','ok');
+    await cargarWaitlist();
+  }catch(e){
+    console.error(e);
+    showToast('Error al eliminar.','error');
+  }
+}
+
 // ━━ PORTAFOLIO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 function switchView(v){
   const isCom=v==='comisiones';
+  const isPort=v==='portafolio';
+  const isWL=v==='waitlist';
   document.getElementById('tab-comisiones').classList.toggle('active',isCom);
-  document.getElementById('tab-portafolio').classList.toggle('active',!isCom);
-  const cs=document.getElementById('comisiones-section');
-  const ps=document.getElementById('port-section');
-  cs.style.display=isCom?'flex':'none';
-  ps.style.display=isCom?'none':'flex';
-  if(!isCom) cargarPortfolio();
+  document.getElementById('tab-portafolio').classList.toggle('active',isPort);
+  document.getElementById('tab-waitlist').classList.toggle('active',isWL);
+  document.getElementById('comisiones-section').style.display=isCom?'flex':'none';
+  document.getElementById('port-section').style.display=isPort?'flex':'none';
+  document.getElementById('waitlist-section').style.display=isWL?'flex':'none';
+  if(isPort) cargarPortfolio();
+  if(isWL) cargarWaitlist();
 }
 
 let portItems=[];

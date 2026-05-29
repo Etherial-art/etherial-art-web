@@ -519,9 +519,9 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <div class="field">
           <label class="field-label" id="lbl-wl-interest">¿Qué te interesa?</label>
           <div class="options-grid single">
-            <div class="opt" onclick="selectOpt(this,'wl_interest')" data-val="Ilustración digital"><div class="opt-radio"></div>Ilustración digital</div>
-            <div class="opt" onclick="selectOpt(this,'wl_interest')" data-val="Diseño Editorial"><div class="opt-radio"></div>Diseño Editorial</div>
-            <div class="opt" onclick="selectOpt(this,'wl_interest')" data-val="Arte Digital para Imprimir"><div class="opt-radio"></div>Arte Digital para Imprimir</div>
+            <div class="opt" onclick="selectOpt(this,'wl_interest')" data-val="Ilustración digital"><div class="opt-radio"></div><span id="wl-int-illus">Ilustración digital</span></div>
+            <div class="opt" onclick="selectOpt(this,'wl_interest')" data-val="Diseño Editorial"><div class="opt-radio"></div><span id="wl-int-edit">Diseño Editorial</span></div>
+            <div class="opt" onclick="selectOpt(this,'wl_interest')" data-val="Arte Digital para Imprimir"><div class="opt-radio"></div><span id="wl-int-print">Arte Digital para Imprimir</span></div>
             <div class="opt" onclick="selectOpt(this,'wl_interest')" data-val="General"><div class="opt-radio"></div><span id="wl-int-general">General / No sé aún</span></div>
           </div>
         </div>
@@ -954,7 +954,7 @@ es:{
   'wl.eyebrow':'Lista de espera','wl.title':'Únete a la waitlist',
   'wl.intro':'Cuando los slots estén llenos, apúntate aquí para ser el primero en saber cuándo hay lugar. No es necesario completar el formulario completo ahora.',
   'wl.name':'Tu nombre o @','wl.email':'Correo electrónico','wl.interest':'¿Qué te interesa?',
-  'wl.int.general':'General / No sé aún',
+  'wl.int.general':'General / No sé aún','wl.int.illus':'Ilustración digital','wl.int.edit':'Diseño Editorial','wl.int.print':'Arte Digital para Imprimir',
   'wl.submit':'Unirme a la lista','wl.ok':'¡Estás en la lista! Te avisaremos cuando haya espacio disponible.','wl.error':'Hubo un error. Intenta de nuevo.',
   'wl.full.title':'Lista de espera completa','wl.full.msg':'La lista de espera está llena por ahora. Sígueme en redes para enterarte cuando vuelva a abrirse.',
   'wl.val.name':'Ingresa tu nombre o @','wl.val.email':'Ingresa tu correo','wl.val.email.invalid':'Ingresa un correo válido','wl.val.interest':'Selecciona tu tipo de interés',
@@ -1059,7 +1059,7 @@ en:{
   'wl.eyebrow':'Waitlist','wl.title':'Join the waitlist',
   'wl.intro':'When slots are full, sign up here to be first to know when a spot opens up. No need to fill the full form now.',
   'wl.name':'Your name or @','wl.email':'Email address','wl.interest':'What are you interested in?',
-  'wl.int.general':'General / Not sure yet',
+  'wl.int.general':'General / Not sure yet','wl.int.illus':'Digital Illustration','wl.int.edit':'Editorial Design','wl.int.print':'Digital Art for Print',
   'wl.submit':'Join the list','wl.ok':'You\'re on the list! We\'ll let you know when a spot opens up.','wl.error':'Something went wrong. Please try again.',
   'wl.full.title':'Waitlist is full','wl.full.msg':'The waitlist is currently full. Follow me on social media to find out when it reopens.',
   'wl.val.name':'Enter your name or @','wl.val.email':'Enter your email','wl.val.email.invalid':'Enter a valid email','wl.val.interest':'Select your area of interest',
@@ -1164,7 +1164,7 @@ de:{
   'wl.eyebrow':'Warteliste','wl.title':'Zur Warteliste beitreten',
   'wl.intro':'Wenn alle Plätze belegt sind, trag dich hier ein – du wirst als Erste(r) benachrichtigt, wenn etwas frei wird. Das vollständige Formular musst du jetzt noch nicht ausfüllen.',
   'wl.name':'Dein Name oder @','wl.email':'E-Mail-Adresse','wl.interest':'Was interessiert dich?',
-  'wl.int.general':'Allgemein / Noch unsicher',
+  'wl.int.general':'Allgemein / Noch unsicher','wl.int.illus':'Digitale Illustration','wl.int.edit':'Editorial Design','wl.int.print':'Digitale Druckkunst',
   'wl.submit':'Zur Liste beitreten','wl.ok':'Du bist auf der Liste! Wir melden uns, sobald ein Platz frei wird.','wl.error':'Da ist etwas schiefgelaufen. Bitte noch mal versuchen.',
   'wl.full.title':'Warteliste voll','wl.full.msg':'Die Warteliste ist derzeit voll. Folg mir in den sozialen Medien, um zu erfahren, wann sie wieder öffnet.',
   'wl.val.name':'Gib deinen Namen oder @ ein','wl.val.email':'Gib deine E-Mail ein','wl.val.email.invalid':'Gib eine gültige E-Mail ein','wl.val.interest':'Wähle dein Interessengebiet',
@@ -1297,7 +1297,9 @@ function applyTranslations(){
   setText('wl-eyebrow',t('wl.eyebrow'));setText('wl-title',t('wl.title'));
   setText('wl-intro',t('wl.intro'));
   setText('lbl-wl-name',t('wl.name'));setText('lbl-wl-email',t('wl.email'));setText('lbl-wl-interest',t('wl.interest'));
-  setText('wl-int-general',t('wl.int.general'));
+  setText('wl-int-general',t('wl.int.general'));setText('wl-int-illus',t('wl.int.illus'));setText('wl-int-edit',t('wl.int.edit'));setText('wl-int-print',t('wl.int.print'));
+  const wln=document.getElementById('wl-name');if(wln) wln.placeholder=lang==='en'?'Your name or @':lang==='de'?'Dein Name oder @':'@usuario o Nombre';
+  const wle=document.getElementById('wl-email');if(wle) wle.placeholder=lang==='en'?'your@email.com':lang==='de'?'deine@email.de':'tu@correo.com';
   const wlsb=document.getElementById('wl-submit-btn');if(wlsb&&!wlsb.disabled) wlsb.textContent=t('wl.submit');
   setText('wl-ok-msg',t('wl.ok'));
   setText('wl-full-title',t('wl.full.title'));setText('wl-full-msg',t('wl.full.msg'));

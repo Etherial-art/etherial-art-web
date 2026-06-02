@@ -649,7 +649,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
           <div class="opt disabled"><div class="opt-radio"></div>Deluxe Ref Sheet<span class="opt-lock">🔒</span></div>
         </div>
       </div>
-      <div class="field">
+      <div class="field" id="field-acabado">
         <label class="field-label" id="lbl-finish">Nivel de acabado *</label>
         <div class="options-grid">
           <div class="opt" onclick="selectOpt(this,'acabado')" data-val="Sketch"><div class="opt-radio"></div>Sketch</div>
@@ -658,7 +658,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
           <div class="opt disabled"><div class="opt-radio"></div>Painterly Realism<span class="opt-lock">🔒</span></div>
         </div>
       </div>
-      <div class="field">
+      <div class="field" id="field-chars">
         <label class="field-label" id="lbl-chars">Cantidad de personajes *</label>
         <div class="options-grid three">
           <div class="opt" onclick="selectOpt(this,'personajes')" data-val="1 personaje"><div class="opt-radio"></div>1</div>
@@ -667,7 +667,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         </div>
         <p class="field-note" id="note-chars">👥 Cada personaje extra suma +50% del precio base. Se detalla en tu invoice.</p>
       </div>
-      <div class="field">
+      <div class="field" id="field-fondo">
         <label class="field-label" id="lbl-bg-addons">Add-ons de fondo (opcional)</label>
         <div class="options-grid single">
           <div class="opt" onclick="toggleOpt(this,'fondo')" data-val="Fondo simple — flat/gradiente (incluido)" id="bg-opt-1" data-i18n="bg.opt_1"><div class="opt-check">✓</div><span>Fondo simple — flat/gradiente (incluido)</span></div>
@@ -676,7 +676,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
           <div class="opt" onclick="toggleOpt(this,'fondo')" data-val="Fondo Full Body (+$20)" id="bg-opt-4" data-i18n="bg.opt_4"><div class="opt-check">✓</div><span>Fondo Full Body</span><span class="opt-price">+$20</span></div>
         </div>
       </div>
-      <div class="field">
+      <div class="field" id="field-comp">
         <label class="field-label" id="lbl-comp-addons">Add-ons de composición — solo Cinematic (opcional)</label>
         <div class="options-grid single">
           <div class="opt" onclick="toggleOpt(this,'composicion')" data-val="Perspectiva lineal avanzada (+$40)" id="comp-opt-1" data-i18n="comp.persp"><div class="opt-check">✓</div><span id="comp-persp">Perspectiva lineal avanzada</span><span class="opt-price">+$40</span></div>
@@ -1540,6 +1540,75 @@ function selectOpt(el,grupo){
   formData[grupo]=el.dataset.i18n?t(el.dataset.i18n):el.dataset.val;
   if(grupo==='contacto'){const fd=document.getElementById('field-discord');if(fd) fd.style.display=el.dataset.val==='Discord'?'block':'none';}
   if(grupo==='rush'){const rn=document.getElementById('rush-notice');if(rn) rn.style.display=el.dataset.val==='si'?'block':'none';}
+  if(grupo==='tipo_ilus') actualizarAddonsIlus(el.dataset.val);
+}
+
+function actualizarAddonsIlus(tipo){
+  const R={
+    'Sticker single':       {ac:null,acA:'Sketch',      ch:true,bg:[],            co:false},
+    'Sticker Bundle x5':    {ac:null,acA:'Sketch',      ch:true,bg:[],            co:false},
+    'Sticker animado':      {ac:null,acA:'Sketch',      ch:true,bg:[],            co:false},
+    'Badge':                {ac:['Sketch','Full Render'],ch:true,bg:[],            co:false},
+    'Icon / Asset spot':    {ac:['Sketch','Full Render'],ch:['1 personaje','2 personajes'],bg:[],   co:false},
+    'PFP / Profile Picture':{ac:['Sketch','Full Render'],ch:null,chA:'1 personaje',bg:['bg-opt-1','bg-opt-2'],co:false},
+    'Half Body':            {ac:['Sketch','Full Render'],ch:true,bg:['bg-opt-1','bg-opt-3'],        co:false},
+    'Full Body':            {ac:['Sketch','Full Render'],ch:true,bg:['bg-opt-1','bg-opt-4'],        co:false},
+    'Cinematic Scene':      {ac:null,acA:'Full Render', ch:true,bg:['bg-opt-4'],                    co:true},
+  };
+  const r=R[tipo];if(!r) return;
+  const show=(el,v)=>{if(el) el.style.display=v?'':'none';};
+
+  const fAc=document.getElementById('field-acabado');
+  if(!r.ac){
+    show(fAc,false);
+    fAc&&fAc.querySelectorAll('.opt.selected').forEach(o=>{o.classList.remove('selected');});
+    formData.acabado=r.acA||null;
+  }else{
+    show(fAc,true);
+    fAc&&fAc.querySelectorAll('.opt[data-val]').forEach(o=>{
+      const vis=r.ac.includes(o.dataset.val);
+      show(o,vis);
+      if(!vis&&o.classList.contains('selected')){o.classList.remove('selected');formData.acabado=null;}
+    });
+  }
+
+  const fCh=document.getElementById('field-chars');
+  if(!r.ch){
+    show(fCh,false);
+    fCh&&fCh.querySelectorAll('.opt.selected').forEach(o=>o.classList.remove('selected'));
+    formData.personajes=r.chA||'1 personaje';
+  }else if(r.ch===true){
+    show(fCh,true);
+    fCh&&fCh.querySelectorAll('.opt').forEach(o=>show(o,true));
+  }else{
+    show(fCh,true);
+    fCh&&fCh.querySelectorAll('.opt[data-val]').forEach(o=>{
+      const vis=r.ch.includes(o.dataset.val);
+      show(o,vis);
+      if(!vis&&o.classList.contains('selected')){o.classList.remove('selected');formData.personajes=null;}
+    });
+  }
+
+  const fBg=document.getElementById('field-fondo');
+  if(!r.bg.length){
+    show(fBg,false);
+    fBg&&fBg.querySelectorAll('.opt.selected').forEach(o=>o.classList.remove('selected'));
+    formData.fondo=[];
+  }else{
+    show(fBg,true);
+    fBg&&fBg.querySelectorAll('.opt[id]').forEach(o=>{
+      const vis=r.bg.includes(o.id);
+      show(o,vis);
+      if(!vis&&o.classList.contains('selected')){o.classList.remove('selected');formData.fondo=formData.fondo.filter(v=>v!==o.dataset.val);}
+    });
+  }
+
+  const fCo=document.getElementById('field-comp');
+  show(fCo,r.co);
+  if(!r.co){
+    fCo&&fCo.querySelectorAll('.opt.selected').forEach(o=>o.classList.remove('selected'));
+    formData.composicion=[];
+  }
 }
 
 function toggleOpt(el,grupo){
@@ -1779,7 +1848,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           });
         };
         setTimeout(()=>{
-          if(subtipVal) preselRadio(subtipVal,'tipo_ilus');
+          if(subtipVal){preselRadio(subtipVal,'tipo_ilus');actualizarAddonsIlus(subtipVal);}
           if(acabadoVal) preselRadio(acabadoVal,'acabado');
           if(personajesVal) preselRadio(personajesVal,'personajes');
           fondoVals.forEach(val=>{

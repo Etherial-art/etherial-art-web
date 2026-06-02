@@ -1593,15 +1593,15 @@ function selectOpt(el,grupo){
 
 function actualizarAddonsIlus(tipo){
   const R={
-    'Sticker single':       {ac:null,acA:'Sketch',      ch:true,bg:[],            co:false},
-    'Sticker Bundle x5':    {ac:null,acA:'Sketch',      ch:true,bg:[],            co:false},
-    'Sticker animado':      {ac:null,acA:'Sketch',      ch:true,bg:[],            co:false},
-    'Badge':                {ac:['Sketch','Full Render'],ch:true,bg:[],            co:false},
-    'Icon / Asset spot':    {ac:['Sketch','Full Render'],ch:['1 personaje','2 personajes'],bg:[],   co:false},
-    'PFP / Profile Picture':{ac:['Sketch','Full Render'],ch:null,chA:'1 personaje',bg:['bg-opt-1','bg-opt-2'],co:false},
-    'Half Body':            {ac:['Sketch','Full Render'],ch:true,bg:['bg-opt-1','bg-opt-3'],        co:false},
-    'Full Body':            {ac:['Sketch','Full Render'],ch:true,bg:['bg-opt-1','bg-opt-4'],        co:false},
-    'Cinematic Scene':      {ac:null,acA:'Full Render', ch:true,bg:['bg-opt-4'],                    co:true},
+    'Sticker single':       {ac:null,acA:'Sketch',                     ch:['1 personaje','2 personajes'],bg:[],                     co:false},
+    'Sticker Bundle x5':    {ac:null,acA:'Sketch',                     ch:['1 personaje','2 personajes'],bg:[],                     co:false},
+    'Sticker animado':      {ac:null,acA:'Sketch',                     ch:['1 personaje','2 personajes'],bg:[],                     co:false},
+    'Badge':                {ac:['Línea + color plano'],                ch:['1 personaje','2 personajes'],bg:[],                     co:false},
+    'Icon / Asset spot':    {ac:['Línea + color plano','Full Render'],  ch:['1 personaje','2 personajes'],bg:[],                     co:false},
+    'PFP / Profile Picture':{ac:['Línea + color plano','Full Render'],  ch:null,chA:'1 personaje',bg:['bg-opt-1','bg-opt-2'],        co:false},
+    'Half Body':            {ac:['Línea + color plano','Full Render'],  ch:['1 personaje','2 personajes'],bg:['bg-opt-1','bg-opt-3'], co:false},
+    'Full Body':            {ac:['Línea + color plano','Full Render'],  ch:['1 personaje','2 personajes'],bg:['bg-opt-1','bg-opt-4'], co:false},
+    'Cinematic Scene':      {ac:null,acA:'Full Render',                ch:['1 personaje','2 personajes'],bg:['bg-opt-4'],             co:true},
   };
   const r=R[tipo];if(!r) return;
   const show=(el,v)=>{if(el) el.style.display=v?'':'none';};

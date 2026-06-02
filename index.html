@@ -1802,7 +1802,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   // URL params
   const p=new URLSearchParams(window.location.search);
   const tab=p.get('tab'),comision=p.get('comision');
-  const pNombre=p.get('nombre'),pEmail=p.get('email'),pTipo=p.get('tipo'),pFolio=p.get('folio');
+  const pNombre=p.get('nombre'),pEmail=p.get('email'),pTipo=p.get('tipo'),pFolio=p.get('folio'),pSubtipo=p.get('subtipo');
   if(pFolio) folioKofi=pFolio;
   const tipoTarget=comision||pTipo;
   if(tab==='seguimiento') goTab('seguimiento');
@@ -1812,6 +1812,18 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(pNombre){const el=document.getElementById('f-tag');if(el) el.value=decodeURIComponent(pNombre);}
       if(pEmail){const el=document.getElementById('f-email');if(el) el.value=decodeURIComponent(pEmail);}
       if(tipoTarget) abrirFormulario(tipoTarget);
+      if(pSubtipo){
+        const val=decodeURIComponent(pSubtipo);
+        setTimeout(()=>{
+          document.querySelectorAll('#fs-2a .opt[data-val]').forEach(opt=>{
+            if(opt.dataset.val===val){
+              opt.closest('.options-grid').querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+              opt.classList.add('selected');
+              formData.tipo_ilus=val;
+            }
+          });
+        },250);
+      }
     },200);
   }
   GLightbox({selector:'.gallery-item',touchNavigation:true,loop:true,zoomable:true});

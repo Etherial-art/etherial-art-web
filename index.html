@@ -1522,6 +1522,7 @@ const _key='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 const db=window.supabase.createClient(_url,_key);
 const eClass={waiting:'s-pending',notified:'s-progress',quoted:'s-quoted',active:'s-sent',completed:'s-paid',expired:'s-expired',cancelled:'s-expired'};
 let foliosGlobales=[];
+let folioKofi=null;
 
 function renderFolios(lista){
   const tbody=document.getElementById('folio-tbody');if(!tbody) return;
@@ -1709,12 +1710,14 @@ async function enviarComision(){
     como_me_encontro:formData.como,
   };
   try{
-    const res=await fetch(`${RAILWAY_URL}/comisiones/nueva`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const url=folioKofi?`${RAILWAY_URL}/comisiones/${folioKofi}/detalles`:`${RAILWAY_URL}/comisiones/nueva`;
+    const method=folioKofi?'PATCH':'POST';
+    const res=await fetch(url,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const data=await res.json();
-    if(data.status==='ok'){
+    if(data.status==='ok'||data.ok){
       document.getElementById('fs-5').classList.remove('active');
       document.getElementById('form-success').style.display='block';
-      document.getElementById('success-folio').textContent=data.folio;
+      document.getElementById('success-folio').textContent=data.folio||folioKofi;
       for(let i=1;i<=5;i++){const st=document.getElementById('step-'+i);if(st) st.classList.add('done');}
     }else{showToast(t('form.error'));btn.disabled=false;btn.textContent=t('form.submit');}
   }catch(e){console.error(e);showToast(t('form.conn.error'));btn.disabled=false;btn.textContent=t('form.submit');}
@@ -1799,7 +1802,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   // URL params
   const p=new URLSearchParams(window.location.search);
   const tab=p.get('tab'),comision=p.get('comision');
-  const pNombre=p.get('nombre'),pEmail=p.get('email'),pTipo=p.get('tipo');
+  const pNombre=p.get('nombre'),pEmail=p.get('email'),pTipo=p.get('tipo'),pFolio=p.get('folio');
+  if(pFolio) folioKofi=pFolio;
   const tipoTarget=comision||pTipo;
   if(tab==='seguimiento') goTab('seguimiento');
   else if(tab==='comisiones'||tab==='servicios'||tipoTarget||pNombre||pEmail) goTab('comisiones');

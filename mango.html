@@ -1784,20 +1784,24 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(pNombre){const el=document.getElementById('f-tag');if(el) el.value=decodeURIComponent(pNombre);}
       if(pEmail){const el=document.getElementById('f-email');if(el) el.value=decodeURIComponent(pEmail);}
       if(tipoTarget) abrirFormulario(tipoTarget);
-      if(pSubtipo||p.getAll('fondo').length||p.getAll('composicion').length){
+      const pAcabado=p.get('acabado'),pPersonajes=p.get('personajes');
+      if(pSubtipo||pAcabado||pPersonajes||p.getAll('fondo').length||p.getAll('composicion').length){
         const subtipVal=pSubtipo?decodeURIComponent(pSubtipo):null;
+        const acabadoVal=pAcabado?decodeURIComponent(pAcabado):null;
+        const personajesVal=pPersonajes?decodeURIComponent(pPersonajes):null;
         const fondoVals=p.getAll('fondo').map(decodeURIComponent);
         const compVals=p.getAll('composicion').map(decodeURIComponent);
+        const preselRadio=(val,key)=>{
+          document.querySelectorAll(`#fs-2a .opt[data-val="${CSS.escape(val)}"]`).forEach(opt=>{
+            opt.closest('.options-grid').querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+            opt.classList.add('selected');
+            formData[key]=val;
+          });
+        };
         setTimeout(()=>{
-          if(subtipVal){
-            document.querySelectorAll('#fs-2a .opt[data-val]').forEach(opt=>{
-              if(opt.dataset.val===subtipVal){
-                opt.closest('.options-grid').querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
-                opt.classList.add('selected');
-                formData.tipo_ilus=subtipVal;
-              }
-            });
-          }
+          if(subtipVal) preselRadio(subtipVal,'tipo_ilus');
+          if(acabadoVal) preselRadio(acabadoVal,'acabado');
+          if(personajesVal) preselRadio(personajesVal,'personajes');
           fondoVals.forEach(val=>{
             const opt=document.querySelector(`#fs-2a .opt[data-val="${CSS.escape(val)}"]`);
             if(opt&&!opt.classList.contains('selected')){opt.classList.add('selected');formData.fondo.push(val);}

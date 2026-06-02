@@ -1812,15 +1812,27 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(pNombre){const el=document.getElementById('f-tag');if(el) el.value=decodeURIComponent(pNombre);}
       if(pEmail){const el=document.getElementById('f-email');if(el) el.value=decodeURIComponent(pEmail);}
       if(tipoTarget) abrirFormulario(tipoTarget);
-      if(pSubtipo){
-        const val=decodeURIComponent(pSubtipo);
+      if(pSubtipo||p.getAll('fondo').length||p.getAll('composicion').length){
+        const subtipVal=pSubtipo?decodeURIComponent(pSubtipo):null;
+        const fondoVals=p.getAll('fondo').map(decodeURIComponent);
+        const compVals=p.getAll('composicion').map(decodeURIComponent);
         setTimeout(()=>{
-          document.querySelectorAll('#fs-2a .opt[data-val]').forEach(opt=>{
-            if(opt.dataset.val===val){
-              opt.closest('.options-grid').querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
-              opt.classList.add('selected');
-              formData.tipo_ilus=val;
-            }
+          if(subtipVal){
+            document.querySelectorAll('#fs-2a .opt[data-val]').forEach(opt=>{
+              if(opt.dataset.val===subtipVal){
+                opt.closest('.options-grid').querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+                opt.classList.add('selected');
+                formData.tipo_ilus=subtipVal;
+              }
+            });
+          }
+          fondoVals.forEach(val=>{
+            const opt=document.querySelector(`#fs-2a .opt[data-val="${CSS.escape(val)}"]`);
+            if(opt&&!opt.classList.contains('selected')){opt.classList.add('selected');formData.fondo.push(val);}
+          });
+          compVals.forEach(val=>{
+            const opt=document.querySelector(`#fs-2a .opt[data-val="${CSS.escape(val)}"]`);
+            if(opt&&!opt.classList.contains('selected')){opt.classList.add('selected');formData.composicion.push(val);}
           });
         },250);
       }

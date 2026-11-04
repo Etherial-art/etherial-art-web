@@ -1,0 +1,21 @@
+{
+  "name": "etherial-art-web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Sitio estático de Etherial_Art (HTML + CSS + JS sin build)",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run format:check && npm run lint"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.14.0",
+    "eslint-plugin-html": "8.2.1",
+    "globals": "17.14.0",
+    "prettier": "3.9.10"
+  }
+}

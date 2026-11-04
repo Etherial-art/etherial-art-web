@@ -241,11 +241,12 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
     <div class="login-logo">Etherial_<b>Art</b></div>
     <div class="login-sub">Panel de administración</div>
     <div class="login-field">
-      <input type="password" id="pwd-input" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()">
+      <label for="pwd-input" class="login-sub" style="display:block;margin-bottom:.5rem">Token de admin</label>
+      <input type="password" id="pwd-input" placeholder="Token de admin" autocomplete="current-password" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <button class="login-btn" onclick="doLogin()">Entrar →</button>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Entrar →</button>
     <button class="login-btn" onclick="history.length>1?history.back():location.href='index.html'" style="margin-top:.5rem;background:transparent;color:var(--muted);border-color:var(--border);">← Volver</button>
-    <div class="login-error" id="login-error">Contraseña incorrecta.</div>
+    <div class="login-error" id="login-error" role="alert">Token incorrecto.</div>
   </div>
 </div>
 
@@ -580,13 +581,6 @@ body{background:var(--cream);color:var(--dark);display:flex;flex-direction:colum
 
 <script>
 // ━━ CONFIG ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Para cambiar la contraseña, genera el hash SHA-256 de tu clave en la consola del navegador:
-// crypto.subtle.digest('SHA-256',new TextEncoder().encode('tu_contraseña')).then(b=>console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
-// Luego reemplaza el valor de PWD_HASH abajo.
-const PWD_HASH='23afbfa36b94e007031a27187d8e7aab4f835ab18515bd9f268d4cac39bd840b';
-
-// Token para las llamadas de escritura a Railway (debe coincidir con tu env var ADMIN_TOKEN en Railway)
-const ADMIN_TOKEN='3RNhJapePn2x5Jgo4XDi';
 const PAYPAL_ME='etherart';
 
 const SUPABASE_URL='https://eliyhtdwmeghfslijwgh.supabase.co';
@@ -596,29 +590,72 @@ const RAILWAY_URL='https://niko-studio-production.up.railway.app';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 // ━━ AUTH ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-async function hashStr(str){
-  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
-  return [...new Uint8Array(buf)].map(x=>x.toString(16).padStart(2,'0')).join('');
+// El token de admin NO está en el código. Se pide al abrir el panel, se guarda
+// sólo en sessionStorage (se borra al cerrar la pestaña) y se envía como
+// X-Admin-Key en cada petición al backend, que lo valida contra ADMIN_SECRET.
+const TOKEN_KEY='ea-admin-token';
+function getToken(){try{return sessionStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
+function setToken(t){try{sessionStorage.setItem(TOKEN_KEY,t);}catch(e){}}
+function clearToken(){try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('ea-admin');}catch(e){}}
+
+class AuthError extends Error{}
+
+// fetch al backend con el token. Si responde 401/403: borra el token y lo vuelve a pedir.
+async function adminFetch(url,opts={}){
+  const token=getToken();
+  if(!token){pedirToken();throw new AuthError('Sin token');}
+  const headers=Object.assign({},opts.headers||{},{'X-Admin-Key':token});
+  const res=await fetch(url,Object.assign({},opts,{headers}));
+  if(res.status===401||res.status===403){
+    clearToken();
+    pedirToken('Token inválido o caducado. Vuelve a introducirlo.');
+    throw new AuthError(`HTTP ${res.status}`);
+  }
+  return res;
+}
+
+function pedirToken(msg){
+  document.getElementById('admin-panel').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  const err=document.getElementById('login-error');
+  if(msg){err.textContent=msg;err.style.display='block';}else{err.style.display='none';}
+  const inp=document.getElementById('pwd-input');
+  inp.value='';inp.focus();
+}
+
+function mostrarPanel(){
+  document.getElementById('login-error').style.display='none';
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('admin-panel').style.display='flex';
+  cargarComisiones();cargarEstadoComisiones();
 }
 
 async function doLogin(){
-  const pwd=document.getElementById('pwd-input').value;
-  const h=await hashStr(pwd);
-  if(h===PWD_HASH){
-    sessionStorage.setItem('ea-admin','1');
-    document.getElementById('login-screen').style.display='none';
-    const panel=document.getElementById('admin-panel');
-    panel.style.display='flex';
-    cargarComisiones();cargarEstadoComisiones();
-  }else{
-    document.getElementById('login-error').style.display='block';
-    document.getElementById('pwd-input').value='';
-    document.getElementById('pwd-input').focus();
+  const inp=document.getElementById('pwd-input');
+  const token=inp.value.trim();
+  if(!token){pedirToken('Introduce el token.');return;}
+  const btn=document.getElementById('login-btn');
+  btn.disabled=true;
+  try{
+    // Comprobar el token con el backend antes de abrir el panel
+    const res=await fetch(`${RAILWAY_URL}/admin/comisiones`,{headers:{'X-Admin-Key':token}});
+    if(res.status===401||res.status===403){clearToken();pedirToken('Token incorrecto.');return;}
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    setToken(token);
+    inp.value='';
+    mostrarPanel();
+  }catch(e){
+    console.error(e);
+    const err=document.getElementById('login-error');
+    err.textContent='No se pudo conectar con el servidor. Inténtalo de nuevo.';
+    err.style.display='block';
+  }finally{
+    btn.disabled=false;
   }
 }
 
 function doLogout(){
-  sessionStorage.removeItem('ea-admin');
+  clearToken();
   location.reload();
 }
 
@@ -652,9 +689,7 @@ async function cargarComisiones(){
   const tbody=document.getElementById('admin-tbody');
   tbody.innerHTML='<tr class="empty-row"><td colspan="7"><i class="ti ti-loader-2"></i> Cargando...</td></tr>';
   try{
-    const res=await fetch(`${RAILWAY_URL}/admin/comisiones`,{
-      headers:{'X-Admin-Key':ADMIN_TOKEN}
-    });
+    const res=await adminFetch(`${RAILWAY_URL}/admin/comisiones`);
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const data=await res.json();
     comisiones=Array.isArray(data)?data:(data.comisiones||[]);
@@ -730,14 +765,14 @@ function setFilter(f,btn){
 // Necesitas agregar estos endpoints en tu Railway API:
 // PATCH /admin/comisiones/:folio/status  { status: "completed" }   → actualiza en Supabase
 // POST  /admin/comisiones/:folio/notificar                          → manda email al cliente
-// Ambos deben verificar el header: Authorization: Bearer <ADMIN_TOKEN>
+// Todas las llamadas usan adminFetch(), que añade el header X-Admin-Key.
 
 async function cambiarEstado(folio,nuevoStatus){
   if(!nuevoStatus) return;
   try{
-    const res=await fetch(`${RAILWAY_URL}/admin/comisiones/${folio}/status`,{
+    const res=await adminFetch(`${RAILWAY_URL}/admin/comisiones/${folio}/status`,{
       method:'PATCH',
-      headers:{'Content-Type':'application/json','X-Admin-Key':ADMIN_TOKEN},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({status:nuevoStatus})
     });
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -751,9 +786,8 @@ async function cambiarEstado(folio,nuevoStatus){
 
 async function notificarCliente(folio){
   try{
-    const res=await fetch(`${RAILWAY_URL}/admin/comisiones/${folio}/notificar`,{
-      method:'POST',
-      headers:{'X-Admin-Key':ADMIN_TOKEN}
+    const res=await adminFetch(`${RAILWAY_URL}/admin/comisiones/${folio}/notificar`,{
+      method:'POST'
     });
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     showToast(`Email enviado al cliente del folio #${String(folio).padStart(4,'0')}`,'ok');
@@ -974,9 +1008,9 @@ async function guardarEdicion(){
   if(canal) payload.canal_contacto=canal;
   if(descuento) payload.descuento=descuento;
   try{
-    const res=await fetch(`${RAILWAY_URL}/admin/comisiones/${eFolioActual}`,{
+    const res=await adminFetch(`${RAILWAY_URL}/admin/comisiones/${eFolioActual}`,{
       method:'PATCH',
-      headers:{'Content-Type':'application/json','X-Admin-Key':ADMIN_TOKEN},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify(payload)
     });
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -993,9 +1027,8 @@ async function guardarEdicion(){
 async function eliminarComision(folio){
   if(!confirm(`¿Eliminar permanentemente la comisión #${String(folio).padStart(4,'0')}?\nEsta acción no se puede deshacer.`)) return;
   try{
-    const res=await fetch(`${RAILWAY_URL}/admin/comisiones/${folio}`,{
-      method:'DELETE',
-      headers:{'X-Admin-Key':ADMIN_TOKEN}
+    const res=await adminFetch(`${RAILWAY_URL}/admin/comisiones/${folio}`,{
+      method:'DELETE'
     });
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     showToast(`Comisión #${String(folio).padStart(4,'0')} eliminada`,'ok');
@@ -1052,8 +1085,8 @@ function renderWaitlist(){
 
 async function notificarWaitlist(id){
   try{
-    const res=await fetch(`${RAILWAY_URL}/admin/waitlist/${id}/notificar`,{
-      method:'POST',headers:{'X-Admin-Key':ADMIN_TOKEN}
+    const res=await adminFetch(`${RAILWAY_URL}/admin/waitlist/${id}/notificar`,{
+      method:'POST'
     });
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     showToast('Notificación enviada','ok');
@@ -1068,8 +1101,8 @@ async function promoverWaitlist(id){
   const nombre=w?.nombre||id;
   if(!confirm(`¿Promover a ${nombre} a comisión?\nSe creará un borrador con estado "En espera" y se eliminará de la waitlist.`)) return;
   try{
-    const res=await fetch(`${RAILWAY_URL}/admin/waitlist/${id}/promover`,{
-      method:'POST',headers:{'X-Admin-Key':ADMIN_TOKEN}
+    const res=await adminFetch(`${RAILWAY_URL}/admin/waitlist/${id}/promover`,{
+      method:'POST'
     });
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const data=await res.json();
@@ -1085,8 +1118,8 @@ async function promoverWaitlist(id){
 async function eliminarWaitlist(id){
   if(!confirm('¿Eliminar esta persona de la waitlist?')) return;
   try{
-    const res=await fetch(`${RAILWAY_URL}/admin/waitlist/${id}`,{
-      method:'DELETE',headers:{'X-Admin-Key':ADMIN_TOKEN}
+    const res=await adminFetch(`${RAILWAY_URL}/admin/waitlist/${id}`,{
+      method:'DELETE'
     });
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     showToast('Eliminado de la waitlist','ok');
@@ -1207,7 +1240,7 @@ async function guardarComision(){
   const btn=document.getElementById('btn-save');
   btn.disabled=true;btn.textContent='Guardando...';
   try{
-    const res=await fetch(`${RAILWAY_URL}/comisiones/nueva`,{
+    const res=await adminFetch(`${RAILWAY_URL}/comisiones/nueva`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -1250,13 +1283,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   const savedTheme=localStorage.getItem('ea-theme');
   const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
   applyTheme(savedTheme?savedTheme==='dark':prefersDark);
-  if(sessionStorage.getItem('ea-admin')==='1'){
-    document.getElementById('login-screen').style.display='none';
-    const panel=document.getElementById('admin-panel');
-    panel.style.display='flex';
-    cargarComisiones();cargarEstadoComisiones();
-  }
-  document.getElementById('pwd-input').focus();
+  try{sessionStorage.removeItem('ea-admin');}catch(e){}
+  if(getToken()) mostrarPanel();
+  else pedirToken();
   document.getElementById('admin-tbody').addEventListener('click',function(e){
     if(window.innerWidth>600) return;
     const tr=e.target.closest('tr[data-status]');

@@ -16,7 +16,6 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
     />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
       * {
         box-sizing: border-box;
@@ -1682,12 +1681,9 @@
       // ━━ CONFIG ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       const PAYPAL_ME = 'etherart';
 
-      const SUPABASE_URL = 'https://eliyhtdwmeghfslijwgh.supabase.co';
-      const SUPABASE_KEY =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaXlodGR3bWVnaGZzbGlqd2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTU2MDMsImV4cCI6MjA5MTMzMTYwM30.QxWx1uHhEZJCvrFcvSfOzlPLUBA39uaRdl80NKEsjZc';
+      // El panel solo habla con el backend: toda lectura y escritura pasa por
+      // /admin/*, que valida el X-Admin-Key en el servidor.
       const RAILWAY_URL = 'https://niko-studio-production.up.railway.app';
-
-      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
       // ━━ AUTH ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // El token de admin NO está en el código. Se pide al abrir el panel, se guarda
@@ -1738,6 +1734,44 @@
           throw new AuthError(`HTTP ${res.status}`);
         }
         return res;
+      }
+
+      // Llama a /admin/* y devuelve el JSON. Si el backend responde con error,
+      // lanza un Error con un mensaje legible (el `detail` del backend cuando
+      // existe) para mostrarlo en un toast.
+      async function adminJson(path, opts = {}) {
+        const init = Object.assign({}, opts);
+        if (opts.body !== undefined) {
+          init.headers = Object.assign({ 'Content-Type': 'application/json' }, opts.headers || {});
+          init.body = JSON.stringify(opts.body);
+        }
+        const res = await adminFetch(`${RAILWAY_URL}${path}`, init);
+        let data = null;
+        try {
+          data = await res.json();
+        } catch (e) {
+          // Respuesta sin JSON (p. ej. una página de error del proxy).
+          console.warn('Respuesta sin JSON de', path, e);
+        }
+        if (!res.ok) {
+          throw new Error(mensajeDeError(res.status, data));
+        }
+        return data;
+      }
+
+      function mensajeDeError(status, data) {
+        const detail = data && data.detail;
+        if (typeof detail === 'string') return detail;
+        if (status === 422) return 'Algún dato no es válido. Revisa los campos.';
+        if (status >= 500) return `El servidor falló (HTTP ${status}). Intenta de nuevo.`;
+        return `Error HTTP ${status}`;
+      }
+
+      // Texto para el usuario a partir de cualquier error de una llamada.
+      function textoError(e) {
+        if (e instanceof AuthError) return 'Vuelve a introducir el token.';
+        if (e instanceof TypeError) return 'Sin conexión con el servidor.';
+        return e.message || 'Error desconocido';
       }
 
       function pedirToken(msg) {
@@ -2063,18 +2097,12 @@
 
       async function cargarEstadoComisiones() {
         try {
-          const { data } = await db
-            .from('config')
-            .select('key,value')
-            .in('key', ['commissions_open', 'max_slots']);
-          if (data) {
-            const openRow = data.find((r) => r.key === 'commissions_open');
-            const slotsRow = data.find((r) => r.key === 'max_slots');
-            comisionesAbiertasAdmin = !openRow || openRow.value !== 'false';
-            if (slotsRow) maxSlots = parseInt(slotsRow.value) || 25;
-          }
+          const config = await adminJson('/admin/config');
+          comisionesAbiertasAdmin = config.commissions_open;
+          maxSlots = config.max_slots;
         } catch (e) {
-          console.warn('Tabla config no encontrada.');
+          console.error('No se pudo leer la configuración:', e);
+          showToast(`No se pudo leer la configuración: ${textoError(e)}`, 'error');
         }
         actualizarToggleUI();
       }
@@ -2104,13 +2132,18 @@
       async function actualizarMaxSlots(val) {
         const v = parseInt(val);
         if (isNaN(v) || v < 1) return;
-        maxSlots = v;
         try {
-          await db.from('config').upsert({ key: 'max_slots', value: String(v) });
+          const config = await adminJson('/admin/config', {
+            method: 'PATCH',
+            body: { max_slots: v },
+          });
+          maxSlots = config.max_slots;
           actualizarToggleUI();
-          showToast(`Límite: ${v} slots activos`, 'ok');
+          showToast(`Límite: ${maxSlots} slots activos`, 'ok');
         } catch (e) {
-          showToast('Error al guardar límite.', 'error');
+          console.error('No se pudo guardar el límite de slots:', e);
+          showToast(`No se guardó el límite: ${textoError(e)}`, 'error');
+          actualizarToggleUI();
         }
       }
 
@@ -2118,26 +2151,34 @@
         const v = parseInt(val);
         if (isNaN(v) || v < 1) return;
         try {
-          await db.from('config').upsert({ key: 'max_waitlist', value: String(v) });
-          showToast(`Límite waitlist: ${v} personas`, 'ok');
+          const config = await adminJson('/admin/config', {
+            method: 'PATCH',
+            body: { max_waitlist: v },
+          });
+          actualizarContadorWaitlist(config.max_waitlist);
+          showToast(`Límite waitlist: ${config.max_waitlist} personas`, 'ok');
         } catch (e) {
-          showToast('Error al guardar límite.', 'error');
+          console.error('No se pudo guardar el límite de la waitlist:', e);
+          showToast(`No se guardó el límite: ${textoError(e)}`, 'error');
         }
       }
 
       async function toggleComisiones() {
         const nuevo = !comisionesAbiertasAdmin;
         try {
-          const { error } = await db
-            .from('config')
-            .upsert({ key: 'commissions_open', value: nuevo ? 'true' : 'false' });
-          if (error) throw error;
-          comisionesAbiertasAdmin = nuevo;
+          const config = await adminJson('/admin/config', {
+            method: 'PATCH',
+            body: { commissions_open: nuevo },
+          });
+          comisionesAbiertasAdmin = config.commissions_open;
           actualizarToggleUI();
-          showToast(nuevo ? 'Comisiones abiertas ✓' : 'Comisiones cerradas', nuevo ? 'ok' : '');
+          showToast(
+            comisionesAbiertasAdmin ? 'Comisiones abiertas ✓' : 'Comisiones cerradas',
+            comisionesAbiertasAdmin ? 'ok' : '',
+          );
         } catch (e) {
-          console.error(e);
-          showToast('Error al actualizar. ¿Existe la tabla "config" en Supabase?', 'error');
+          console.error('No se pudo abrir/cerrar las comisiones:', e);
+          showToast(`No se cambió el estado: ${textoError(e)}`, 'error');
         }
       }
 
@@ -2278,28 +2319,31 @@
         tbody.innerHTML =
           '<tr class="empty-row"><td colspan="6"><i class="ti ti-loader-2"></i> Cargando...</td></tr>';
         try {
-          const { data, error } = await db
-            .from('waitlist')
-            .select('*')
-            .order('created_at', { ascending: true });
-          if (error) throw error;
-          waitlistItems = data || [];
+          const [lista, config] = await Promise.all([
+            adminJson('/admin/waitlist'),
+            adminJson('/admin/config'),
+          ]);
+          waitlistItems = Array.isArray(lista) ? lista : [];
           renderWaitlist();
-          const wlLimitRow = await db
-            .from('config')
-            .select('value')
-            .eq('key', 'max_waitlist')
-            .single();
-          const limit = parseInt(wlLimitRow?.data?.value) || 50;
-          const inp = document.getElementById('wl-limit-input');
-          if (inp) inp.value = limit;
-          const ctr = document.getElementById('wl-counter');
-          if (ctr) ctr.textContent = `${waitlistItems.length}/${limit}`;
+          actualizarContadorWaitlist(config.max_waitlist);
         } catch (e) {
-          console.error(e);
-          tbody.innerHTML =
-            '<tr class="empty-row"><td colspan="6"><i class="ti ti-database-off"></i> Error al cargar. ¿Existe la tabla "waitlist"?</td></tr>';
+          console.error('No se pudo cargar la waitlist:', e);
+          tbody.innerHTML = '';
+          const fila = document.createElement('tr');
+          fila.className = 'empty-row';
+          const celda = document.createElement('td');
+          celda.colSpan = 6;
+          celda.textContent = `Error al cargar la waitlist: ${textoError(e)}`;
+          fila.appendChild(celda);
+          tbody.appendChild(fila);
         }
+      }
+
+      function actualizarContadorWaitlist(limit) {
+        const inp = document.getElementById('wl-limit-input');
+        if (inp && inp !== document.activeElement) inp.value = limit;
+        const ctr = document.getElementById('wl-counter');
+        if (ctr) ctr.textContent = `${waitlistItems.length}/${limit}`;
       }
 
       function renderWaitlist() {
@@ -2408,18 +2452,17 @@
         const list = document.getElementById('port-list');
         list.innerHTML = '<div class="port-empty"><i class="ti ti-loader-2"></i> Cargando...</div>';
         try {
-          const { data, error } = await db
-            .from('portfolio')
-            .select('*')
-            .order('orden', { ascending: true })
-            .order('created_at', { ascending: false });
-          if (error) throw error;
-          portItems = data || [];
+          const data = await adminJson('/admin/portfolio');
+          portItems = Array.isArray(data) ? data : [];
           renderPortfolio();
         } catch (e) {
-          console.error(e);
-          list.innerHTML =
-            '<div class="port-empty" style="color:var(--danger)"><i class="ti ti-database-off"></i> Error al cargar. ¿Existe la tabla "portfolio" en Supabase?</div>';
+          console.error('No se pudo cargar el portafolio:', e);
+          list.innerHTML = '';
+          const aviso = document.createElement('div');
+          aviso.className = 'port-empty';
+          aviso.style.color = 'var(--danger)';
+          aviso.textContent = `Error al cargar el portafolio: ${textoError(e)}`;
+          list.appendChild(aviso);
         }
       }
 
@@ -2466,18 +2509,19 @@
         btn.disabled = true;
         btn.textContent = 'Guardando...';
         try {
-          const { error } = await db
-            .from('portfolio')
-            .insert({ nombre, imagen, categoria, site, anio, en_galeria, orden: portItems.length });
-          if (error) throw error;
+          await adminJson('/admin/portfolio', {
+            method: 'POST',
+            body: { nombre, imagen, categoria, site, anio, en_galeria, orden: portItems.length },
+          });
           showToast('Obra agregada al portafolio', 'ok');
           document.getElementById('p-nombre').value = '';
           document.getElementById('p-imagen').value = '';
           await cargarPortfolio();
         } catch (e) {
-          console.error(e);
+          console.error('No se pudo agregar la obra:', e);
+          const motivo = textoError(e).replace(/\.$/, '');
           showToast(
-            'Error al guardar. Revisa que la tabla "portfolio" exista en Supabase con RLS habilitado.',
+            `No se guardó la obra: ${motivo}. El archivo debe llamarse como "galeria-14.jpg" (sin espacios).`,
             'error',
           );
         } finally {
@@ -2489,13 +2533,12 @@
       async function eliminarObra(id) {
         if (!confirm('¿Eliminar esta obra del portafolio?')) return;
         try {
-          const { error } = await db.from('portfolio').delete().eq('id', id);
-          if (error) throw error;
+          await adminJson(`/admin/portfolio/${encodeURIComponent(id)}`, { method: 'DELETE' });
           showToast('Obra eliminada', 'ok');
           await cargarPortfolio();
         } catch (e) {
-          console.error(e);
-          showToast('Error al eliminar.', 'error');
+          console.error('No se pudo eliminar la obra:', e);
+          showToast(`No se eliminó la obra: ${textoError(e)}`, 'error');
         }
       }
 

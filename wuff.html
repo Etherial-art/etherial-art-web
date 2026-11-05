@@ -850,6 +850,21 @@
         margin-bottom: 0.5rem;
         color: var(--border);
       }
+      .cliente-oculto {
+        color: var(--border);
+        letter-spacing: -1px;
+        user-select: none;
+      }
+      .cliente-enmascarado {
+        font-weight: 500;
+        color: var(--dark);
+      }
+      tr.folio-resaltado td {
+        background: var(--gp);
+      }
+      tr.folio-resaltado td:first-child {
+        box-shadow: inset 3px 0 0 var(--gl);
+      }
       .fila-badge {
         display: inline-flex;
         align-items: center;
@@ -1962,7 +1977,8 @@
             <thead>
               <tr>
                 <th id="th-folio">Folio</th>
-                <th id="th-desc">Descripción</th>
+                <th id="th-client">Cliente</th>
+                <th id="th-desc">Tipo</th>
                 <th id="th-date">Fecha</th>
                 <th id="th-queue">Lugar en fila</th>
                 <th id="th-status">Estado</th>
@@ -3414,13 +3430,12 @@
           'tracker.search': 'Buscar',
           'tracker.loading': 'Cargando folios...',
           'tracker.placeholder': 'Ingresa tu número de folio, ej: #0001',
-          'tracker.empty': 'Escribe tu número de folio para ver su estado.',
           'tracker.error': 'No se pudieron cargar los folios. Intenta más tarde.',
           'tracker.found': 'Se encontró {n} folio(s).',
           'tracker.notfound': 'No se encontró ningún folio.',
           'tracker.col.folio': 'Folio',
           'tracker.col.client': 'Cliente',
-          'tracker.col.desc': 'Descripción',
+          'tracker.col.desc': 'Tipo',
           'tracker.col.date': 'Fecha',
           'tracker.col.queue': 'Lugar en fila',
           'tracker.col.status': 'Estado',
@@ -3494,6 +3509,32 @@
           'status.completed': 'Completado',
           'status.expired': 'Expirado',
           'status.cancelled': 'Cancelado',
+          'tracker.oculto': 'oculto',
+          'tracker.empty': 'No hay comisiones en la fila.',
+          'tracker.folio.info':
+            'Folio {folio} · {cliente} · {tipo} · {estado} · Lugar en la fila: {lugar}',
+          'tracker.folio.fuera':
+            'Folio {folio} · {cliente} · {tipo} · {estado} (ya no está en la fila)',
+          // Tipos guardados en Supabase (formulario y backend) → idioma del visitante.
+          'valor.Ilustración digital': 'Ilustración digital',
+          'valor.Diseño Editorial': 'Diseño Editorial',
+          'valor.Arte Digital para Imprimir': 'Arte digital para imprimir',
+          'valor.Otro': 'Otro',
+          'valor.General': 'General',
+          'valor.Por definir': 'Por definir',
+          'valor.Sticker single': 'Sticker individual',
+          'valor.Icon / Asset spot': 'Ícono / asset',
+          'valor.Sticker Bundle x5': 'Paquete de 5 stickers',
+          'valor.Sticker animado': 'Sticker animado',
+          'valor.PFP / Profile Picture': 'PFP / Foto de perfil',
+          'valor.Badge': 'Badge',
+          'valor.Half Body': 'Half Body',
+          'valor.Full Body': 'Full Body',
+          'valor.Cinematic Scene': 'Escena cinemática',
+          'valor.Portada de libro/zine': 'Portada de libro/zine',
+          'valor.Revista/publicación': 'Revista/publicación',
+          'valor.Poster': 'Póster',
+          'valor.Portada': 'Portada',
           'commissions.closed.title': 'Comisiones cerradas',
           'commissions.closed.msg':
             'Por el momento no estoy aceptando nuevas comisiones. ¡Vuelve pronto y sígueme para enterarte cuando abra!',
@@ -3713,13 +3754,12 @@
           'tracker.search': 'Search',
           'tracker.loading': 'Loading orders...',
           'tracker.placeholder': 'Enter your folio number, e.g. #0001',
-          'tracker.empty': 'Enter your folio number to see its status.',
           'tracker.error': 'Could not load orders. Please try again later.',
           'tracker.found': 'Found {n} order(s).',
           'tracker.notfound': 'No order found.',
           'tracker.col.folio': 'Folio',
           'tracker.col.client': 'Client',
-          'tracker.col.desc': 'Description',
+          'tracker.col.desc': 'Type',
           'tracker.col.date': 'Date',
           'tracker.col.queue': 'Queue position',
           'tracker.col.status': 'Status',
@@ -3794,6 +3834,32 @@
           'status.completed': 'Completed',
           'status.expired': 'Expired',
           'status.cancelled': 'Cancelled',
+          'tracker.oculto': 'hidden',
+          'tracker.empty': 'There are no commissions in the queue.',
+          'tracker.folio.info':
+            'Folio {folio} · {cliente} · {tipo} · {estado} · Place in queue: {lugar}',
+          'tracker.folio.fuera':
+            'Folio {folio} · {cliente} · {tipo} · {estado} (no longer in the queue)',
+          // Tipos guardados en Supabase (formulario y backend) → idioma del visitante.
+          'valor.Ilustración digital': 'Digital illustration',
+          'valor.Diseño Editorial': 'Editorial Design',
+          'valor.Arte Digital para Imprimir': 'Print-ready digital art',
+          'valor.Otro': 'Other',
+          'valor.General': 'General',
+          'valor.Por definir': 'To be defined',
+          'valor.Sticker single': 'Single sticker',
+          'valor.Icon / Asset spot': 'Icon / asset spot',
+          'valor.Sticker Bundle x5': 'Sticker bundle x5',
+          'valor.Sticker animado': 'Animated sticker',
+          'valor.PFP / Profile Picture': 'PFP / Profile picture',
+          'valor.Badge': 'Badge',
+          'valor.Half Body': 'Half Body',
+          'valor.Full Body': 'Full Body',
+          'valor.Cinematic Scene': 'Cinematic scene',
+          'valor.Portada de libro/zine': 'Book/zine cover',
+          'valor.Revista/publicación': 'Magazine/publication',
+          'valor.Poster': 'Poster',
+          'valor.Portada': 'Cover',
           'commissions.closed.title': 'Commissions closed',
           'commissions.closed.msg':
             "I'm not accepting new commissions right now. Check back soon and follow me to know when they open!",
@@ -4012,13 +4078,12 @@
           'tracker.search': 'Suchen',
           'tracker.loading': 'Aufträge werden geladen...',
           'tracker.placeholder': 'Folio-Nummer eingeben, z.B. #0001',
-          'tracker.empty': 'Gib deine Folio-Nummer ein, um den Status zu sehen.',
           'tracker.error': 'Aufträge konnten nicht geladen werden.',
           'tracker.found': '{n} Auftrag/Aufträge gefunden.',
           'tracker.notfound': 'Kein Auftrag gefunden.',
           'tracker.col.folio': 'Folio',
           'tracker.col.client': 'Kunde',
-          'tracker.col.desc': 'Beschreibung',
+          'tracker.col.desc': 'Typ',
           'tracker.col.date': 'Datum',
           'tracker.col.queue': 'Platz',
           'tracker.col.status': 'Status',
@@ -4093,6 +4158,32 @@
           'status.completed': 'Abgeschlossen',
           'status.expired': 'Abgelaufen',
           'status.cancelled': 'Abgebrochen',
+          'tracker.oculto': 'verborgen',
+          'tracker.empty': 'Keine Aufträge in der Warteschlange.',
+          'tracker.folio.info':
+            'Folio {folio} · {cliente} · {tipo} · {estado} · Platz in der Warteschlange: {lugar}',
+          'tracker.folio.fuera':
+            'Folio {folio} · {cliente} · {tipo} · {estado} (nicht mehr in der Warteschlange)',
+          // Tipos guardados en Supabase (formulario y backend) → idioma del visitante.
+          'valor.Ilustración digital': 'Digitale Illustration',
+          'valor.Diseño Editorial': 'Editorial Design',
+          'valor.Arte Digital para Imprimir': 'Druckfertige digitale Kunst',
+          'valor.Otro': 'Sonstiges',
+          'valor.General': 'Allgemein',
+          'valor.Por definir': 'Noch offen',
+          'valor.Sticker single': 'Einzelner Sticker',
+          'valor.Icon / Asset spot': 'Icon / Asset',
+          'valor.Sticker Bundle x5': 'Sticker-Paket x5',
+          'valor.Sticker animado': 'Animierter Sticker',
+          'valor.PFP / Profile Picture': 'PFP / Profilbild',
+          'valor.Badge': 'Badge',
+          'valor.Half Body': 'Half Body',
+          'valor.Full Body': 'Full Body',
+          'valor.Cinematic Scene': 'Kinoreife Szene',
+          'valor.Portada de libro/zine': 'Buch-/Zine-Cover',
+          'valor.Revista/publicación': 'Magazin/Publikation',
+          'valor.Poster': 'Poster',
+          'valor.Portada': 'Cover',
           'commissions.closed.title': 'Aufträge geschlossen',
           'commissions.closed.msg':
             'Momentan nehme ich keine neuen Aufträge an. Schau bald wieder rein und folge mir – so erfährst du als Erste:r, wann es wieder losgeht!',
@@ -4455,6 +4546,7 @@
         const ti = document.getElementById('folio-input');
         if (ti) ti.placeholder = t('tracker.placeholder');
         setText('th-folio', t('tracker.col.folio'));
+        setText('th-client', t('tracker.col.client'));
         setText('th-desc', t('tracker.col.desc'));
         setText('th-date', t('tracker.col.date'));
         setText('th-queue', t('tracker.col.queue'));
@@ -4926,15 +5018,26 @@
         cancelled: 's-expired',
       };
       let foliosGlobales = [];
+      // Resultado de buscar_folio() (con el nombre ya enmascarado por la base).
+      let folioBuscado = null;
       let folioKofi = null;
+
+      // Traduce un valor guardado en español (tipo de servicio o de ilustración)
+      // al idioma del visitante. Si no está en el diccionario, se muestra tal cual.
+      function traducirValor(valor) {
+        if (valor == null || valor === '') return '';
+        const clave = 'valor.' + valor;
+        return (i18n[lang] && i18n[lang][clave]) || (i18n.es && i18n.es[clave]) || String(valor);
+      }
 
       function renderFolios(lista) {
         const tbody = document.getElementById('folio-tbody');
         if (!tbody) return;
         if (!lista.length) {
-          tbody.innerHTML = `<tr><td colspan="5" class="tracker-empty"><i class="ti ti-inbox"></i> ${t('tracker.empty')}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="6" class="tracker-empty"><i class="ti ti-inbox"></i> ${t('tracker.empty')}</td></tr>`;
           return;
         }
+        const buscado = folioBuscado ? Number(folioBuscado.folio) : null;
         tbody.innerHTML = lista
           .map((f) => {
             const status = esc((f.status || 'waiting').toLowerCase());
@@ -4947,14 +5050,37 @@
             const fila = f.lugar_en_fila
               ? `<span class="fila-badge"><i class="ti ti-list-numbers"></i> #${esc(f.lugar_en_fila)}</span>`
               : '—';
-            return `<tr><td class="folio-num">#${esc(String(f.folio).padStart(4, '0'))}</td><td>${esc(f.tipo_ilustracion || f.tipo_servicio) || '—'}</td><td>${fecha}</td><td>${fila}</td><td><span class="pill ${eClass[status] || 's-pending'}">${t('status.' + status)}</span></td></tr>`;
+            const esBuscado = buscado !== null && Number(f.folio) === buscado;
+            // Nunca hay datos del cliente detrás del marcador: solo el folio
+            // buscado muestra el nombre que la base ya devolvió enmascarado.
+            const cliente = esBuscado
+              ? `<span class="cliente-enmascarado">${esc(folioBuscado.cliente_enmascarado || '***')}</span>`
+              : `<span class="cliente-oculto" role="img" aria-label="${esc(t('tracker.oculto'))}">██████</span>`;
+            const tipo = esc(traducirValor(f.tipo_ilustracion || f.tipo_servicio)) || '—';
+            return `<tr${esBuscado ? ' class="folio-resaltado"' : ''}><td class="folio-num">#${esc(String(f.folio).padStart(4, '0'))}</td><td>${cliente}</td><td>${tipo}</td><td>${fecha}</td><td>${fila}</td><td><span class="pill ${eClass[status] || 's-pending'}">${t('status.' + status)}</span></td></tr>`;
           })
           .join('');
       }
 
-      // El tracker es solo por folio: no se carga ninguna lista al abrir. Cada
-      // búsqueda pide una comisión a la función buscar_folio() (columnas
-      // públicas, sin datos del cliente).
+      // La fila pública: folio, tipo, estado, lugar y fecha de cada comisión en
+      // cola (función fila_publica). Ningún dato del cliente.
+      async function cargarFila() {
+        const tbody = document.getElementById('folio-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = `<tr><td colspan="6" class="tracker-loading"><i class="ti ti-loader-2"></i> ${t('tracker.loading')}</td></tr>`;
+        try {
+          const { data, error } = await db.rpc('fila_publica');
+          if (error) throw error;
+          foliosGlobales = Array.isArray(data) ? data : [];
+          renderFolios(foliosGlobales);
+        } catch (e) {
+          console.error('No se pudo cargar la fila:', e);
+          tbody.innerHTML = `<tr><td colspan="6" class="tracker-empty"><i class="ti ti-wifi-off"></i> ${t('tracker.error')}</td></tr>`;
+        }
+      }
+
+      // Busca un folio con buscar_folio(): la base devuelve el nombre ya
+      // enmascarado (2 letras + ***). Se resalta en la lista si está en la fila.
       async function buscarFolio() {
         const q = document
           .getElementById('folio-input')
@@ -4962,38 +5088,50 @@
           .toLowerCase()
           .replace('#', '');
         const res = document.getElementById('tracker-result');
+        folioBuscado = null;
         if (!q) {
           if (res) res.style.display = 'none';
-          foliosGlobales = [];
           renderFolios(foliosGlobales);
           return;
         }
         const numero = /^\d+$/.test(q) ? Number(q) : NaN;
-        let found = [];
+        let encontrado = null;
         if (Number.isSafeInteger(numero) && numero > 0 && numero <= 2147483647) {
-          const tbody = document.getElementById('folio-tbody');
-          if (tbody)
-            tbody.innerHTML = `<tr><td colspan="5" class="tracker-loading"><i class="ti ti-loader-2"></i> ${t('tracker.loading')}</td></tr>`;
           try {
             const { data, error } = await db.rpc('buscar_folio', { p_folio: numero });
             if (error) throw error;
-            found = Array.isArray(data) ? data : [];
+            encontrado = Array.isArray(data) && data.length ? data[0] : null;
           } catch (e) {
             console.error('No se pudo buscar el folio:', e);
-            if (res) res.style.display = 'none';
-            if (tbody)
-              tbody.innerHTML = `<tr><td colspan="5" class="tracker-empty"><i class="ti ti-wifi-off"></i> ${t('tracker.error')}</td></tr>`;
+            if (res) {
+              res.style.display = 'block';
+              res.textContent = t('tracker.error');
+            }
+            renderFolios(foliosGlobales);
             return;
           }
         }
-        if (res) {
-          res.style.display = 'block';
-          res.textContent = found.length
-            ? t('tracker.found', { n: found.length })
-            : t('tracker.notfound');
+        if (res) res.style.display = 'block';
+        if (!encontrado) {
+          if (res) res.textContent = t('tracker.notfound');
+          renderFolios(foliosGlobales);
+          return;
         }
-        foliosGlobales = found;
-        renderFolios(found);
+        folioBuscado = encontrado;
+        const enFila = foliosGlobales.some((f) => Number(f.folio) === Number(encontrado.folio));
+        const estado = (encontrado.status || '').toLowerCase();
+        if (res)
+          res.textContent = t(enFila ? 'tracker.folio.info' : 'tracker.folio.fuera', {
+            folio: '#' + String(encontrado.folio).padStart(4, '0'),
+            cliente: encontrado.cliente_enmascarado || '***',
+            tipo: traducirValor(encontrado.tipo_ilustracion || encontrado.tipo_servicio) || '—',
+            estado: t('status.' + estado),
+            lugar: encontrado.lugar_en_fila || '—',
+          });
+        renderFolios(foliosGlobales);
+        const fila = document.querySelector('#folio-tbody tr.folio-resaltado');
+        if (fila && typeof fila.scrollIntoView === 'function')
+          fila.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
 
       // ━━ FORMULARIO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -5637,7 +5775,7 @@
           fi.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') buscarFolio();
           });
-        renderFolios(foliosGlobales);
+        cargarFila();
         cargarEstadoComisiones();
         // URL params
         const p = new URLSearchParams(window.location.search);

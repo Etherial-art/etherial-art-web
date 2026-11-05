@@ -57,3 +57,22 @@ export function fakeConsole() {
     },
   };
 }
+
+/** Código fuente de las declaraciones `const`/`let` de nivel superior pedidas. */
+export function variableSources(page, names) {
+  const found = new Map();
+  for (const src of inlineScripts(page)) {
+    const ast = espree.parse(src, { ecmaVersion: 2024, range: true });
+    for (const node of ast.body) {
+      if (node.type !== 'VariableDeclaration') continue;
+      for (const decl of node.declarations) {
+        if (decl.id.type === 'Identifier' && names.includes(decl.id.name)) {
+          found.set(decl.id.name, `${node.kind} ${src.slice(...decl.range)};`);
+        }
+      }
+    }
+  }
+  const missing = names.filter((n) => !found.has(n));
+  if (missing.length) throw new Error(`${page}: no se encontró ${missing.join(', ')}`);
+  return names.map((n) => found.get(n)).join('\n');
+}

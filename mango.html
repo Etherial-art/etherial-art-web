@@ -48,6 +48,7 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <script src="js/escape.js"></script>
     <style>
       * {
         box-sizing: border-box;
@@ -5019,7 +5020,7 @@
         }
         tbody.innerHTML = lista
           .map((f) => {
-            const status = (f.status || 'waiting').toLowerCase();
+            const status = esc((f.status || 'waiting').toLowerCase());
             const fecha = f.created_at
               ? new Date(f.created_at).toLocaleDateString(
                   lang === 'de' ? 'de-DE' : lang === 'en' ? 'en-US' : 'es-MX',
@@ -5027,9 +5028,9 @@
                 )
               : '—';
             const fila = f.lugar_en_fila
-              ? `<span class="fila-badge"><i class="ti ti-list-numbers"></i> #${f.lugar_en_fila}</span>`
+              ? `<span class="fila-badge"><i class="ti ti-list-numbers"></i> #${esc(f.lugar_en_fila)}</span>`
               : '—';
-            return `<tr><td class="folio-num">#${String(f.folio).padStart(4, '0')}</td><td>${f.cliente_tag || '—'}</td><td>${f.tipo_ilustracion || f.tipo_servicio || '—'}</td><td>${fecha}</td><td>${fila}</td><td><span class="pill ${eClass[status] || 's-pending'}">${t('status.' + status)}</span></td></tr>`;
+            return `<tr><td class="folio-num">#${esc(String(f.folio).padStart(4, '0'))}</td><td>${esc(f.cliente_tag) || '—'}</td><td>${esc(f.tipo_ilustracion || f.tipo_servicio) || '—'}</td><td>${fecha}</td><td>${fila}</td><td><span class="pill ${eClass[status] || 's-pending'}">${t('status.' + status)}</span></td></tr>`;
           })
           .join('');
       }
@@ -5805,11 +5806,16 @@
 
       async function loadExtraPortfolio() {
         try {
-          const { data } = await db
+          const { data, error } = await db
             .from('portfolio')
             .select('*')
             .eq('site', 'art')
             .order('orden', { ascending: true });
+          if (error) {
+            // Sin las obras extra la galería fija sigue visible.
+            console.error('No se pudo cargar el portafolio extra:', error);
+            return;
+          }
           if (!data || !data.length) return;
           const g = document.getElementById('gallery-extra-items');
           if (g) {
@@ -5817,7 +5823,7 @@
               .filter((p) => p.en_galeria)
               .map(
                 (p) =>
-                  `<div class="gallery-item" data-type="image" data-href="img/${p.imagen}"><div class="gallery-img" style="height:240px"><img src="img/${p.imagen}" alt="" loading="lazy" decoding="async" style="width:100%;display:block;object-fit:cover;height:240px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">${p.nombre}</span></div></div>`,
+                  `<div class="gallery-item" data-type="image" data-href="${rutaImagen(p.imagen)}"><div class="gallery-img" style="height:240px"><img src="${rutaImagen(p.imagen)}" alt="" loading="lazy" decoding="async" style="width:100%;display:block;object-fit:cover;height:240px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">${esc(p.nombre)}</span></div></div>`,
               )
               .join('');
             if (g.innerHTML)
@@ -5833,7 +5839,7 @@
             pg.innerHTML = data
               .map(
                 (p) =>
-                  `<div class="port-card" data-cat="${p.categoria}"><div class="port-img" style="background-image:url('img/${p.imagen}')"><span>${p.nombre}</span></div><div class="port-info"><div><div class="port-title">${p.nombre}</div><div class="port-tag">${p.categoria}</div></div><span class="port-year">${p.anio || '2026'}</span></div></div>`,
+                  `<div class="port-card" data-cat="${esc(p.categoria)}"><div class="port-img" style="background-image:url('${rutaImagen(p.imagen)}')"><span>${esc(p.nombre)}</span></div><div class="port-info"><div><div class="port-title">${esc(p.nombre)}</div><div class="port-tag">${esc(p.categoria)}</div></div><span class="port-year">${esc(p.anio || '2026')}</span></div></div>`,
               )
               .join('');
         } catch (e) {

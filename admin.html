@@ -16,6 +16,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
     />
+    <script src="js/escape.js"></script>
     <style>
       * {
         box-sizing: border-box;
@@ -1759,6 +1760,17 @@
         return data;
       }
 
+      // ━━ ESCAPE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // Todo dato que viene de clientes o de la base pasa por esc() (js/escape.js)
+      // antes de entrar en innerHTML: un nombre como "<img onerror=…>" se
+      // muestra como texto, no se ejecuta en la sesión de admin.
+
+      // Argumento seguro para un onclick="fn(…)": literal JSON (comillas y
+      // barras escapadas para JS) y luego escapado para el atributo HTML.
+      function jsArg(valor) {
+        return esc(JSON.stringify(String(valor)));
+      }
+
       function mensajeDeError(status, data) {
         const detail = data && data.detail;
         if (typeof detail === 'string') return detail;
@@ -1941,23 +1953,26 @@
                   year: 'numeric',
                 })
               : '—';
-            const tipo = c.tipo_ilustracion || c.tipo_servicio || '—';
+            const tipo = esc(c.tipo_ilustracion || c.tipo_servicio || '—');
             const rush = c.es_rush ? '<span class="rush-badge">⚡ RUSH</span>' : '';
-            const st = c.status || 'waiting';
-            const folio = String(c.folio).padStart(4, '0');
+            const st = esc(c.status || 'waiting');
+            const etiqueta = statusLabel[st] || st;
+            // El folio es numérico; Number() evita que otra cosa llegue a los onclick.
+            const num = Number(c.folio);
+            const folio = String(num).padStart(4, '0');
             const quoteBtn = necesitaCotizacion(c)
-              ? `<button class="act-btn quote" onclick="abrirCotizacion(${c.folio})" title="Generar cotización"><i class="ti ti-calculator"></i> ${st === 'quoted' ? 'Recotizar' : 'Cotizar'}</button>`
+              ? `<button class="act-btn quote" onclick="abrirCotizacion(${num})" title="Generar cotización"><i class="ti ti-calculator"></i> ${st === 'quoted' ? 'Recotizar' : 'Cotizar'}</button>`
               : '';
-            return `<tr data-folio="${c.folio}" data-status="${st}" style="--sc:${statusColor[st] || '#666'}">
+            return `<tr data-folio="${num}" data-status="${st}" style="--sc:${statusColor[st] || '#666'}">
       <td class="folio-num">#${folio}</td>
-      <td data-lbl="${statusLabel[st] || st}">${c.cliente_tag || '—'}${c.email ? `<br><span style="font-size:11px;color:var(--hint)">${c.email}</span>` : ''}</td>
+      <td data-lbl="${etiqueta}">${esc(c.cliente_tag) || '—'}${c.email ? `<br><span style="font-size:11px;color:var(--hint)">${esc(c.email)}</span>` : ''}</td>
       <td>${tipo}</td>
       <td>${rush || '—'}</td>
-      <td><span class="pill ${statusClass[st] || 's-waiting'}">${statusLabel[st] || st}</span></td>
+      <td><span class="pill ${statusClass[st] || 's-waiting'}">${etiqueta}</span></td>
       <td>${fecha}</td>
       <td>
         <div class="action-row">
-          <select class="status-select" onchange="cambiarEstado(${c.folio},this.value)" title="Cambiar estado">
+          <select class="status-select" onchange="cambiarEstado(${num},this.value)" title="Cambiar estado">
             <option value="">Estado →</option>
             <option value="waiting">En espera</option>
             <option value="notified">Notificada</option>
@@ -1968,10 +1983,10 @@
             <option value="expired">Expirada</option>
           </select>
           ${quoteBtn}
-          <button class="act-btn" onclick="abrirDetalle(${c.folio})" title="Ver detalles"><i class="ti ti-eye"></i> Ver</button>
-          <button class="act-btn notify" onclick="notificarCliente(${c.folio})" title="Enviar email al cliente"><i class="ti ti-mail"></i> Notificar</button>
-          <button class="act-btn" onclick="abrirEditar(${c.folio})" title="Editar comisión"><i class="ti ti-pencil"></i> Editar</button>
-          <button class="act-btn danger" onclick="eliminarComision(${c.folio})" title="Eliminar permanentemente"><i class="ti ti-trash"></i></button>
+          <button class="act-btn" onclick="abrirDetalle(${num})" title="Ver detalles"><i class="ti ti-eye"></i> Ver</button>
+          <button class="act-btn notify" onclick="notificarCliente(${num})" title="Enviar email al cliente"><i class="ti ti-mail"></i> Notificar</button>
+          <button class="act-btn" onclick="abrirEditar(${num})" title="Editar comisión"><i class="ti ti-pencil"></i> Editar</button>
+          <button class="act-btn danger" onclick="eliminarComision(${num})" title="Eliminar permanentemente"><i class="ti ti-trash"></i></button>
         </div>
       </td>
     </tr>`;
@@ -2189,7 +2204,7 @@
         document.getElementById('d-folio').textContent = `#${String(folio).padStart(4, '0')}`;
         const f = (lbl, val) =>
           val != null && val !== '' && val !== false
-            ? `<div class="q-row"><span class="q-lbl">${lbl}</span><span style="color:var(--dark)">${val}</span></div>`
+            ? `<div class="q-row"><span class="q-lbl">${lbl}</span><span style="color:var(--dark)">${esc(val)}</span></div>`
             : '';
         const arr = (lbl, val) => (Array.isArray(val) && val.length ? f(lbl, val.join(', ')) : '');
         document.getElementById('d-body').innerHTML = `
@@ -2211,7 +2226,7 @@
       ${f('Rush', c.es_rush ? '⚡ Sí' : null)}
       ${f('NSFW', c.es_nsfw ? 'Sí' : null)}
     </div>
-    ${c.descripcion_adicional ? `<div class="mfield" style="margin-top:.75rem"><label>Descripción</label><div style="padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;line-height:1.6;color:var(--dark);white-space:pre-wrap">${c.descripcion_adicional}</div></div>` : ''}
+    ${c.descripcion_adicional ? `<div class="mfield" style="margin-top:.75rem"><label>Descripción</label><div style="padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;line-height:1.6;color:var(--dark);white-space:pre-wrap">${esc(c.descripcion_adicional)}</div></div>` : ''}
     ${arr('Fondo', c.fondo)}
     ${arr('Composición', c.composicion)}
   `;
@@ -2364,14 +2379,14 @@
               : '—';
             return `<tr>
       <td class="folio-num">${i + 1}</td>
-      <td>${w.nombre || '—'}</td>
-      <td style="font-size:12px;color:var(--muted)">${w.email || '—'}</td>
-      <td>${w.tipo_interes || '—'}</td>
+      <td>${esc(w.nombre) || '—'}</td>
+      <td style="font-size:12px;color:var(--muted)">${esc(w.email) || '—'}</td>
+      <td>${esc(w.tipo_interes) || '—'}</td>
       <td>${fecha}</td>
       <td><div class="action-row">
-        <button class="act-btn" onclick="promoverWaitlist('${w.id}')" title="Promover a comisión" style="border-color:var(--gl);color:var(--gl)"><i class="ti ti-arrow-up"></i> Promover</button>
-        <button class="act-btn notify" onclick="notificarWaitlist('${w.id}')" title="Notificar por email"><i class="ti ti-mail"></i> Notificar</button>
-        <button class="act-btn danger" onclick="eliminarWaitlist('${w.id}')" title="Eliminar"><i class="ti ti-trash"></i></button>
+        <button class="act-btn" onclick="promoverWaitlist(${jsArg(w.id)})" title="Promover a comisión" style="border-color:var(--gl);color:var(--gl)"><i class="ti ti-arrow-up"></i> Promover</button>
+        <button class="act-btn notify" onclick="notificarWaitlist(${jsArg(w.id)})" title="Notificar por email"><i class="ti ti-mail"></i> Notificar</button>
+        <button class="act-btn danger" onclick="eliminarWaitlist(${jsArg(w.id)})" title="Eliminar"><i class="ti ti-trash"></i></button>
       </div></td>
     </tr>`;
           })
@@ -2477,18 +2492,18 @@
           .map(
             (p) => `
     <div class="port-item-card">
-      <img src="img/${p.imagen}" class="port-item-thumb"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${p.nombre}">
+      <img src="${rutaImagen(p.imagen)}" class="port-item-thumb"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${esc(p.nombre)}">
       <div class="port-item-placeholder" style="display:none"><i class="ti ti-photo-off"></i></div>
       <div class="port-item-info">
-        <div class="port-item-name">${p.nombre}</div>
+        <div class="port-item-name">${esc(p.nombre)}</div>
         <div class="port-item-meta">
-          <span>${p.categoria} · ${p.site === 'wuff' ? 'Wuff' : 'Art/Mango'}</span>
-          <span>${p.anio || '—'}</span>
+          <span>${esc(p.categoria)} · ${p.site === 'wuff' ? 'Wuff' : 'Art/Mango'}</span>
+          <span>${esc(p.anio) || '—'}</span>
         </div>
         ${!p.en_galeria ? '<div class="port-hint">Solo portafolio</div>' : ''}
       </div>
-      <button class="port-item-del" onclick="eliminarObra('${p.id}')" title="Eliminar"><i class="ti ti-trash"></i></button>
+      <button class="port-item-del" onclick="eliminarObra(${jsArg(p.id)})" title="Eliminar"><i class="ti ti-trash"></i></button>
     </div>`,
           )
           .join('')}</div>`;

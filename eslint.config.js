@@ -23,6 +23,8 @@ export default [
         ...globals.browser,
         supabase: 'readonly', // <script src="@supabase/supabase-js">
         GLightbox: 'readonly', // <script src="glightbox">
+        esc: 'readonly', // <script src="js/escape.js">
+        rutaImagen: 'readonly', // <script src="js/escape.js">
       },
     },
     rules: {

@@ -62,15 +62,31 @@ conciencia con `npm run lint:fix` y en un commit propio.
 pre-commit run --all-files   # todo el repo
 npm run format               # solo Prettier
 npm run lint                 # solo ESLint
-npm run check                # Prettier --check + ESLint, sin modificar nada
+npm test                     # pruebas (node:test)
+npm run check                # Prettier --check + ESLint + pruebas, sin modificar nada
 ```
 
 ### CI
 
-`.github/workflows/ci.yml` corre pre-commit en cada PR, sobre los archivos que
-cambia el PR (en `main`, sobre todo el repo). Es el mismo chequeo que el hook
-local. Un PR solo se mergea con el check en verde. (No hay job de pytest: este
-repo no tiene Python; las pruebas del backend están en `niko-studio`.)
+`.github/workflows/ci.yml` corre en cada PR:
+
+- **pre-commit** sobre los archivos que cambia el PR (en `main`, sobre todo el
+  repo). Es el mismo chequeo que el hook local.
+- **`npm test`**: las pruebas de `tests/`.
+
+Un PR solo se mergea con ambos checks en verde.
+
+### Pruebas
+
+Las pruebas viven en `tests/*.test.js` y usan el runner que trae Node
+(`node:test`): no hace falta navegador ni dependencias extra. _Por qué así:_ el
+JS está inline en los `.html`, así que `tests/extract.js` lo **extrae de la
+página real** (con espree, el parser de ESLint) y lo ejecuta en un contexto
+aislado con dobles de `db`, `document` o `sessionStorage`. Se prueba el código
+que se publica, no una copia.
+
+Cuando cambies el manejo de errores o la lógica de una función, agrega una
+prueba que falle antes del cambio y pase después.
 
 > **No uses `git commit --no-verify`** para saltarte los hooks. Si un hook se
 > equivoca, corrige la configuración en un PR aparte.
@@ -239,8 +255,6 @@ Al adoptar estos estándares había código que no cumplía reglas cuyo arreglo
 cambia lógica. Para no bloquear commits, `eslint.config.js` baja esas reglas a
 _warning_ solo en esos archivos:
 
-- `no-empty`: `catch (e) {}` vacíos en `index.html`, `mango.html`, `wuff.html`
-  y `admin.html`.
 - `no-var`: `a11y.js`.
 
 Se siguen viendo en cada `npm run lint`. Al corregirlos (en un PR propio),

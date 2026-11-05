@@ -549,6 +549,10 @@
         color: #9a6a00;
         background: rgba(154, 106, 0, 0.08);
       }
+      .comm-badge.badge-unknown {
+        color: var(--muted);
+        background: transparent;
+      }
       [data-theme='dark'] .comm-badge.badge-closed {
         color: #e07070;
       }
@@ -1997,6 +2001,44 @@
                 vuelva a abrirse.
               </p>
             </div>
+            <div
+              id="wl-unknown-banner"
+              role="alert"
+              style="display: none; text-align: center; padding: 2rem 0 1rem"
+            >
+              <i
+                class="ti ti-alert-circle"
+                style="font-size: 36px; color: var(--hint); display: block; margin-bottom: 0.75rem"
+              ></i>
+              <div
+                style="
+                  font-family: var(--serif);
+                  font-size: 22px;
+                  font-weight: 300;
+                  color: var(--dark);
+                  margin-bottom: 0.5rem;
+                "
+                id="wl-unknown-title"
+              >
+                No se pudo cargar la lista de espera
+              </div>
+              <p
+                style="
+                  font-size: 13px;
+                  color: var(--muted);
+                  max-width: 400px;
+                  margin: 0 auto 1.25rem;
+                  line-height: 1.7;
+                "
+                id="wl-unknown-msg"
+              >
+                No pudimos comprobar si hay lugar en la lista de espera en este momento. Revisa tu
+                conexión e inténtalo de nuevo.
+              </p>
+              <button class="srv-pay" onclick="cargarEstadoComisiones()" id="wl-unknown-retry-btn">
+                Reintentar
+              </button>
+            </div>
             <div id="wl-form-wrap" style="max-width: 480px">
               <div class="field">
                 <label for="wl-name" class="field-label" id="lbl-wl-name">Tu nombre o @</label>
@@ -2265,6 +2307,44 @@
                 ><i class="ti ti-coffee"></i> Ko-fi</a
               >
             </div>
+          </div>
+          <div
+            id="form-unknown-banner"
+            role="alert"
+            style="display: none; text-align: center; padding: 4rem 2rem"
+          >
+            <i
+              class="ti ti-alert-circle"
+              style="font-size: 48px; color: var(--hint); display: block; margin-bottom: 1.25rem"
+            ></i>
+            <div
+              style="
+                font-family: var(--serif);
+                font-size: 32px;
+                font-weight: 300;
+                color: var(--dark);
+                margin-bottom: 0.5rem;
+              "
+              id="unknown-title"
+            >
+              No se pudo cargar la disponibilidad
+            </div>
+            <p
+              style="
+                font-size: 13px;
+                color: var(--muted);
+                max-width: 420px;
+                margin: 0 auto 1.75rem;
+                line-height: 1.7;
+              "
+              id="unknown-msg"
+            >
+              No pudimos comprobar si hay espacios para comisiones en este momento. Revisa tu
+              conexión e inténtalo de nuevo.
+            </p>
+            <button class="srv-pay" onclick="cargarEstadoComisiones()" id="unknown-retry-btn">
+              Reintentar
+            </button>
           </div>
           <div id="form-wrap">
             <div class="page-eyebrow" id="form-eyebrow">Solicitud de comisión</div>
@@ -3395,6 +3475,11 @@
           'comm.badge.open': '● Abiertas',
           'comm.badge.closed': '● Cerradas',
           'comm.badge.full': '● Slots llenos',
+          'comm.badge.unknown': '● Desconocido',
+          'commissions.unknown.title': 'No se pudo cargar la disponibilidad',
+          'commissions.unknown.msg':
+            'No pudimos comprobar si hay espacios para comisiones en este momento. Revisa tu conexión e inténtalo de nuevo.',
+          'commissions.unknown.retry': 'Reintentar',
           'nav.seguimiento': 'Seguimiento',
           'seg.eyebrow': 'Estado de pedidos',
           'seg.title': 'Seguimiento',
@@ -3412,6 +3497,9 @@
           'wl.submit': 'Unirme a la lista',
           'wl.ok': '¡Estás en la lista! Te avisaremos cuando haya espacio disponible.',
           'wl.error': 'Hubo un error. Intenta de nuevo.',
+          'wl.unknown.title': 'No se pudo cargar la lista de espera',
+          'wl.unknown.msg':
+            'No pudimos comprobar si hay lugar en la lista de espera en este momento. Revisa tu conexión e inténtalo de nuevo.',
           'wl.full.title': 'Lista de espera completa',
           'wl.full.msg':
             'La lista de espera está llena por ahora. Sígueme en redes para enterarte cuando vuelva a abrirse.',
@@ -3676,6 +3764,11 @@
           'comm.badge.open': '● Open',
           'comm.badge.closed': '● Closed',
           'comm.badge.full': '● Slots full',
+          'comm.badge.unknown': '● Unknown',
+          'commissions.unknown.title': "Couldn't load availability",
+          'commissions.unknown.msg':
+            "We couldn't check whether commission slots are available right now. Check your connection and try again.",
+          'commissions.unknown.retry': 'Try again',
           'nav.seguimiento': 'Tracking',
           'seg.eyebrow': 'Order status',
           'seg.title': 'Tracking',
@@ -3693,6 +3786,9 @@
           'wl.submit': 'Join the list',
           'wl.ok': "You're on the list! We'll let you know when a spot opens up.",
           'wl.error': 'Something went wrong. Please try again.',
+          'wl.unknown.title': "Couldn't load the waitlist",
+          'wl.unknown.msg':
+            "We couldn't check whether there's room on the waitlist right now. Check your connection and try again.",
           'wl.full.title': 'Waitlist is full',
           'wl.full.msg':
             'The waitlist is currently full. Follow me on social media to find out when it reopens.',
@@ -3956,6 +4052,11 @@
           'comm.badge.open': '● Offen',
           'comm.badge.closed': '● Geschlossen',
           'comm.badge.full': '● Plätze belegt',
+          'comm.badge.unknown': '● Unbekannt',
+          'commissions.unknown.title': 'Verfügbarkeit konnte nicht geladen werden',
+          'commissions.unknown.msg':
+            'Wir konnten gerade nicht prüfen, ob Plätze für Aufträge frei sind. Prüfe deine Verbindung und versuche es erneut.',
+          'commissions.unknown.retry': 'Erneut versuchen',
           'nav.seguimiento': 'Nachverfolgung',
           'seg.eyebrow': 'Bestellstatus',
           'seg.title': 'Nachverfolgung',
@@ -3973,6 +4074,9 @@
           'wl.submit': 'Zur Liste beitreten',
           'wl.ok': 'Du bist auf der Liste! Wir melden uns, sobald ein Platz frei wird.',
           'wl.error': 'Da ist etwas schiefgelaufen. Bitte noch mal versuchen.',
+          'wl.unknown.title': 'Warteliste konnte nicht geladen werden',
+          'wl.unknown.msg':
+            'Wir konnten gerade nicht prüfen, ob auf der Warteliste Platz ist. Prüfe deine Verbindung und versuche es erneut.',
           'wl.full.title': 'Warteliste voll',
           'wl.full.msg':
             'Die Warteliste ist derzeit voll. Folg mir in den sozialen Medien, um zu erfahren, wann sie wieder öffnet.',
@@ -4252,6 +4356,9 @@
         setText('wl-ok-msg', t('wl.ok'));
         setText('wl-full-title', t('wl.full.title'));
         setText('wl-full-msg', t('wl.full.msg'));
+        setText('wl-unknown-title', t('wl.unknown.title'));
+        setText('wl-unknown-msg', t('wl.unknown.msg'));
+        setText('wl-unknown-retry-btn', t('commissions.unknown.retry'));
         const cwb = document.getElementById('closed-wl-btn');
         if (cwb) cwb.textContent = t('slots.full.btn');
         setText('slots-full-title', t('slots.full.title'));
@@ -4283,6 +4390,9 @@
         setText('form-intro', t('form.intro'));
         setText('closed-title', t('commissions.closed.title'));
         setText('closed-msg', t('commissions.closed.msg'));
+        setText('unknown-title', t('commissions.unknown.title'));
+        setText('unknown-msg', t('commissions.unknown.msg'));
+        setText('unknown-retry-btn', t('commissions.unknown.retry'));
         document.querySelectorAll('.btn-back').forEach((b) => (b.textContent = t('form.back')));
         document.querySelectorAll('.btn-next').forEach((b) => (b.textContent = t('form.next')));
         const sub = document.getElementById('btn-submit');
@@ -4517,7 +4627,10 @@
 
         const badge = document.getElementById('comm-status-badge');
         if (badge) {
-          if (badge.classList.contains('badge-closed')) badge.textContent = t('comm.badge.closed');
+          if (badge.classList.contains('badge-unknown'))
+            badge.textContent = t('comm.badge.unknown');
+          else if (badge.classList.contains('badge-closed'))
+            badge.textContent = t('comm.badge.closed');
           else if (badge.classList.contains('badge-full')) badge.textContent = t('comm.badge.full');
           else badge.textContent = t('comm.badge.open');
         }
@@ -4543,13 +4656,31 @@
       let slotsFull = false;
       let maxWaitlist = 50;
       let waitlistFull = false;
+      // true si no se pudo leer la configuración o contar los slots: en ese caso
+      // no se asume nada (ni abiertas ni cerradas) y se muestra un aviso.
+      let estadoDesconocido = false;
+      // Igual para la waitlist: true si no se pudo contar o leer su límite
+      // (max_waitlist viene de la misma configuración).
+      let waitlistDesconocida = false;
 
       async function cargarEstadoComisiones() {
+        // Si no se puede leer la configuración o contar los slots, la
+        // disponibilidad queda como desconocida: la pestaña de comisiones muestra
+        // un aviso con "Reintentar" en vez de asumir abiertas o cerradas. El error
+        // se registra en consola. supabase-js no lanza en errores de consulta: los
+        // devuelve en `error`, así que se revisa además del catch.
+        estadoDesconocido = false;
+        waitlistDesconocida = false;
         try {
-          const { data } = await db
+          const { data, error } = await db
             .from('config')
             .select('key,value')
             .in('key', ['commissions_open', 'max_slots', 'max_waitlist']);
+          if (error) {
+            console.error('No se pudo leer la configuración de comisiones:', error);
+            estadoDesconocido = true;
+            waitlistDesconocida = true;
+          }
           if (data) {
             const openRow = data.find((r) => r.key === 'commissions_open');
             const slotsRow = data.find((r) => r.key === 'max_slots');
@@ -4558,26 +4689,43 @@
             if (slotsRow) maxSlots = parseInt(slotsRow.value) || 25;
             if (wlRow) maxWaitlist = parseInt(wlRow.value) || 50;
           }
-        } catch (e) {}
+        } catch (e) {
+          console.error('No se pudo leer la configuración de comisiones:', e);
+          estadoDesconocido = true;
+          waitlistDesconocida = true;
+        }
         if (comisionesAbiertas) {
           try {
-            const { count } = await db
+            const { count, error } = await db
               .from('seguimiento_publico')
               .select('folio', { count: 'exact', head: true })
               .not('status', 'in', '(completed,cancelled,expired)');
+            if (error) {
+              console.error('No se pudo contar las comisiones activas:', error);
+              estadoDesconocido = true;
+            }
             activeCount = count || 0;
             slotsFull = activeCount >= maxSlots;
-          } catch (e) {}
+          } catch (e) {
+            console.error('No se pudo contar las comisiones activas:', e);
+            estadoDesconocido = true;
+          }
         } else {
           slotsFull = false;
         }
         try {
-          const { count: wlCount } = await db
+          const { count: wlCount, error } = await db
             .from('waitlist')
             .select('id', { count: 'exact', head: true });
+          if (error) {
+            console.error('No se pudo contar la waitlist:', error);
+            waitlistDesconocida = true;
+          }
           waitlistFull = (wlCount || 0) >= maxWaitlist;
         } catch (e) {
+          console.error('No se pudo contar la waitlist:', e);
           waitlistFull = false;
+          waitlistDesconocida = true;
         }
         const page = document.getElementById('page-comisiones');
         if (page && page.classList.contains('active')) goTab('comisiones');
@@ -4594,15 +4742,23 @@
           .forEach((p) => p.classList.toggle('active', p.id === 'page-' + name));
         document.getElementById('main').scrollTop = 0;
         if (name === 'comisiones') {
-          const closed = !comisionesAbiertas;
-          const full = comisionesAbiertas && slotsFull;
+          const desconocido = estadoDesconocido;
+          const closed = !desconocido && !comisionesAbiertas;
+          const full = !desconocido && comisionesAbiertas && slotsFull;
+          document.getElementById('form-unknown-banner').style.display = desconocido
+            ? 'block'
+            : 'none';
           document.getElementById('form-slots-banner').style.display = full ? 'block' : 'none';
           document.getElementById('form-closed-banner').style.display =
             !full && closed ? 'block' : 'none';
-          document.getElementById('form-wrap').style.display = !closed && !full ? 'block' : 'none';
+          document.getElementById('form-wrap').style.display =
+            !desconocido && !closed && !full ? 'block' : 'none';
           const badge = document.getElementById('comm-status-badge');
           if (badge) {
-            if (closed) {
+            if (desconocido) {
+              badge.textContent = t('comm.badge.unknown');
+              badge.className = 'comm-badge badge-unknown';
+            } else if (closed) {
               badge.textContent = t('comm.badge.closed');
               badge.className = 'comm-badge badge-closed';
             } else if (full) {
@@ -4616,15 +4772,22 @@
           actualizarBotonesSrv();
         }
         if (name === 'seguimiento') {
+          // Con la waitlist desconocida no se asume llena ni con lugar: sólo el aviso.
+          const wlDesconocida = waitlistDesconocida;
+          const wlLlena = !wlDesconocida && waitlistFull;
+          const wlUnknown = document.getElementById('wl-unknown-banner');
           const wlFull = document.getElementById('wl-full-banner');
           const wlForm = document.getElementById('wl-form-wrap');
-          if (wlFull) wlFull.style.display = waitlistFull ? 'block' : 'none';
-          if (wlForm) wlForm.style.display = waitlistFull ? 'none' : 'block';
+          if (wlUnknown) wlUnknown.style.display = wlDesconocida ? 'block' : 'none';
+          if (wlFull) wlFull.style.display = wlLlena ? 'block' : 'none';
+          if (wlForm) wlForm.style.display = !wlDesconocida && !wlLlena ? 'block' : 'none';
         }
       }
 
       function actualizarBotonesSrv() {
-        const needWaitlist = !comisionesAbiertas || slotsFull;
+        // Con la disponibilidad desconocida no se manda a la waitlist (sería
+        // asumir cerradas): el botón lleva a comisiones, donde está el aviso.
+        const needWaitlist = !estadoDesconocido && (!comisionesAbiertas || slotsFull);
         const tipos = {
           'btn-req-illus': 'ilustracion',
           'btn-req-edit': 'editorial',

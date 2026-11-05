@@ -15,11 +15,22 @@ const ADMIN_HTML = readFileSync(new URL('../admin.html', import.meta.url), 'utf8
 const ESTADOS_BACKEND = [
   'waiting',
   'quoted',
-  'active',
+  'sketch',
+  'color',
   'revision',
   'delivered',
   'completed',
   'cancelled',
+];
+const LISTA_FNS = [
+  'renderComisiones',
+  'renderTablero',
+  'tarjetaComision',
+  'filtrarComisiones',
+  'valorCampo',
+  'opcionesMover',
+  'necesitaCotizacion',
+  'jsArg',
 ];
 
 // Bloque `const nombre = {…};` / `[…];` del script del panel, tal cual.
@@ -30,9 +41,11 @@ function constante(nombre) {
 }
 const CONSTANTES = [
   'statusLabel',
+  'ESTADOS_ASIGNABLES',
   'statusClass',
   'statusColor',
   'ESTADOS_ACTIVOS',
+  'COLUMNAS',
   'IDIOMAS_BACKEND',
 ]
   .map(constante)
@@ -72,7 +85,7 @@ describe('admin.html: estados', () => {
   it('el panel ofrece exactamente los estados del backend', () => {
     const { ctx } = panel('', []);
     assert.deepEqual(
-      JSON.parse(vm.runInContext('JSON.stringify(Object.keys(statusLabel))', ctx)),
+      JSON.parse(vm.runInContext('JSON.stringify(ESTADOS_ASIGNABLES)', ctx)),
       ESTADOS_BACKEND,
     );
     assert.doesNotMatch(ADMIN_HTML, /'notified'|'expired'/);
@@ -80,23 +93,27 @@ describe('admin.html: estados', () => {
 
   it('se puede marcar como entregada desde la lista', () => {
     const { ctx, doc } = panel(
-      '<table><tbody id="admin-tbody"></tbody></table>',
-      ['renderComisiones', 'necesitaCotizacion', 'jsArg'],
-      { prelude: "let filtroActual = 'all'; let comisiones = [{ folio: 3, status: 'active' }];" },
+      '<table><tbody id="admin-tbody"></tbody></table><div id="tablero"></div>',
+      LISTA_FNS,
+      {
+        prelude:
+          "let filtroActual = 'all'; let columnaMovil = 'recibida'; let comisiones = [{ folio: 3, status: 'sketch' }];",
+      },
     );
     ctx.renderComisiones();
     const opciones = [...doc.querySelectorAll('.status-select option')].map((o) => o.value);
     assert.ok(opciones.includes('delivered'));
-    assert.ok(!opciones.includes('active'), 'no ofrece el estado actual');
+    assert.ok(!opciones.includes('sketch'), 'no ofrece el estado actual');
+    assert.ok(!opciones.includes('active'), 'el estado heredado no se asigna');
     for (const v of opciones.filter(Boolean)) assert.ok(ESTADOS_BACKEND.includes(v));
   });
 
   it('la columna cliente muestra nombre y email', () => {
     const { ctx, doc } = panel(
-      '<table><tbody id="admin-tbody"></tbody></table>',
-      ['renderComisiones', 'necesitaCotizacion', 'jsArg'],
+      '<table><tbody id="admin-tbody"></tbody></table><div id="tablero"></div>',
+      LISTA_FNS,
       {
-        prelude: `let filtroActual = 'all';
+        prelude: `let filtroActual = 'all'; let columnaMovil = 'recibida';
           let comisiones = [{ folio: 1, status: 'waiting', cliente_tag: 'Ana', email: 'ana@x.com' }];`,
       },
     );
@@ -111,6 +128,8 @@ describe('admin.html: estados', () => {
     assert.deepEqual(JSON.parse(vm.runInContext('JSON.stringify(ESTADOS_ACTIVOS)', ctx)), [
       'waiting',
       'quoted',
+      'sketch',
+      'color',
       'active',
       'revision',
       'delivered',

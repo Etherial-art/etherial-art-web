@@ -166,9 +166,10 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
     it('tracker de folios', () => {
       const { ctx, doc } = pagina(
         page,
-        ['renderFolios'],
+        ['renderFolios', 'traducirValor'],
         '<table><tbody id="folio-tbody"></tbody></table>',
-        "let lang = 'es'; const t = (k) => k; const eClass = {};",
+        `let lang = 'es'; const t = (k) => k; const eClass = {}; const i18n = { es: {} };
+         let folioBuscado = { folio: 1, cliente_enmascarado: ${JSON.stringify(MALO)} };`,
       );
       ctx.renderFolios([
         {

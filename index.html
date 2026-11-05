@@ -35,20 +35,43 @@
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- jsdelivr sirve scripts (sin CORS) y las fuentes de iconos (con CORS):
+         son dos conexiones distintas, por eso dos preconnect. -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <!-- Sólo los pesos que usa la página: Cormorant 300, 300 itálica y 500;
+         DM Sans 400 y 500. Si un estilo nuevo usa otro peso, añadirlo aquí. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=DM+Sans:wght@400;500&display=swap"
       rel="stylesheet"
     />
+    <!-- El CSS del lightbox sólo hace falta al abrir una obra: se carga sin
+         bloquear el primer pintado. -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+      href="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/css/glightbox.min.css"
+      media="print"
+      onload="this.media = 'all'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/css/glightbox.min.css"
+      />
+    </noscript>
+    <!-- supabase-js se ejecuta al final del <body> para no bloquear el primer
+         pintado; aquí sólo se adelanta la descarga, con prioridad baja para no
+         competir con la primera obra (no hace falta para pintar). -->
     <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
+      rel="preload"
+      href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.js"
+      as="script"
+      fetchpriority="low"
     />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/js/glightbox.min.js"
+      defer
+    ></script>
     <script src="js/escape.js"></script>
     <style>
       * {
@@ -1530,6 +1553,250 @@
       [data-theme='dark'] .btn-submit {
         color: var(--cream);
       }
+
+      /* ══ ICONOS (subconjunto de Tabler Icons 3.50.0) ═════════
+         Antes se cargaba tabler-icons.min.css completo (240 KB, bloqueante)
+         para usar ~25 iconos. Aquí van sólo las @font-face cuyas fuentes
+         contienen esos iconos y una regla por icono. Para usar un icono nuevo:
+         copiar su regla `.ti-NOMBRE:before` de
+         https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.50.0/dist/tabler-icons.min.css
+         (y su @font-face si es de otra categoría). tests/iconos.test.js falla
+         si la página usa un icono sin regla aquí. */
+      @font-face {
+        font-family: 'tabler-icons';
+        font-style: normal;
+        font-weight: 400;
+        src: url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.50.0/dist/fonts/tabler-icons.core.woff2?h3a24de11')
+          format('woff2');
+        unicode-range:
+          U+EA03, U+EA05-EA06, U+EA0B, U+EA19-EA1D, U+EA1F, U+EA24, U+EA28, U+EA2C, U+EA35,
+          U+EA38-EA3A, U+EA45-EA46, U+EA4E-EA4F, U+EA51-EA55, U+EA59, U+EA5C, U+EA5E-EA62, U+EA67,
+          U+EA69-EA6D, U+EA70, U+EA75-EA77, U+EA79-EA7A, U+EA84, U+EA87-EA8A, U+EA94-EA9A,
+          U+EA9C-EA9D, U+EAA2, U+EAA4-EAA6, U+EAAD, U+EABD-EAC1, U+EAC3, U+EAC5, U+EAC7, U+EADA,
+          U+EADE, U+EAE2, U+EAE4-EAE5, U+EAE7-EAE9, U+EAEC-EAF0, U+EAF2, U+EAF7-EAF8, U+EAFC-EAFD,
+          U+EAFF, U+EB01-EB02, U+EB04-EB05, U+EB09-EB0C, U+EB0E, U+EB10-EB11, U+EB13, U+EB17,
+          U+EB1C-EB1E, U+EB20-EB22, U+EB24-EB25, U+EB28, U+EB2C, U+EB2E, U+EB30, U+EB3C-EB3D,
+          U+EB40-EB41, U+EB43, U+EB45, U+EB47, U+EB49, U+EB4B, U+EB4D, U+EB51-EB52, U+EB54-EB55,
+          U+EB5C-EB5D, U+EB62, U+EB64-EB65, U+EB67-EB68, U+EB6A-EB6C, U+EB6E, U+EB72, U+EB75,
+          U+EB77, U+EB80, U+EB82, U+EB84, U+EB90, U+EB9D, U+EBA1, U+EBA6, U+EBA8, U+EBAA, U+EBB6,
+          U+EBBB-EBBC, U+EBBE, U+EBC2, U+EBC4, U+EBE2-EBE3, U+EBEA, U+EBF2, U+EBF6, U+EC01,
+          U+EC16-EC17, U+EC1A, U+EC1C, U+EC1F-EC20, U+EC26, U+EC2C, U+EC2E, U+EC38-EC39, U+EC42,
+          U+EC45, U+EC4B, U+EC73-EC74, U+EC8C, U+EC90-EC91, U+EC9C-EC9D, U+ECA3, U+ECDE,
+          U+ECEF-ECF0, U+ECF7, U+ED07, U+ED12, U+ED22, U+ED45-ED46, U+ED4A, U+ED4F, U+ED51, U+ED58,
+          U+ED61, U+ED76, U+EDBA, U+EDBE, U+EDEF, U+EDFD, U+EDFF, U+EE21, U+EE25, U+EEA9, U+EEC2,
+          U+EECB, U+EECD, U+EEF7, U+EEFF, U+EF40, U+EF4F, U+EF68, U+EF88-EF89, U+EF8E, U+EF90,
+          U+EFBE, U+EFC5, U+EFE6, U+EFF0, U+EFF2, U+EFF9, U+F004-F005, U+F00B, U+F021, U+F028,
+          U+F02C, U+F074, U+F082, U+F089, U+F0F3, U+F1D2, U+F1E2, U+F1F6, U+F1F8, U+F226, U+F236,
+          U+F265, U+F2B8, U+F2C9, U+F318-F319, U+F358, U+F38A, U+F38C, U+F38F, U+F3AE, U+F51A,
+          U+F59F, U+F5AC, U+F5F8, U+F634-F635, U+F63D, U+F65C-F65D, U+F6D7, U+F7BD, U+F7D0, U+F810,
+          U+F824, U+F91D, U+F9D4, U+FA21, U+FA77, U+FA7E, U+FAF7, U+FAFD, U+FB03, U+FB10, U+FB1B,
+          U+FC0F, U+FCAF, U+FD2E-FD30, U+FD32, U+FDAA, U+FEB8, U+FEF7, U+FEFB, U+FF11, U+FF40,
+          U+FF9B, U+10066, U+10096, U+100B2, U+1014B, U+101A6, U+1025A-1025B, U+10261, U+10289;
+      }
+      @font-face {
+        font-family: 'tabler-icons';
+        font-style: normal;
+        font-weight: 400;
+        src: url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.50.0/dist/fonts/tabler-icons.brand-1.woff2?h94da8f57')
+          format('woff2');
+        unicode-range:
+          U+EC18-EC19, U+EC1B, U+EC1D-EC1E, U+EC21-EC25, U+EC27, U+EC6E-EC72, U+EC8D-EC8F, U+EC93,
+          U+ECA1, U+ECD8, U+ECE3, U+ECFB-ED06, U+ED24-ED25, U+ED68-ED73, U+EDC5-EDD9, U+EF0C,
+          U+EF24, U+EF3E, U+EF49, U+EF57-EF59, U+EF6A-EF76, U+EF7B, U+EF8D, U+EFA2, U+EFB0,
+          U+F001-F003, U+F072, U+F0DC-F0E0, U+F1CF, U+F1E6-F1E7, U+F205-F21A, U+F230-F232,
+          U+F24E-F255, U+F260-F262, U+F297-F298, U+F2D2-F2D3, U+F324-F335, U+F348-F34C, U+F35A,
+          U+F37F-F380, U+F390-F399;
+      }
+      @font-face {
+        font-family: 'tabler-icons';
+        font-style: normal;
+        font-weight: 400;
+        src: url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.50.0/dist/fonts/tabler-icons.food.woff2?hb3481bc1')
+          format('woff2');
+        unicode-range:
+          U+EAB7-EAB8, U+EAC2, U+EAFB, U+EB8A, U+ED64, U+EDB8, U+EDBB, U+EE91, U+EE9F, U+EF0B,
+          U+EF0D-EF0E, U+EF10, U+EF12-EF17, U+EF21, U+EF26, U+EF28-EF29, U+EF2E, U+EF81, U+EFA1,
+          U+EFA3, U+EFA9, U+EFCC, U+F00F, U+F02F, U+F0BB, U+F0C5, U+F0D7, U+F101, U+F104, U+F106,
+          U+F10D, U+F11F, U+F148, U+F157, U+F165, U+F16F, U+F175, U+F179, U+F21C-F21D, U+F248,
+          U+F264, U+F2D6, U+F35B-F35C, U+F386, U+F3A5, U+F3C8, U+F3CB, U+F3D0, U+F3D4, U+F3F5,
+          U+F40A, U+F40F, U+F412, U+F42D, U+F4C8, U+F4FA, U+F500, U+F50A, U+F552, U+F57A,
+          U+FAE9-FAEB, U+FC61, U+FC7A, U+FCB4, U+FD2B, U+FD8E, U+FD90-FD91, U+FD9C-FD9E, U+FDB1,
+          U+FEB5, U+FEB9, U+FF51-FF52, U+100A8-100A9, U+100BD, U+101A0, U+10239, U+1024E, U+10253;
+      }
+      @font-face {
+        font-family: 'tabler-icons';
+        font-style: normal;
+        font-weight: 400;
+        src: url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.50.0/dist/fonts/tabler-icons.system-1.woff2?hc2e55e19')
+          format('woff2');
+        unicode-range:
+          U+EA04, U+EA2E, U+EA71, U+EA91-EA93, U+EA9B, U+EAB0-EAB1, U+EABA, U+EAC4, U+EAC6,
+          U+EADC-EADD, U+EAE1, U+EAE6, U+EAEB, U+EAFE, U+EB12, U+EB23, U+EB3A-EB3B, U+EB3E-EB3F,
+          U+EB48, U+EB4A, U+EB4C, U+EB53, U+EBB9-EBBA, U+EBC1, U+EBC6-EBC8, U+EBCB, U+EBD1,
+          U+EBD4-EBD5, U+EBD7, U+EBDC, U+EBE7, U+EBEC, U+EBF1, U+EBFA-EBFB, U+EC00, U+EC12, U+EC37,
+          U+EC3E, U+EC77, U+EC9F, U+ECA2, U+ECBF, U+ECC6, U+ECD3-ECD5, U+ECD7, U+ECDA, U+ECE9,
+          U+ECF8-ECF9, U+ED19, U+ED1E, U+ED2C, U+ED38, U+ED62, U+ED65, U+ED84, U+EDE2-EDE5,
+          U+EE1F-EE20, U+EE41, U+EE71, U+EE88, U+EEAA, U+EEAE, U+EEB4, U+EEC4, U+EECA, U+EED6,
+          U+EF4C-EF4E, U+EF51, U+EF53, U+EF56, U+EF93, U+EF9A-EF9B, U+EFA7, U+EFAD, U+EFAF,
+          U+EFB3-EFB4, U+EFB6, U+EFB9-EFBB, U+EFBD, U+EFC9, U+EFCF, U+EFD3, U+EFDA-EFDB, U+EFDF,
+          U+EFE2, U+EFF1, U+EFF7, U+F008, U+F00C, U+F020, U+F023, U+F02A, U+F031, U+F068, U+F076,
+          U+F079, U+F07D, U+F092-F093, U+F099, U+F09C, U+F0A4, U+F0A8-F0A9, U+F0B3, U+F0CF, U+F10A,
+          U+F10F, U+F11B, U+F123-F125, U+F12A, U+F136, U+F138, U+F146-F147, U+F149-F14A, U+F14C,
+          U+F154, U+F156, U+F158, U+F15D, U+F16B, U+F181, U+F185, U+F18B, U+F192, U+F198-F199,
+          U+F19C, U+F19F, U+F1A1, U+F1A9, U+F1AE, U+F1B1, U+F1B4, U+F1BB, U+F1C1, U+F1C5-F1C6,
+          U+F1F1-F1F2, U+F1F7, U+F1FB-F1FC, U+F1FF, U+F21F-F223, U+F227-F228, U+F249-F24B, U+F256,
+          U+F258, U+F26E, U+F286, U+F288, U+F294, U+F2DD, U+F313-F317, U+F31A-F31E, U+F359, U+F368,
+          U+F37E, U+F38E, U+F3A3, U+F3B0, U+F3B3, U+F3B5, U+F3BA, U+F3C1, U+F3E1-F3E2, U+F3E5,
+          U+F3E8, U+F3EA, U+F3F4, U+F3F8, U+F3FB, U+F3FD, U+F401, U+F404, U+F422, U+F42C,
+          U+F42E-F430, U+F436-F437, U+F43A, U+F440, U+F4A5, U+F4CA-F4CB, U+F50B;
+      }
+      @font-face {
+        font-family: 'tabler-icons';
+        font-style: normal;
+        font-weight: 400;
+        src: url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.50.0/dist/fonts/tabler-icons.devices-1.woff2?h591f42a6')
+          format('woff2');
+        unicode-range:
+          U+EA2F-EA34, U+EA37, U+EA8B-EA8D, U+EA90, U+EAF9, U+EB06-EB08, U+EB0D, U+EB18, U+EB1F,
+          U+EB63, U+EB86-EB87, U+EBA3-EBA5, U+EBB7, U+EBD6, U+EBD9, U+EBF3-EBF4, U+EBF9,
+          U+EC05-EC07, U+EC43, U+EC7E-EC7F, U+ECC7-ECCB, U+ECDB, U+ECEA-ECEB, U+ECF5, U+ECFA,
+          U+ED17-ED18, U+ED1A-ED1C, U+ED29, U+ED74, U+EE72-EE7A, U+EEA0, U+EEB7, U+EEDF,
+          U+EF3B-EF3C, U+EF7C-EF7D, U+EFD6-EFD8, U+F00A, U+F00D, U+F026, U+F060-F065, U+F067,
+          U+F075, U+F07C, U+F081, U+F083-F088, U+F094, U+F0A0-F0A1, U+F0AA, U+F0C1, U+F0C4, U+F0C8,
+          U+F108, U+F111-F114, U+F118, U+F163, U+F168, U+F180, U+F184, U+F19E, U+F1D3, U+F1D7,
+          U+F1E8-F1E9, U+F1EE-F1F0, U+F1FA, U+F224, U+F233, U+F259, U+F25E, U+F2AD-F2B0,
+          U+F2B6-F2B7, U+F2B9, U+F320-F321, U+F384, U+F3A2, U+F3BB, U+F3E3-F3E4, U+F3EF, U+F41E,
+          U+F424, U+F4AF-F4B2, U+F542, U+F5A9, U+F646-F649, U+F792, U+F79A, U+F7A7, U+F85E-F875;
+      }
+      @font-face {
+        font-family: 'tabler-icons';
+        font-style: normal;
+        font-weight: 400;
+        src: url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.50.0/dist/fonts/tabler-icons.text.woff2?h52fb0347')
+          format('woff2');
+        unicode-range:
+          U+EA07-EA0A, U+EA2B, U+EA2D, U+EB26-EB27, U+EB46, U+EB7B, U+EB83, U+EB8B, U+EB91-EB94,
+          U+EB9E-EBA0, U+EBA2, U+EBB1-EBB3, U+EBC5, U+EBC9, U+EBCF, U+EBDA, U+EBDD, U+EBE5, U+EC0C,
+          U+EC41, U+EC79-EC7A, U+EC94-EC99, U+ECA7, U+ED13, U+EE09, U+EE42-EE43, U+EE6D, U+EE8F,
+          U+EE9B, U+EEA2-EEA6, U+EEBB, U+EEE0, U+EEE2-EEE3, U+EEFC-EEFD, U+EF07-EF08, U+EF11,
+          U+EF18-EF1B, U+EF1E, U+EF3F, U+EF77-EF78, U+EFB8, U+EFC4, U+EFD4-EFD5, U+F019, U+F024,
+          U+F06E, U+F0A3, U+F0A6, U+F0B0-F0B1, U+F0BA, U+F0D0, U+F0D4, U+F0D8, U+F121, U+F13F,
+          U+F144, U+F14E, U+F188, U+F1A5, U+F1AA, U+F1BA, U+F1CB-F1CC, U+F1DF-F1E1, U+F202-F204,
+          U+F25F, U+F2A2, U+F2A4-F2A6, U+F2B1, U+F2DC, U+F312, U+F31F, U+F402, U+F407, U+F421,
+          U+F427, U+F43B, U+F4A4, U+F4E0, U+F4FE-F4FF, U+F530-F53B, U+F54D-F550, U+F567, U+F5F6,
+          U+F61A, U+F6D4-F6D6, U+F79F, U+F9F0-F9F2, U+FACB-FACF, U+FB1E, U+FD16-FD17, U+FD6D,
+          U+FD7F-FD80, U+FDAD-FDB0, U+FEB2, U+FF00, U+FF2B-FF2F, U+101B0-101B1, U+10224, U+10248,
+          U+10269-1026F, U+10271, U+1028E, U+102B2, U+102C1-102C5;
+      }
+      @font-face {
+        font-family: 'tabler-icons';
+        font-style: normal;
+        font-weight: 400;
+        src: url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.50.0/dist/fonts/tabler-icons.design-1.woff2?h9b49350d')
+          format('woff2');
+        unicode-range:
+          U+EA02, U+EA2A, U+EA3B-EA44, U+EA47, U+EA50, U+EA85-EA86, U+EAA7-EAA8, U+EAAF, U+EABC,
+          U+EAC8-EAD9, U+EADB, U+EAE3, U+EB00, U+EB1A-EB1B, U+EB2D, U+EB2F, U+EB39, U+EB61, U+EB7C,
+          U+EB88-EB89, U+EB9C, U+EBB8, U+EBCA, U+EBDB, U+EBE6, U+EC13-EC14, U+EC3F-EC40,
+          U+ECA8-ECA9, U+ECC5, U+ECEC, U+EDB9, U+EE0A-EE0C, U+EE17-EE18, U+EE46-EE47, U+EE50,
+          U+EE7B, U+EE81-EE83, U+EE85, U+EE92, U+EE9D-EE9E, U+EEA1, U+EEA7-EEA8, U+EEAF-EEB0,
+          U+EEC6-EEC9, U+EECF, U+EED2, U+EED5, U+EED9-EEDA, U+EEF3-EEF6, U+EF1D, U+EF1F-EF20,
+          U+EF22-EF23, U+EF87, U+EF8C, U+EF91, U+EF94-EF95, U+EF9D, U+EFA5, U+EFAB-EFAC, U+EFC6,
+          U+EFD0, U+EFF8, U+EFFB, U+F006-F007, U+F00E, U+F02B, U+F05F, U+F09E, U+F0AE, U+F0B4-F0B5,
+          U+F0C2, U+F0D2-F0D3, U+F0D6, U+F0FE, U+F102-F103, U+F107, U+F11D-F11E, U+F135, U+F13C,
+          U+F14B, U+F14D, U+F14F-F151, U+F159, U+F16D-F16E, U+F173, U+F182, U+F195-F196, U+F19B,
+          U+F1A0, U+F1A3, U+F1B0, U+F1B7, U+F1BE-F1BF, U+F1D9, U+F1EB-F1EC, U+F234-F235, U+F289,
+          U+F28B-F28E;
+      }
+      .ti {
+        font-family: 'tabler-icons' !important;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .ti-alert-circle:before {
+        content: '\ea05';
+      }
+      .ti-brand-discord:before {
+        content: '\ece3';
+      }
+      .ti-brand-instagram:before {
+        content: '\ec20';
+      }
+      .ti-brush:before {
+        content: '\ebb8';
+      }
+      .ti-chevron-down:before {
+        content: '\ea5f';
+      }
+      .ti-circle-check:before {
+        content: '\ea67';
+      }
+      .ti-clock:before {
+        content: '\ea70';
+      }
+      .ti-coffee:before {
+        content: '\ef0e';
+      }
+      .ti-dots:before {
+        content: '\ea95';
+      }
+      .ti-home:before {
+        content: '\eac1';
+      }
+      .ti-inbox:before {
+        content: '\eac4';
+      }
+      .ti-layout:before {
+        content: '\eadb';
+      }
+      .ti-layout-grid:before {
+        content: '\edba';
+      }
+      .ti-list-check:before {
+        content: '\eb6a';
+      }
+      .ti-list-numbers:before {
+        content: '\ef11';
+      }
+      .ti-loader-2:before {
+        content: '\f226';
+      }
+      .ti-lock:before {
+        content: '\eae2';
+      }
+      .ti-mail:before {
+        content: '\eae5';
+      }
+      .ti-moon:before {
+        content: '\eaf8';
+      }
+      .ti-pencil:before {
+        content: '\eb04';
+      }
+      .ti-photo:before {
+        content: '\eb0a';
+      }
+      .ti-sun:before {
+        content: '\eb30';
+      }
+      .ti-user:before {
+        content: '\eb4d';
+      }
+      .ti-users:before {
+        content: '\ebf2';
+      }
+      .ti-users-group:before {
+        content: '\fa21';
+      }
+      .ti-wifi-off:before {
+        content: '\ecfa';
+      }
     </style>
   </head>
   <body>
@@ -1620,6 +1887,7 @@
                 alt="Ilustración de Etherial_Art — Obra 01"
                 width="800"
                 height="410"
+                fetchpriority="high"
                 decoding="async"
                 style="width: 100%; display: block; object-fit: cover; height: 260px"
               />
@@ -1630,6 +1898,7 @@
             <div class="gallery-img" style="height: 200px">
               <img
                 src="img/thumb/galeria-02.webp"
+                fetchpriority="low"
                 alt="Ilustración de Etherial_Art — Obra 02"
                 width="800"
                 height="1267"
@@ -1643,6 +1912,7 @@
             <div class="gallery-img" style="height: 300px">
               <img
                 src="img/thumb/galeria-03.webp"
+                fetchpriority="low"
                 alt="Ilustración de Etherial_Art — Obra 03"
                 width="800"
                 height="711"
@@ -1656,6 +1926,7 @@
             <div class="gallery-img" style="height: 180px">
               <img
                 src="img/thumb/galeria-04.webp"
+                fetchpriority="low"
                 alt="Ilustración de Etherial_Art — Obra 04"
                 width="800"
                 height="800"
@@ -5190,7 +5461,16 @@
       const _url = 'https://eliyhtdwmeghfslijwgh.supabase.co';
       const _key =
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaXlodGR3bWVnaGZzbGlqd2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTU2MDMsImV4cCI6MjA5MTMzMTYwM30.QxWx1uHhEZJCvrFcvSfOzlPLUBA39uaRdl80NKEsjZc';
-      const db = window.supabase.createClient(_url, _key);
+      // supabase-js se carga justo después de este script, así que el cliente se
+      // crea la primera vez que se usa (ya en DOMContentLoaded, con la librería
+      // cargada). Si el CDN fallara, sólo fallan las consultas, que ya muestran
+      // su aviso, en vez de romperse todo el script de la página.
+      let clienteSupabase = null;
+      const cliente = () => (clienteSupabase ??= window.supabase.createClient(_url, _key));
+      const db = {
+        from: (tabla) => cliente().from(tabla),
+        rpc: (funcion, args) => cliente().rpc(funcion, args),
+      };
       const eClass = {
         waiting: 's-pending',
         notified: 's-progress',
@@ -5900,18 +6180,22 @@
       }
 
       // ━━ INIT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      document.addEventListener('DOMContentLoaded', () => {
-        // Tema
+      // Tema e idioma se aplican en cuanto corre este script (al final del
+      // <body>, con todo el HTML ya parseado), no en DOMContentLoaded: ese evento
+      // espera a supabase-js y la página ya puede haberse pintado antes, con el
+      // tema claro y en español, aunque la persona haya elegido otro.
+      {
         const savedTheme = localStorage.getItem('ea-theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
           if (!localStorage.getItem('ea-theme')) applyTheme(e.matches);
         });
-        // Idioma
         const saved = localStorage.getItem('ea-lang');
         const browser = navigator.language.substring(0, 2);
         setLang(saved || (['es', 'en', 'de'].includes(browser) ? browser : 'es'));
+      }
+      document.addEventListener('DOMContentLoaded', () => {
         // Tracker
         const fi = document.getElementById('folio-input');
         if (fi)
@@ -6042,6 +6326,12 @@
         }
       }
     </script>
+    <!-- Después del script principal: así tema e idioma se aplican antes del
+         primer pintado sin esperar a supabase-js (ver "INIT" y "SUPABASE"). -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.js"
+      fetchpriority="low"
+    ></script>
     <script src="a11y.js" defer></script>
   </body>
 </html>

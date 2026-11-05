@@ -39,15 +39,6 @@ export default [
     },
   },
   {
-    // ── DEUDA TÉCNICA (línea base) ────────────────────────────────────────
-    // a11y.js usa `var`. Pasar a let/const puede cambiar el alcance de las
-    // variables, así que se hace en un PR propio. Al corregirlo, borrar este bloque.
-    files: ['a11y.js'],
-    rules: {
-      'no-var': 'warn',
-    },
-  },
-  {
     // ── Configuración y pruebas (Node, módulos ES) ────────────────────────
     files: ['eslint.config.js', 'tests/**/*.js'],
     languageOptions: { ecmaVersion: 2024, sourceType: 'module', globals: globals.node },

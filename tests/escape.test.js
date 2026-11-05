@@ -111,7 +111,7 @@ describe('admin.html: escape al pintar', () => {
       'admin.html',
       ['abrirDetalle'],
       '<span id="d-folio"></span><div id="d-body"></div><div id="detail-overlay"></div>',
-      PRELUDE_ADMIN,
+      PRELUDE_ADMIN + 'function cargarFicha() {}',
     );
     vm.runInContext(
       `comisiones = [{ folio: 1, cliente_tag: ${JSON.stringify(MALO)},

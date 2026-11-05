@@ -804,6 +804,189 @@
         color: #fdba74;
       }
 
+      /* ── Resumen y ficha ───────────────────────────────────── */
+      .resumen-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.75rem;
+      }
+      .resumen-card {
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-radius: 14px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .resumen-entregas {
+        grid-column: span 2;
+      }
+      .resumen-lbl {
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .resumen-card .act-btn {
+        min-height: 44px;
+        align-self: flex-start;
+      }
+      .resumen-num {
+        font-family: var(--serif);
+        font-size: 2rem;
+        color: var(--dark);
+        line-height: 1;
+      }
+      .resumen-num small {
+        font-size: 1rem;
+        color: var(--muted);
+      }
+      .resumen-sub {
+        font-size: 12px;
+        color: var(--hint);
+      }
+      .resumen-lista,
+      .ficha-lista {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .resumen-lista li,
+      .ficha-lista li {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        align-items: center;
+        font-size: 13px;
+        color: var(--dark);
+      }
+      .resumen-link {
+        background: none;
+        border: none;
+        color: var(--gl);
+        font-family: var(--sans);
+        font-size: 13px;
+        cursor: pointer;
+        min-height: 44px;
+        padding: 0;
+        text-align: left;
+      }
+      .vencida {
+        color: var(--danger);
+        font-weight: 600;
+      }
+      .resumen-error {
+        color: var(--danger);
+        font-size: 13px;
+      }
+      .ficha-sec {
+        border-top: 0.5px solid var(--border);
+        padding-top: 0.9rem;
+        margin-top: 0.9rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .ficha-sec h3 {
+        margin: 0;
+        font-family: var(--serif);
+        font-weight: 500;
+        font-size: 1.1rem;
+        color: var(--dark);
+      }
+      .ficha-fila {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .ficha-fila > * {
+        min-height: 44px;
+      }
+      .ficha-fila select,
+      .ficha-fila input {
+        flex: 1 1 160px;
+      }
+      .ficha-sec input[type='date'],
+      .ficha-sec textarea {
+        border: 0.5px solid var(--border);
+        border-radius: 10px;
+        padding: 0 12px;
+        background: var(--card);
+        color: var(--dark);
+        font-family: var(--sans);
+        font-size: 14px;
+      }
+      .ficha-sec textarea {
+        padding: 10px 12px;
+        resize: vertical;
+      }
+      .ficha-sec .btn-save {
+        min-height: 44px;
+        align-self: flex-start;
+      }
+      .ficha-nota {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      .ficha-saldo {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .mover-aviso {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        min-height: 44px;
+        font-size: 14px;
+        color: var(--dark);
+      }
+      .mover-aviso input {
+        width: 22px;
+        height: 22px;
+        accent-color: var(--gl);
+      }
+      .mover-dialog {
+        border: 0.5px solid var(--border);
+        border-radius: 16px;
+        background: var(--card);
+        color: var(--dark);
+        padding: 1.25rem;
+        width: min(420px, calc(100vw - 32px));
+      }
+      .mover-dialog::backdrop {
+        background: rgba(10, 31, 30, 0.5);
+      }
+      .mover-dialog form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .mover-botones {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+      }
+      .mover-botones button {
+        min-height: 44px;
+      }
+      @media (max-width: 600px) {
+        .resumen-entregas {
+          grid-column: auto;
+        }
+        /* La ficha ocupa toda la pantalla en el teléfono. */
+        #detail-overlay .modal-ficha {
+          max-width: none !important;
+          max-height: 100vh;
+          height: 100vh;
+          border-radius: 0;
+        }
+      }
+
       /* ── Tablero ───────────────────────────────────────────── */
       .sr-only {
         position: absolute;
@@ -1354,6 +1537,9 @@
 
         <!-- Comisiones section -->
         <div id="comisiones-section" style="display: flex; flex-direction: column; gap: 1.5rem">
+          <!-- Resumen (GET /admin/resumen) -->
+          <section id="resumen" class="resumen-grid" aria-live="polite"></section>
+
           <!-- Stats -->
           <div class="stats-row">
             <div class="stat-card">
@@ -1832,7 +2018,7 @@
       id="detail-overlay"
       onclick="if (event.target === this) cerrarDetalle();"
     >
-      <div class="modal" style="max-width: 600px">
+      <div class="modal modal-ficha" style="max-width: 640px">
         <div class="modal-head">
           <div class="modal-title">
             Comisión <span id="d-folio" style="color: var(--gl)"></span>
@@ -1916,6 +2102,21 @@
 
     <!-- ══ TOAST ═════════════════════════════════════════════ -->
     <div class="toast" id="toast"></div>
+
+    <!-- Confirmar cambio de estado (con aviso opcional al cliente) -->
+    <dialog id="mover-dialog" class="mover-dialog" aria-labelledby="mover-titulo">
+      <form method="dialog" onsubmit="confirmarMovimientoEnviar(event)">
+        <h2 id="mover-titulo" class="modal-title"></h2>
+        <label class="mover-aviso">
+          <input type="checkbox" id="mover-notificar" />
+          <span id="mover-notificar-texto"></span>
+        </label>
+        <div class="mover-botones">
+          <button type="button" class="btn-cancel" onclick="cerrarMovimiento()">Cancelar</button>
+          <button type="submit" class="btn-save">Cambiar estado</button>
+        </div>
+      </form>
+    </dialog>
 
     <script>
       // ━━ CONFIG ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2193,6 +2394,7 @@
           comisiones.sort((a, b) => a.folio - b.folio);
           actualizarStats();
           renderComisiones();
+          cargarResumen();
         } catch (e) {
           console.error(e);
           tbody.innerHTML =
@@ -2212,6 +2414,275 @@
           (c) => c.status === 'completed',
         ).length;
         actualizarToggleUI();
+      }
+
+      // ━━ RESUMEN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      const dinero = (v) => `$${Number(v || 0).toFixed(2)}`;
+      const fechaCorta = (iso) =>
+        iso
+          ? new Date(`${String(iso).slice(0, 10)}T12:00:00`).toLocaleDateString('es-MX', {
+              day: '2-digit',
+              month: 'short',
+            })
+          : '';
+
+      async function cargarResumen() {
+        const cont = document.getElementById('resumen');
+        if (!cont) return;
+        try {
+          renderResumen(await adminJson('/admin/resumen'));
+        } catch (e) {
+          console.error('No se pudo cargar el resumen:', e);
+          cont.innerHTML = `<p class="resumen-error">No se pudo cargar el resumen: ${esc(textoError(e))}</p>`;
+        }
+      }
+
+      function renderResumen(r) {
+        const libres = Math.max(r.slots.maximo - r.slots.usados, 0);
+        const avisar =
+          libres > 0 && r.waitlist.personas > 0
+            ? `<button class="act-btn" onclick="switchView('waitlist')">Hay ${libres} slot${libres === 1 ? '' : 's'} libre${libres === 1 ? '' : 's'} · ver waitlist</button>`
+            : '';
+        const entregas = r.entregas_proximas.length
+          ? `<ul class="resumen-lista">${r.entregas_proximas
+              .map(
+                (e) =>
+                  `<li><button class="resumen-link" onclick="abrirDetalle(${Number(e.folio)})">#${String(Number(e.folio)).padStart(4, '0')} ${esc(e.cliente_tag) || ''}</button><span class="${e.vencida ? 'vencida' : ''}">${e.vencida ? 'Vencida · ' : ''}${fechaCorta(e.fecha_entrega)}</span></li>`,
+              )
+              .join('')}</ul>`
+          : '<p class="kanban-vacio">Sin entregas en los próximos 14 días.</p>';
+        document.getElementById('resumen').innerHTML = `
+  <div class="resumen-card">
+    <div class="resumen-lbl">Slots</div>
+    <div class="resumen-num">${Number(r.slots.usados)}<small>/${Number(r.slots.maximo)}</small></div>
+    <div class="resumen-sub">${r.slots.abiertas ? `${libres} disponible${libres === 1 ? '' : 's'}` : 'Comisiones cerradas'}</div>
+    ${avisar}
+  </div>
+  <div class="resumen-card">
+    <div class="resumen-lbl">Pagos pendientes</div>
+    <div class="resumen-num">${Number(r.pagos_pendientes.comisiones)}</div>
+    <div class="resumen-sub">${dinero(r.pagos_pendientes.monto)} USD por cobrar${r.pagos_sin_comision ? ` · ${Number(r.pagos_sin_comision)} pago${r.pagos_sin_comision === 1 ? '' : 's'} de Ko-fi sin comisión` : ''}</div>
+  </div>
+  <div class="resumen-card resumen-entregas">
+    <div class="resumen-lbl">Entregas próximas${r.vencidas ? ` <span class="vencida">· ${Number(r.vencidas)} vencida${r.vencidas === 1 ? '' : 's'}</span>` : ''}</div>
+    ${entregas}
+  </div>
+  <div class="resumen-card">
+    <div class="resumen-lbl">Waitlist</div>
+    <div class="resumen-num">${Number(r.waitlist.personas)}<small>/${Number(r.waitlist.maximo)}</small></div>
+  </div>`;
+      }
+
+      // ━━ FICHA ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      let fichaAbierta = null;
+      // Estados que al cliente le importan: la casilla de aviso sale marcada.
+      const AVISAR_POR_DEFECTO = ['quoted', 'sketch', 'color', 'delivered'];
+      const IDIOMA_CORTO = { English: 'EN', Deutsch: 'DE' };
+      const idiomaDe = (c) => IDIOMA_CORTO[c && c.idioma_preferido] || 'ES';
+
+      function describirCambios(cambios) {
+        return Object.entries(cambios || {})
+          .map(([campo, v]) => {
+            const fmt = (x) =>
+              x == null || x === ''
+                ? '—'
+                : campo === 'status'
+                  ? statusLabel[x] || x
+                  : typeof x === 'object'
+                    ? JSON.stringify(x)
+                    : x;
+            return `${campo}: ${fmt(v.antes)} → ${fmt(v.despues)}`;
+          })
+          .join(' · ');
+      }
+
+      async function cargarFicha(folio) {
+        fichaAbierta = Number(folio);
+        const cont = document.getElementById('d-ficha');
+        try {
+          const f = await adminJson(`/admin/comisiones/${Number(folio)}`);
+          if (fichaAbierta !== Number(folio) || !document.getElementById('d-ficha')) return;
+          renderFicha(f);
+        } catch (e) {
+          console.error('No se pudo cargar la ficha:', e);
+          if (cont)
+            cont.innerHTML = `<p class="resumen-error">No se pudo cargar la ficha: ${esc(textoError(e))}</p>`;
+        }
+      }
+
+      function renderFicha(f) {
+        const c = f.comision;
+        const num = Number(c.folio);
+        const pagos = f.pagos.length
+          ? `<ul class="ficha-lista">${f.pagos
+              .map(
+                (p) =>
+                  `<li><span>${dinero(p.monto_recibido)} · ${esc(p.metodo_pago || '')}${p.kofi_transaction_id ? ` · Ko-fi ${esc(p.kofi_transaction_id)}` : ''}</span><span>${esc(String(p.fecha_pago || p.created_at || '').slice(0, 10))}</span></li>`,
+              )
+              .join('')}</ul>`
+          : '<p class="kanban-vacio">Sin pagos registrados.</p>';
+        const saldo =
+          f.saldo == null
+            ? 'Sin precio definido'
+            : f.saldo > 0
+              ? `<span class="vencida">Saldo pendiente ${dinero(f.saldo)}</span>`
+              : 'Pagada';
+        const notas = f.notas
+          .map(
+            (n) =>
+              `<li><span class="ficha-nota">${esc(n.texto)}</span><button class="act-btn danger" aria-label="Borrar nota" onclick="borrarNota(${num}, ${jsArg(n.id)})"><i class="ti ti-trash"></i></button></li>`,
+          )
+          .join('');
+        const historial = f.historial.length
+          ? `<ul class="ficha-lista">${f.historial
+              .map(
+                (h) =>
+                  `<li><span>${esc(describirCambios(h.cambios) || h.accion)}</span><span>${esc(new Date(h.created_at).toLocaleString('es-MX'))}</span></li>`,
+              )
+              .join('')}</ul>`
+          : '<p class="kanban-vacio">Sin cambios registrados todavía.</p>';
+        const otras = (f.cliente.comisiones || []).filter((x) => x !== num);
+        document.getElementById('d-ficha').innerHTML = `
+  <section class="ficha-sec">
+    <h3>Estado</h3>
+    <div class="ficha-fila">
+      <select id="f-estado" class="status-select" aria-label="Nuevo estado" onchange="actualizarAvisoFicha()">
+        ${ESTADOS_ASIGNABLES.map((e) => `<option value="${e}"${e === c.status ? ' selected' : ''}>${statusLabel[e]}</option>`).join('')}
+      </select>
+    </div>
+    <label class="mover-aviso"><input type="checkbox" id="f-notificar" /> <span>Avisar a ${esc(c.cliente_tag) || 'cliente'} por correo (${idiomaDe(c)})${c.email ? '' : ' — sin email registrado'}</span></label>
+    <button class="btn-save" onclick="guardarEstadoFicha(${num})">Guardar estado</button>
+  </section>
+  <section class="ficha-sec">
+    <h3>Fecha de entrega</h3>
+    <div class="ficha-fila">
+      <input type="date" id="f-entrega" value="${esc(String(c.fecha_entrega || '').slice(0, 10))}" aria-label="Fecha de entrega" />
+      <button class="btn-save" onclick="guardarEntrega(${num})">Guardar fecha</button>
+    </div>
+  </section>
+  <section class="ficha-sec">
+    <h3>Pagos</h3>
+    ${pagos}
+    <p class="ficha-saldo">Pagado ${dinero(f.pagado)} · ${saldo}</p>
+  </section>
+  <section class="ficha-sec">
+    <h3>Notas privadas</h3>
+    <ul class="ficha-lista">${notas}</ul>
+    <label class="sr-only" for="f-nota">Nueva nota</label>
+    <textarea id="f-nota" rows="3" maxlength="4000" placeholder="Solo tú la ves"></textarea>
+    <button class="btn-save" onclick="agregarNota(${num})">Agregar nota</button>
+  </section>
+  <section class="ficha-sec">
+    <h3>Historial</h3>
+    ${historial}
+  </section>
+  ${otras.length ? `<p class="kanban-vacio">Otras comisiones de este cliente: ${otras.map((x) => `<button class="resumen-link" onclick="abrirDetalle(${Number(x)})">#${String(Number(x)).padStart(4, '0')}</button>`).join(' ')}</p>` : ''}`;
+        actualizarAvisoFicha();
+      }
+
+      function actualizarAvisoFicha() {
+        const sel = document.getElementById('f-estado');
+        const chk = document.getElementById('f-notificar');
+        if (sel && chk) chk.checked = AVISAR_POR_DEFECTO.includes(sel.value);
+      }
+
+      async function guardarEstadoFicha(folio) {
+        const nuevo = document.getElementById('f-estado').value;
+        const notificar = document.getElementById('f-notificar').checked;
+        await cambiarEstado(folio, nuevo, notificar);
+      }
+
+      async function guardarEntrega(folio) {
+        const valor = document.getElementById('f-entrega').value;
+        if (!valor) {
+          showToast('Elige una fecha.', 'error');
+          return;
+        }
+        try {
+          await adminJson(`/admin/comisiones/${Number(folio)}`, {
+            method: 'PATCH',
+            body: { fecha_entrega: valor },
+          });
+          showToast(`Entrega: ${fechaCorta(valor)}`, 'ok');
+          await cargarComisiones();
+          cargarFicha(folio);
+        } catch (e) {
+          console.error('No se pudo guardar la fecha de entrega:', e);
+          showToast(`No se guardó la fecha: ${textoError(e)}`, 'error');
+        }
+      }
+
+      async function agregarNota(folio) {
+        const area = document.getElementById('f-nota');
+        const texto = area.value.trim();
+        if (!texto) {
+          showToast('Escribe la nota.', 'error');
+          return;
+        }
+        try {
+          await adminJson(`/admin/comisiones/${Number(folio)}/notas`, {
+            method: 'POST',
+            body: { texto },
+          });
+          area.value = '';
+          showToast('Nota guardada', 'ok');
+          cargarFicha(folio);
+        } catch (e) {
+          console.error('No se pudo guardar la nota:', e);
+          showToast(`No se guardó la nota: ${textoError(e)}`, 'error');
+        }
+      }
+
+      async function borrarNota(folio, id) {
+        if (!confirm('¿Borrar esta nota?')) return;
+        try {
+          await adminJson(`/admin/comisiones/${Number(folio)}/notas/${encodeURIComponent(id)}`, {
+            method: 'DELETE',
+          });
+          showToast('Nota borrada', 'ok');
+          cargarFicha(folio);
+        } catch (e) {
+          console.error('No se pudo borrar la nota:', e);
+          showToast(`No se borró la nota: ${textoError(e)}`, 'error');
+        }
+      }
+
+      // ━━ MOVER CON AVISO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      let movimientoPendiente = null;
+
+      // Abre el diálogo "Mover #folio a …" con la casilla de aviso al cliente.
+      function confirmarMovimiento(folio, nuevo) {
+        if (!nuevo) return;
+        const c = comisiones.find((x) => Number(x.folio) === Number(folio)) || {};
+        movimientoPendiente = { folio: Number(folio), nuevo };
+        const dlg = document.getElementById('mover-dialog');
+        document.getElementById('mover-titulo').textContent =
+          `Mover #${String(Number(folio)).padStart(4, '0')} a ${statusLabel[nuevo] || nuevo}`;
+        document.getElementById('mover-notificar').checked =
+          AVISAR_POR_DEFECTO.includes(nuevo) && !!c.email;
+        document.getElementById('mover-notificar').disabled = !c.email;
+        document.getElementById('mover-notificar-texto').textContent = c.email
+          ? `Avisar a ${c.cliente_tag || 'cliente'} por correo (${idiomaDe(c)})`
+          : 'Sin email registrado: no se puede avisar';
+        if (typeof dlg.showModal === 'function') dlg.showModal();
+        else dlg.setAttribute('open', '');
+      }
+
+      function cerrarMovimiento() {
+        movimientoPendiente = null;
+        const dlg = document.getElementById('mover-dialog');
+        if (typeof dlg.close === 'function') dlg.close();
+        else dlg.removeAttribute('open');
+        // Devuelve los <select> a "Mover a →".
+        renderComisiones();
+      }
+
+      async function confirmarMovimientoEnviar(event) {
+        event.preventDefault();
+        const mov = movimientoPendiente;
+        const notificar = document.getElementById('mover-notificar').checked;
+        cerrarMovimiento();
+        if (mov) await cambiarEstado(mov.folio, mov.nuevo, notificar);
       }
 
       // ━━ TABLERO Y FILTROS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2285,8 +2756,9 @@
   </div>
   <div class="kc-cliente">${esc(c.cliente_tag) || '—'}</div>
   <div class="kc-meta">${[tipo, fecha].filter(Boolean).join(' · ')}</div>
+  ${c.fecha_entrega ? `<div class="kc-meta${String(c.fecha_entrega).slice(0, 10) < new Date().toISOString().slice(0, 10) && !['delivered', 'completed', 'cancelled'].includes(c.status) ? ' vencida' : ''}">Entrega ${fechaCorta(c.fecha_entrega)}</div>` : ''}
   <div class="kc-acciones">
-    <select class="status-select" aria-label="Mover folio #${folio} a otro estado" onchange="cambiarEstado(${num},this.value)">
+    <select class="status-select" aria-label="Mover folio #${folio} a otro estado" onchange="confirmarMovimiento(${num},this.value)">
       <option value="">Mover a →</option>
       ${opcionesMover(st)}
     </select>
@@ -2360,7 +2832,7 @@
       <td>${fecha}</td>
       <td>
         <div class="action-row">
-          <select class="status-select" onchange="cambiarEstado(${num},this.value)" title="Cambiar estado">
+          <select class="status-select" onchange="confirmarMovimiento(${num},this.value)" title="Cambiar estado">
             <option value="">Estado →</option>
             ${opcionesMover(st)}
           </select>
@@ -2389,15 +2861,22 @@
       // POST  /admin/comisiones/:folio/notificar                          → manda email al cliente
       // Todas las llamadas usan adminFetch(), que añade el header X-Admin-Key.
 
-      async function cambiarEstado(folio, nuevoStatus) {
+      async function cambiarEstado(folio, nuevoStatus, notificar = false) {
         if (!nuevoStatus) return;
         try {
-          await adminJson(`/admin/comisiones/${Number(folio)}/status`, {
+          const data = await adminJson(`/admin/comisiones/${Number(folio)}/status`, {
             method: 'PATCH',
-            body: { status: nuevoStatus },
+            body: { status: nuevoStatus, notificar },
           });
-          showToast(`Folio #${String(folio).padStart(4, '0')} → ${statusLabel[nuevoStatus]}`, 'ok');
+          const base = `Folio #${String(folio).padStart(4, '0')} → ${statusLabel[nuevoStatus]}`;
+          if (data && data.advertencias && data.advertencias.length) {
+            // El estado se guardó; el correo no.
+            showToast(`${base}. ⚠ ${data.advertencias.join(' ')}`, 'error');
+          } else {
+            showToast(notificar ? `${base} · cliente avisado ✉` : base, 'ok');
+          }
           await cargarComisiones();
+          if (fichaAbierta === Number(folio)) cargarFicha(folio);
         } catch (e) {
           console.error('No se pudo cambiar el estado:', e);
           showToast(`No se cambió el estado: ${textoError(e)}`, 'error');
@@ -2633,11 +3112,14 @@
     ${bloque('Lo que no quiere', c.que_no_quiere)}
     ${bloque('Referencias', c.referencias_links)}
     ${bloque('Notas', c.notas)}
+    <div id="d-ficha" aria-live="polite"><p class="kanban-vacio">Cargando ficha…</p></div>
   `;
+        cargarFicha(folio);
         document.getElementById('detail-overlay').classList.add('open');
       }
 
       function cerrarDetalle() {
+        fichaAbierta = null;
         document.getElementById('detail-overlay').classList.remove('open');
       }
 

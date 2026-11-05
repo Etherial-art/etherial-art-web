@@ -18,7 +18,7 @@
 
   var uid = 0;
   function ensureId(el, prefix) {
-    if (!el.id) el.id = prefix + '-' + (++uid);
+    if (!el.id) el.id = prefix + '-' + ++uid;
     return el.id;
   }
 
@@ -39,7 +39,11 @@
     grid.dataset.a11y = '1';
     var opts = grid.querySelectorAll('.opt');
     var multi = false;
-    for (var i = 0; i < opts.length; i++) if (isMulti(opts[i])) { multi = true; break; }
+    for (var i = 0; i < opts.length; i++)
+      if (isMulti(opts[i])) {
+        multi = true;
+        break;
+      }
     grid.setAttribute('role', multi ? 'group' : 'radiogroup');
     var label = grid.previousElementSibling;
     while (label && label.tagName !== 'LABEL') label = label.previousElementSibling;
@@ -103,9 +107,11 @@
       if (m.type === 'attributes') {
         var el = m.target;
         if (el.classList.contains('opt') && el.dataset.a11y) syncOpt(el);
-        if (el.classList.contains('form-section') &&
-            el.classList.contains('active') &&
-            !(m.oldValue || '').split(/\s+/).includes('active')) {
+        if (
+          el.classList.contains('form-section') &&
+          el.classList.contains('active') &&
+          !(m.oldValue || '').split(/\s+/).includes('active')
+        ) {
           var a = document.activeElement;
           // Sólo si el usuario venía interactuando con el formulario
           if (a && a.closest && a.closest('.form-section')) focusStep(el);
@@ -119,8 +125,11 @@
   function init() {
     scan(document);
     observer.observe(document.body, {
-      subtree: true, childList: true,
-      attributes: true, attributeFilter: ['class'], attributeOldValue: true
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['class'],
+      attributeOldValue: true,
     });
   }
 

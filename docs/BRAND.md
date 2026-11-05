@@ -166,8 +166,15 @@ Reglas:
 - **Opción** (`.opt`): 48 px, borde `--border-soft`, radio/check con `--border-field`;
   seleccionada = `--gp` + borde `--color-accent` + `--shadow-rest`.
 - **Pestañas**: teléfono (≤ 768 px) barra inferior al alcance del pulgar, sólo iconos
-  en < 481 px e icono + etiqueta en tablet; escritorio, barra superior. Activa = texto
-  `--color-accent` + barra `--gold` que crece con `scaleX`.
+  en < 481 px e icono + etiqueta (12 px) en tablet; escritorio, barra superior con las 6.
+  Activa = texto `--color-accent` + barra `--gold` que crece con `scaleX`.
+- **Menú "Más"** (sólo teléfono/tablet): la barra inferior lleva 4 destinos (Inicio,
+  Comisiones, Seguimiento, Contacto) y un botón "Más" que abre un panel con las
+  pestañas marcadas `.tab-secondary` (Sobre mí, Portafolio). Patrón _disclosure_:
+  `aria-expanded`/`aria-controls`, foco al primer elemento al abrir, flechas/Inicio/Fin
+  dentro del panel, Escape cierra y devuelve el foco. Panel = tarjeta `--radius-md` +
+  `--shadow-raised`, elementos de 48 px; entra con `rise` (sólo `fade` con movimiento
+  reducido). "Más" se marca activo cuando la página actual está en el panel.
 
 ## 7. Qué hacer / qué no hacer
 

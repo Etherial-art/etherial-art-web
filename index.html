@@ -526,6 +526,67 @@
       .tab.active i {
         transform: translateY(-1px);
       }
+      /* "Más": sólo existe con JS y en teléfono/tablet (.has-more la pone el script) */
+      .tab-more {
+        display: none;
+      }
+      .tabbar.has-more .tab-more {
+        display: flex;
+      }
+      .tabbar.has-more .tab-secondary {
+        display: none;
+      }
+      .tab-more[aria-expanded='true'] {
+        color: var(--color-accent);
+      }
+      .more-menu {
+        position: fixed;
+        right: var(--page-gutter);
+        bottom: calc(56px + var(--space-2) + env(safe-area-inset-bottom));
+        z-index: 60;
+        min-width: 220px;
+        max-width: calc(100vw - 2 * var(--page-gutter));
+        padding: var(--space-2);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-1);
+        background: var(--card);
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-raised);
+        animation: rise var(--duration-base) var(--ease-out) backwards;
+      }
+      .more-menu[hidden] {
+        display: none;
+      }
+      .more-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        min-height: var(--tap-target-lg);
+        padding: 0 var(--space-4);
+        border: none;
+        border-radius: var(--radius-sm);
+        background: none;
+        color: var(--dark);
+        font-family: var(--sans);
+        font-size: var(--font-size-base);
+        text-align: left;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .more-item i {
+        font-size: 1.25rem;
+        color: var(--color-eyebrow);
+      }
+      .more-item:hover {
+        background: var(--surface-hover);
+      }
+      .more-item.active {
+        background: var(--gp);
+        color: var(--color-accent);
+        font-weight: 500;
+      }
 
       /* ══ MAIN ═════════════════════════════════════════════ */
       .main {
@@ -1780,8 +1841,12 @@
           flex-direction: column;
           gap: 2px;
           min-height: 60px;
-          font-size: 0.6875rem;
-          letter-spacing: 0.04em;
+          font-size: var(--font-size-label);
+          letter-spacing: 0.01em;
+          text-transform: none;
+        }
+        .more-menu {
+          bottom: calc(60px + var(--space-2) + env(safe-area-inset-bottom));
         }
         .tab span {
           position: static;
@@ -1832,6 +1897,14 @@
           height: auto;
           overflow: visible;
           clip: auto;
+        }
+        .tabbar.has-more .tab-more,
+        .more-menu,
+        .more-menu[hidden] {
+          display: none;
+        }
+        .tabbar.has-more .tab-secondary {
+          display: flex;
         }
         .tab.active i {
           transform: none;
@@ -2169,6 +2242,7 @@
           transition-property: opacity !important;
         }
         .reveal.is-visible,
+        .more-menu,
         .service-item.open .srv-body-inner,
         .form-success,
         .wl-success {
@@ -2223,11 +2297,11 @@
       <button class="tab active" data-tab="inicio" onclick="goTab('inicio')">
         <i class="ti ti-home"></i><span>Inicio</span>
       </button>
-      <button class="tab" data-tab="sobre" onclick="goTab('sobre')">
+      <button class="tab tab-secondary" data-tab="sobre" onclick="goTab('sobre')">
         <i class="ti ti-user"></i><span>Sobre mí</span>
       </button>
 
-      <button class="tab" data-tab="portafolio" onclick="goTab('portafolio')">
+      <button class="tab tab-secondary" data-tab="portafolio" onclick="goTab('portafolio')">
         <i class="ti ti-layout-grid"></i><span>Portafolio</span>
       </button>
       <button class="tab" data-tab="comisiones" onclick="goTab('comisiones')">
@@ -2239,7 +2313,17 @@
       <button class="tab" data-tab="contacto" onclick="goTab('contacto')">
         <i class="ti ti-mail"></i><span>Contacto</span>
       </button>
+      <button
+        class="tab tab-more"
+        id="tab-more"
+        type="button"
+        aria-expanded="false"
+        aria-controls="more-menu"
+      >
+        <i class="ti ti-dots" aria-hidden="true"></i><span id="tab-more-label">Más</span>
+      </button>
     </div>
+    <div class="more-menu" id="more-menu" role="group" aria-labelledby="tab-more" hidden></div>
 
     <!-- MAIN -->
     <div class="main" id="main" role="main">
@@ -4476,6 +4560,7 @@
             'No pudimos comprobar si hay espacios para comisiones en este momento. Revisa tu conexión e inténtalo de nuevo.',
           'commissions.unknown.retry': 'Reintentar',
           'nav.seguimiento': 'Seguimiento',
+          'nav.more': 'Más',
           'seg.eyebrow': 'Estado de pedidos',
           'seg.title': 'Seguimiento',
           'wl.eyebrow': 'Lista de espera',
@@ -4780,6 +4865,7 @@
             "We couldn't check whether commission slots are available right now. Check your connection and try again.",
           'commissions.unknown.retry': 'Try again',
           'nav.seguimiento': 'Tracking',
+          'nav.more': 'More',
           'seg.eyebrow': 'Order status',
           'seg.title': 'Tracking',
           'wl.eyebrow': 'Waitlist',
@@ -5083,6 +5169,7 @@
             'Wir konnten gerade nicht prüfen, ob Plätze für Aufträge frei sind. Prüfe deine Verbindung und versuche es erneut.',
           'commissions.unknown.retry': 'Erneut versuchen',
           'nav.seguimiento': 'Nachverfolgung',
+          'nav.more': 'Mehr',
           'seg.eyebrow': 'Bestellstatus',
           'seg.title': 'Nachverfolgung',
           'wl.eyebrow': 'Warteliste',
@@ -5354,6 +5441,7 @@
             if (span) span.textContent = t(key);
           }
         });
+        setText('tab-more-label', t('nav.more'));
         const cta = document.getElementById('cta-contact');
         if (cta) cta.textContent = t('nav.contact');
 
@@ -6764,6 +6852,113 @@
           console.error('portfolio:', e);
         }
       }
+    </script>
+    <script>
+      /* Menú "Más" de la barra inferior en teléfono (≤ 768 px). Con 6 destinos la
+         barra quedaba saturada: las pestañas .tab-secondary pasan a este panel.
+         Patrón disclosure (WAI-APG): botón con aria-expanded que muestra un grupo
+         de botones. Sólo se activa con JS (clase .has-more en la barra); sin JS
+         la barra sigue mostrando las 6 pestañas. */
+      function iniciarMenuMas() {
+        const barra = document.querySelector('.tabbar');
+        const boton = document.getElementById('tab-more');
+        const panel = document.getElementById('more-menu');
+        if (!barra || !boton || !panel) return;
+        const secundarias = [...barra.querySelectorAll('.tab-secondary')];
+
+        // Un botón por pestaña secundaria; el icono y el texto se copian de la
+        // pestaña al abrir, así siguen el idioma elegido.
+        const items = secundarias.map((tab) => {
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'more-item';
+          item.dataset.tab = tab.dataset.tab;
+          const icono = tab.querySelector('i');
+          const iconoItem = document.createElement('i');
+          iconoItem.className = icono ? icono.className : '';
+          iconoItem.setAttribute('aria-hidden', 'true');
+          item.append(iconoItem, document.createElement('span'));
+          panel.append(item);
+          return item;
+        });
+
+        const sincronizarTextos = () => {
+          items.forEach((item, i) => {
+            const texto = secundarias[i].querySelector('span');
+            item.querySelector('span').textContent = texto ? texto.textContent : '';
+          });
+        };
+        const sincronizarActivo = () => {
+          let algunaActiva = false;
+          items.forEach((item, i) => {
+            const activa = secundarias[i].classList.contains('active');
+            algunaActiva = algunaActiva || activa;
+            item.classList.toggle('active', activa);
+            if (activa) item.setAttribute('aria-current', 'page');
+            else item.removeAttribute('aria-current');
+          });
+          boton.classList.toggle('active', algunaActiva);
+        };
+        const abierto = () => boton.getAttribute('aria-expanded') === 'true';
+        const cerrar = (devolverFoco) => {
+          if (!abierto()) return;
+          boton.setAttribute('aria-expanded', 'false');
+          panel.hidden = true;
+          if (devolverFoco) boton.focus();
+        };
+        const abrir = () => {
+          sincronizarTextos();
+          sincronizarActivo();
+          boton.setAttribute('aria-expanded', 'true');
+          panel.hidden = false;
+          if (items[0]) items[0].focus();
+        };
+
+        boton.addEventListener('click', () => (abierto() ? cerrar(true) : abrir()));
+        items.forEach((item) => {
+          item.addEventListener('click', () => {
+            goTab(item.dataset.tab);
+            cerrar(true);
+          });
+        });
+        panel.addEventListener('keydown', (e) => {
+          const i = items.indexOf(document.activeElement);
+          let destino = null;
+          if (e.key === 'ArrowDown') destino = items[(i + 1) % items.length];
+          else if (e.key === 'ArrowUp') destino = items[(i - 1 + items.length) % items.length];
+          else if (e.key === 'Home') destino = items[0];
+          else if (e.key === 'End') destino = items[items.length - 1];
+          if (destino) {
+            e.preventDefault();
+            destino.focus();
+          }
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && abierto()) cerrar(true);
+        });
+        // Se cierra al tocar fuera o al salir del menú con Tab.
+        document.addEventListener('click', (e) => {
+          if (!panel.contains(e.target) && !boton.contains(e.target)) cerrar(false);
+        });
+        panel.addEventListener('focusout', (e) => {
+          if (e.relatedTarget && !panel.contains(e.relatedTarget) && e.relatedTarget !== boton)
+            cerrar(false);
+        });
+        // Al pasar a escritorio el menú no existe: se cierra.
+        if (window.matchMedia) {
+          window.matchMedia('(min-width: 769px)').addEventListener('change', (e) => {
+            if (e.matches) cerrar(false);
+          });
+        }
+        new MutationObserver(sincronizarActivo).observe(barra, {
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['class'],
+        });
+        sincronizarActivo();
+        barra.classList.add('has-more');
+      }
+      iniciarMenuMas();
     </script>
     <script>
       /* Aparición suave al entrar en pantalla, una sola vez. Sin IntersectionObserver

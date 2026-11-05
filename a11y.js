@@ -16,7 +16,7 @@
 (function () {
   'use strict';
 
-  var uid = 0;
+  let uid = 0;
   function ensureId(el, prefix) {
     if (!el.id) el.id = prefix + '-' + ++uid;
     return el.id;
@@ -27,7 +27,7 @@
   }
 
   function syncOpt(el) {
-    var disabled = el.classList.contains('disabled');
+    const disabled = el.classList.contains('disabled');
     el.setAttribute('aria-checked', el.classList.contains('selected') ? 'true' : 'false');
     el.tabIndex = disabled ? -1 : 0;
     if (disabled) el.setAttribute('aria-disabled', 'true');
@@ -37,26 +37,26 @@
   function upgradeGrid(grid) {
     if (grid.dataset.a11y) return;
     grid.dataset.a11y = '1';
-    var opts = grid.querySelectorAll('.opt');
-    var multi = false;
-    for (var i = 0; i < opts.length; i++)
+    const opts = grid.querySelectorAll('.opt');
+    let multi = false;
+    for (let i = 0; i < opts.length; i++)
       if (isMulti(opts[i])) {
         multi = true;
         break;
       }
     grid.setAttribute('role', multi ? 'group' : 'radiogroup');
-    var label = grid.previousElementSibling;
+    let label = grid.previousElementSibling;
     while (label && label.tagName !== 'LABEL') label = label.previousElementSibling;
     if (label) {
       grid.setAttribute('aria-labelledby', ensureId(label, 'lbl-grp'));
     }
-    for (var j = 0; j < opts.length; j++) upgradeOpt(opts[j], multi);
+    for (let j = 0; j < opts.length; j++) upgradeOpt(opts[j], multi);
   }
 
   function upgradeOpt(el, multiGroup) {
     if (el.dataset.a11y) return;
     el.dataset.a11y = '1';
-    var multi = isMulti(el) || (multiGroup && !el.getAttribute('onclick'));
+    const multi = isMulti(el) || (multiGroup && !el.getAttribute('onclick'));
     el.setAttribute('role', multi ? 'checkbox' : 'radio');
     syncOpt(el);
   }
@@ -66,26 +66,26 @@
     el.dataset.a11y = '1';
     el.setAttribute('role', 'button');
     el.tabIndex = 0;
-    var img = el.querySelector('img');
-    var name = (img && img.getAttribute('alt')) || '';
+    const img = el.querySelector('img');
+    const name = (img && img.getAttribute('alt')) || '';
     el.setAttribute('aria-label', name ? 'Ampliar: ' + name : 'Ampliar imagen');
   }
 
   function scan(root) {
     if (!root || !root.querySelectorAll) return;
-    var grids = root.querySelectorAll('.options-grid');
-    for (var i = 0; i < grids.length; i++) upgradeGrid(grids[i]);
-    var opts = root.querySelectorAll('.opt');
-    for (var j = 0; j < opts.length; j++) upgradeOpt(opts[j], false);
-    var gal = root.querySelectorAll('.gallery-item');
-    for (var k = 0; k < gal.length; k++) upgradeGallery(gal[k]);
+    const grids = root.querySelectorAll('.options-grid');
+    for (let i = 0; i < grids.length; i++) upgradeGrid(grids[i]);
+    const opts = root.querySelectorAll('.opt');
+    for (let j = 0; j < opts.length; j++) upgradeOpt(opts[j], false);
+    const gal = root.querySelectorAll('.gallery-item');
+    for (let k = 0; k < gal.length; k++) upgradeGallery(gal[k]);
     if (root.classList && root.classList.contains('gallery-item')) upgradeGallery(root);
   }
 
   // Enter / Espacio activan los controles que no son <button>.
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
-    var t = e.target;
+    const t = e.target;
     if (!t || !t.matches) return;
     if (t.matches('.opt[role], .gallery-item[role="button"]')) {
       e.preventDefault();
@@ -95,29 +95,29 @@
 
   // Foco al título del paso cuando cambia la sección activa del formulario.
   function focusStep(section) {
-    var title = section.querySelector('.form-section-title');
+    const title = section.querySelector('.form-section-title');
     if (!title) return;
     if (!title.hasAttribute('tabindex')) title.tabIndex = -1;
     title.focus({ preventScroll: true });
   }
 
-  var observer = new MutationObserver(function (mutations) {
-    for (var i = 0; i < mutations.length; i++) {
-      var m = mutations[i];
+  const observer = new MutationObserver(function (mutations) {
+    for (let i = 0; i < mutations.length; i++) {
+      const m = mutations[i];
       if (m.type === 'attributes') {
-        var el = m.target;
+        const el = m.target;
         if (el.classList.contains('opt') && el.dataset.a11y) syncOpt(el);
         if (
           el.classList.contains('form-section') &&
           el.classList.contains('active') &&
           !(m.oldValue || '').split(/\s+/).includes('active')
         ) {
-          var a = document.activeElement;
+          const a = document.activeElement;
           // Sólo si el usuario venía interactuando con el formulario
           if (a && a.closest && a.closest('.form-section')) focusStep(el);
         }
       } else {
-        for (var j = 0; j < m.addedNodes.length; j++) scan(m.addedNodes[j]);
+        for (let j = 0; j < m.addedNodes.length; j++) scan(m.addedNodes[j]);
       }
     }
   });

@@ -85,6 +85,10 @@ página real** (con espree, el parser de ESLint) y lo ejecuta en un contexto
 aislado con dobles de `db`, `document` o `sessionStorage`. Se prueba el código
 que se publica, no una copia.
 
+Para scripts que trabajan sobre el DOM (como `a11y.js`) se usa
+[jsdom](https://github.com/jsdom/jsdom): carga la página real y ejecuta solo el
+script que se prueba (ver `tests/a11y.test.js`).
+
 Cuando cambies el manejo de errores o la lógica de una función, agrega una
 prueba que falle antes del cambio y pase después.
 
@@ -251,14 +255,11 @@ Reglas:
 
 ### Línea base (deuda técnica)
 
-Al adoptar estos estándares había código que no cumplía reglas cuyo arreglo
-cambia lógica. Para no bloquear commits, `eslint.config.js` baja esas reglas a
-_warning_ solo en esos archivos:
-
-- `no-var`: `a11y.js`.
-
-Se siguen viendo en cada `npm run lint`. Al corregirlos (en un PR propio),
-**quitar el archivo de la lista**. Archivos nuevos nunca se agregan.
+Hoy no hay excepciones: todas las reglas de ESLint aplican a todo el sitio. Si
+alguna vez hace falta tolerar código existente que rompe una regla cuyo arreglo
+cambia lógica, se baja esa regla a _warning_ **solo en ese archivo**, en un
+bloque de `eslint.config.js` marcado como deuda técnica y listado aquí, y se
+corrige en un PR propio. Archivos nuevos nunca se agregan.
 
 ---
 

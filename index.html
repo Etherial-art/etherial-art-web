@@ -2349,6 +2349,44 @@
                 vuelva a abrirse.
               </p>
             </div>
+            <div
+              id="wl-unknown-banner"
+              role="alert"
+              style="display: none; text-align: center; padding: 2rem 0 1rem"
+            >
+              <i
+                class="ti ti-alert-circle"
+                style="font-size: 36px; color: var(--hint); display: block; margin-bottom: 0.75rem"
+              ></i>
+              <div
+                style="
+                  font-family: var(--serif);
+                  font-size: 22px;
+                  font-weight: 300;
+                  color: var(--dark);
+                  margin-bottom: 0.5rem;
+                "
+                id="wl-unknown-title"
+              >
+                No se pudo cargar la lista de espera
+              </div>
+              <p
+                style="
+                  font-size: 13px;
+                  color: var(--muted);
+                  max-width: 400px;
+                  margin: 0 auto 1.25rem;
+                  line-height: 1.7;
+                "
+                id="wl-unknown-msg"
+              >
+                No pudimos comprobar si hay lugar en la lista de espera en este momento. Revisa tu
+                conexión e inténtalo de nuevo.
+              </p>
+              <button class="srv-pay" onclick="cargarEstadoComisiones()" id="wl-unknown-retry-btn">
+                Reintentar
+              </button>
+            </div>
             <div id="wl-form-wrap" style="max-width: 480px">
               <div class="field">
                 <label for="wl-name" class="field-label" id="lbl-wl-name">Tu nombre o @</label>
@@ -3800,6 +3838,9 @@
           'wl.submit': 'Unirme a la lista',
           'wl.ok': '¡Estás en la lista! Te avisaremos cuando haya espacio disponible.',
           'wl.error': 'Hubo un error. Intenta de nuevo.',
+          'wl.unknown.title': 'No se pudo cargar la lista de espera',
+          'wl.unknown.msg':
+            'No pudimos comprobar si hay lugar en la lista de espera en este momento. Revisa tu conexión e inténtalo de nuevo.',
           'wl.full.title': 'Lista de espera completa',
           'wl.full.msg':
             'La lista de espera está llena por ahora. Sígueme en redes para enterarte cuando vuelva a abrirse.',
@@ -4090,6 +4131,9 @@
           'wl.submit': 'Join the list',
           'wl.ok': "You're on the list! We'll let you know when a spot opens up.",
           'wl.error': 'Something went wrong. Please try again.',
+          'wl.unknown.title': "Couldn't load the waitlist",
+          'wl.unknown.msg':
+            "We couldn't check whether there's room on the waitlist right now. Check your connection and try again.",
           'wl.full.title': 'Waitlist is full',
           'wl.full.msg':
             'The waitlist is currently full. Follow me on social media to find out when it reopens.',
@@ -4379,6 +4423,9 @@
           'wl.submit': 'Zur Liste beitreten',
           'wl.ok': 'Du bist auf der Liste! Wir melden uns, sobald ein Platz frei wird.',
           'wl.error': 'Da ist etwas schiefgelaufen. Bitte noch mal versuchen.',
+          'wl.unknown.title': 'Warteliste konnte nicht geladen werden',
+          'wl.unknown.msg':
+            'Wir konnten gerade nicht prüfen, ob auf der Warteliste Platz ist. Prüfe deine Verbindung und versuche es erneut.',
           'wl.full.title': 'Warteliste voll',
           'wl.full.msg':
             'Die Warteliste ist derzeit voll. Folg mir in den sozialen Medien, um zu erfahren, wann sie wieder öffnet.',
@@ -4667,6 +4714,9 @@
         setText('wl-ok-msg', t('wl.ok'));
         setText('wl-full-title', t('wl.full.title'));
         setText('wl-full-msg', t('wl.full.msg'));
+        setText('wl-unknown-title', t('wl.unknown.title'));
+        setText('wl-unknown-msg', t('wl.unknown.msg'));
+        setText('wl-unknown-retry-btn', t('commissions.unknown.retry'));
         const cwb = document.getElementById('closed-wl-btn');
         if (cwb) cwb.textContent = t('slots.full.btn');
         setText('slots-full-title', t('slots.full.title'));
@@ -4967,6 +5017,9 @@
       // true si no se pudo leer la configuración o contar los slots: en ese caso
       // no se asume nada (ni abiertas ni cerradas) y se muestra un aviso.
       let estadoDesconocido = false;
+      // Igual para la waitlist: true si no se pudo contar o leer su límite
+      // (max_waitlist viene de la misma configuración).
+      let waitlistDesconocida = false;
 
       async function cargarEstadoComisiones() {
         // Si no se puede leer la configuración o contar los slots, la
@@ -4975,6 +5028,7 @@
         // se registra en consola. supabase-js no lanza en errores de consulta: los
         // devuelve en `error`, así que se revisa además del catch.
         estadoDesconocido = false;
+        waitlistDesconocida = false;
         try {
           const { data, error } = await db
             .from('config')
@@ -4983,6 +5037,7 @@
           if (error) {
             console.error('No se pudo leer la configuración de comisiones:', error);
             estadoDesconocido = true;
+            waitlistDesconocida = true;
           }
           if (data) {
             const openRow = data.find((r) => r.key === 'commissions_open');
@@ -4995,6 +5050,7 @@
         } catch (e) {
           console.error('No se pudo leer la configuración de comisiones:', e);
           estadoDesconocido = true;
+          waitlistDesconocida = true;
         }
         if (comisionesAbiertas) {
           try {
@@ -5019,11 +5075,15 @@
           const { count: wlCount, error } = await db
             .from('waitlist')
             .select('id', { count: 'exact', head: true });
-          if (error) console.error('No se pudo contar la waitlist:', error);
+          if (error) {
+            console.error('No se pudo contar la waitlist:', error);
+            waitlistDesconocida = true;
+          }
           waitlistFull = (wlCount || 0) >= maxWaitlist;
         } catch (e) {
           console.error('No se pudo contar la waitlist:', e);
           waitlistFull = false;
+          waitlistDesconocida = true;
         }
         const page = document.getElementById('page-comisiones');
         if (page && page.classList.contains('active')) goTab('comisiones');
@@ -5070,10 +5130,15 @@
           actualizarBotonesSrv();
         }
         if (name === 'seguimiento') {
+          // Con la waitlist desconocida no se asume llena ni con lugar: sólo el aviso.
+          const wlDesconocida = waitlistDesconocida;
+          const wlLlena = !wlDesconocida && waitlistFull;
+          const wlUnknown = document.getElementById('wl-unknown-banner');
           const wlFull = document.getElementById('wl-full-banner');
           const wlForm = document.getElementById('wl-form-wrap');
-          if (wlFull) wlFull.style.display = waitlistFull ? 'block' : 'none';
-          if (wlForm) wlForm.style.display = waitlistFull ? 'none' : 'block';
+          if (wlUnknown) wlUnknown.style.display = wlDesconocida ? 'block' : 'none';
+          if (wlFull) wlFull.style.display = wlLlena ? 'block' : 'none';
+          if (wlForm) wlForm.style.display = !wlDesconocida && !wlLlena ? 'block' : 'none';
         }
       }
 

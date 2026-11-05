@@ -38,6 +38,7 @@ const PRELUDE = `
   let maxWaitlist = 50;
   let waitlistFull = false;
   let estadoDesconocido = false;
+  let waitlistDesconocida = false;
   function __estado() {
     return {
       comisionesAbiertas,
@@ -47,6 +48,7 @@ const PRELUDE = `
       maxWaitlist,
       waitlistFull,
       estadoDesconocido,
+      waitlistDesconocida,
     };
   }
 `;
@@ -64,6 +66,7 @@ const DEFAULTS = {
 const sinEstado = (estado) => {
   const copia = { ...estado };
   delete copia.estadoDesconocido;
+  delete copia.waitlistDesconocida;
   return copia;
 };
 
@@ -105,6 +108,7 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
       assert.equal(estado.slotsFull, true);
       assert.equal(estado.waitlistFull, false);
       assert.equal(estado.estadoDesconocido, false);
+      assert.equal(estado.waitlistDesconocida, false);
     });
 
     it('si Supabase devuelve error lo registra y la disponibilidad queda desconocida', async () => {
@@ -117,6 +121,7 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
       for (const args of calls.error) assert.ok(args.includes(supabaseError));
       assert.deepEqual(sinEstado(estado), DEFAULTS);
       assert.equal(estado.estadoDesconocido, true);
+      assert.equal(estado.waitlistDesconocida, true);
     });
 
     it('basta con que falle el conteo de slots para que sea desconocida', async () => {
@@ -128,13 +133,38 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
       assert.equal(estado.estadoDesconocido, true);
     });
 
-    it('si sólo falla la waitlist, la disponibilidad de comisiones sí se conoce', async () => {
+    it('si sólo falla la waitlist, ella queda desconocida y las comisiones no', async () => {
+      for (const waitlist of [
+        { error: supabaseError },
+        { throw: new TypeError('Failed to fetch') },
+      ]) {
+        const { estado } = await cargar(page, {
+          config: { data: [{ key: 'commissions_open', value: 'false' }] },
+          waitlist,
+        });
+        assert.equal(estado.waitlistDesconocida, true);
+        assert.equal(estado.estadoDesconocido, false);
+        assert.equal(estado.comisionesAbiertas, false);
+      }
+    });
+
+    it('si falla la configuración, la waitlist también es desconocida (su límite sale de ahí)', async () => {
       const { estado } = await cargar(page, {
-        config: { data: [{ key: 'commissions_open', value: 'false' }] },
-        waitlist: { error: supabaseError },
+        config: { error: supabaseError },
+        seguimiento_publico: { count: 0 },
+        waitlist: { count: 0 },
       });
-      assert.equal(estado.estadoDesconocido, false);
-      assert.equal(estado.comisionesAbiertas, false);
+      assert.equal(estado.waitlistDesconocida, true);
+    });
+
+    it('si sólo falla el conteo de slots, la waitlist sí se conoce', async () => {
+      const { estado } = await cargar(page, {
+        config: { data: [] },
+        seguimiento_publico: { error: supabaseError },
+        waitlist: { count: 60 },
+      });
+      assert.equal(estado.waitlistDesconocida, false);
+      assert.equal(estado.waitlistFull, true);
     });
 
     it('al reintentar con éxito deja de ser desconocida', async () => {
@@ -148,9 +178,11 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
       );
       await ctx.cargarEstadoComisiones();
       assert.equal(ctx.__estado().estadoDesconocido, true);
+      assert.equal(ctx.__estado().waitlistDesconocida, true);
       tablas.config = { data: [] };
       await ctx.cargarEstadoComisiones();
       assert.equal(ctx.__estado().estadoDesconocido, false);
+      assert.equal(ctx.__estado().waitlistDesconocida, false);
       assert.equal(calls.error.length, 1);
     });
 
@@ -165,6 +197,7 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
       for (const args of calls.error) assert.ok(args.includes(red));
       assert.deepEqual(sinEstado(estado), DEFAULTS);
       assert.equal(estado.estadoDesconocido, true);
+      assert.equal(estado.waitlistDesconocida, true);
     });
   });
 }
@@ -233,6 +266,9 @@ function domFalso() {
     'btn-req-illus',
     'btn-req-edit',
     'btn-req-print',
+    'wl-unknown-banner',
+    'wl-full-banner',
+    'wl-form-wrap',
   ];
   const els = Object.fromEntries(
     ids.map((id) => [id, { id, style: {}, className: '', textContent: '', onclick: null }]),
@@ -250,6 +286,7 @@ function pestanaComisiones(page, estado) {
     let slotsFull = ${estado.llenas};
     let waitlistFull = false;
     let estadoDesconocido = ${estado.desconocido};
+    let waitlistDesconocida = false;
   `;
   const ctx = load(
     page,
@@ -301,6 +338,47 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
         assert.equal(vista.badge[0], `comm-badge ${clase}`);
         assert.equal(vista.botones, boton);
       }
+    });
+  });
+}
+
+function pestanaSeguimiento(page, { llena, desconocida }) {
+  const { els, document } = domFalso();
+  const prelude = `
+    let comisionesAbiertas = true;
+    let slotsFull = false;
+    let estadoDesconocido = false;
+    let waitlistFull = ${llena};
+    let waitlistDesconocida = ${desconocida};
+  `;
+  const ctx = load(
+    page,
+    ['goTab', 'actualizarBotonesSrv'],
+    { document, t: (k) => k, abrirFormulario: () => {} },
+    prelude,
+  );
+  ctx.goTab('seguimiento');
+  const visible = (id) => els[id].style.display === 'block';
+  return ['wl-unknown-banner', 'wl-full-banner', 'wl-form-wrap'].filter(visible);
+}
+
+for (const page of ['index.html', 'mango.html', 'wuff.html']) {
+  describe(`${page}: lista de espera`, () => {
+    it('desconocida: sólo el aviso, sin asumir llena ni con lugar', () => {
+      for (const llena of [true, false]) {
+        assert.deepEqual(pestanaSeguimiento(page, { llena, desconocida: true }), [
+          'wl-unknown-banner',
+        ]);
+      }
+    });
+
+    it('conocida: como antes (llena -> aviso de llena, con lugar -> formulario)', () => {
+      assert.deepEqual(pestanaSeguimiento(page, { llena: true, desconocida: false }), [
+        'wl-full-banner',
+      ]);
+      assert.deepEqual(pestanaSeguimiento(page, { llena: false, desconocida: false }), [
+        'wl-form-wrap',
+      ]);
     });
   });
 }

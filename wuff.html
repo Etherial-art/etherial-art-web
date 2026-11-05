@@ -4714,9 +4714,9 @@
           slotsFull = false;
         }
         try {
-          const { count: wlCount, error } = await db
-            .from('waitlist')
-            .select('id', { count: 'exact', head: true });
+          // La waitlist tiene datos personales: el sitio no lee la tabla, solo
+          // pide el número de personas a la función contar_waitlist().
+          const { data: wlCount, error } = await db.rpc('contar_waitlist');
           if (error) {
             console.error('No se pudo contar la waitlist:', error);
             waitlistDesconocida = true;

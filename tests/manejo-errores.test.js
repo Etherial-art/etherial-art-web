@@ -7,23 +7,37 @@ import { fakeConsole, load } from './extract.js';
 // ── Supabase falso ─────────────────────────────────────────────────────────
 // Imita el query builder de supabase-js: cada consulta es "thenable" y se
 // resuelve con { data, count, error }, o se rechaza si se pide `throw`.
+//
+// La waitlist se cuenta con la función contar_waitlist() (rpc), nunca leyendo
+// la tabla: `byTable.waitlist.count` es el número que devuelve la función.
+function thenable(outcome, base) {
+  return {
+    then(resolve, reject) {
+      if (outcome.throw) return Promise.reject(outcome.throw).then(resolve, reject);
+      return Promise.resolve({ ...base, ...outcome }).then(resolve, reject);
+    },
+  };
+}
+
 function fakeDb(byTable) {
   return {
     from(table) {
+      if (table === 'waitlist') {
+        throw new Error('El sitio no debe leer la tabla waitlist (tiene datos personales)');
+      }
       const outcome = byTable[table] ?? { data: null, count: null, error: null };
       const query = {
         select: () => query,
         in: () => query,
         not: () => query,
-        then(resolve, reject) {
-          if (outcome.throw) return Promise.reject(outcome.throw).then(resolve, reject);
-          return Promise.resolve({ data: null, count: null, error: null, ...outcome }).then(
-            resolve,
-            reject,
-          );
-        },
+        ...thenable(outcome, { data: null, count: null, error: null }),
       };
       return query;
+    },
+    rpc(fn) {
+      if (fn !== 'contar_waitlist') throw new Error(`rpc inesperada: ${fn}`);
+      const { count, ...outcome } = byTable.waitlist ?? {};
+      return thenable(outcome, { data: count ?? null, error: null });
     },
   };
 }

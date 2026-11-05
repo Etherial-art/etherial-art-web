@@ -2581,7 +2581,6 @@
             <thead>
               <tr>
                 <th id="th-folio">Folio</th>
-                <th id="th-client">Cliente</th>
                 <th id="th-desc">Descripción</th>
                 <th id="th-date">Fecha</th>
                 <th id="th-queue">Lugar en fila</th>
@@ -4026,8 +4025,8 @@
           'tracker.title': 'Tracker de folios',
           'tracker.search': 'Buscar',
           'tracker.loading': 'Cargando folios...',
-          'tracker.placeholder': 'Ingresa tu número de folio o nombre, ej: #0001',
-          'tracker.empty': 'No hay folios para mostrar',
+          'tracker.placeholder': 'Ingresa tu número de folio, ej: #0001',
+          'tracker.empty': 'Escribe tu número de folio para ver su estado.',
           'tracker.error': 'No se pudieron cargar los folios. Intenta más tarde.',
           'tracker.found': 'Se encontró {n} folio(s).',
           'tracker.notfound': 'No se encontró ningún folio.',
@@ -4097,6 +4096,10 @@
           'val.discord': 'Ingresa tu usuario de Discord',
           'val.discord.format': 'El usuario de Discord debe tener 2–32 caracteres sin espacios',
           'status.waiting': 'En espera',
+          'status.sketch': 'Boceto',
+          'status.color': 'Color',
+          'status.revision': 'En revisión',
+          'status.delivered': 'Entregado',
           'status.notified': 'Notificado',
           'status.quoted': 'Cotización enviada',
           'status.active': 'En proceso',
@@ -4325,8 +4328,8 @@
           'tracker.title': 'Order tracker',
           'tracker.search': 'Search',
           'tracker.loading': 'Loading orders...',
-          'tracker.placeholder': 'Enter your folio number or name, e.g. #0001',
-          'tracker.empty': 'No orders to display',
+          'tracker.placeholder': 'Enter your folio number, e.g. #0001',
+          'tracker.empty': 'Enter your folio number to see its status.',
           'tracker.error': 'Could not load orders. Please try again later.',
           'tracker.found': 'Found {n} order(s).',
           'tracker.notfound': 'No order found.',
@@ -4397,6 +4400,10 @@
           'val.discord': 'Enter your Discord username',
           'val.discord.format': 'Discord username must be 2–32 characters with no spaces',
           'status.waiting': 'Waiting',
+          'status.sketch': 'Sketch',
+          'status.color': 'Coloring',
+          'status.revision': 'In revision',
+          'status.delivered': 'Delivered',
           'status.notified': 'Notified',
           'status.quoted': 'Quote sent',
           'status.active': 'In progress',
@@ -4624,8 +4631,8 @@
           'tracker.title': 'Auftrags-Tracker',
           'tracker.search': 'Suchen',
           'tracker.loading': 'Aufträge werden geladen...',
-          'tracker.placeholder': 'Folio-Nummer oder Name eingeben, z.B. #0001',
-          'tracker.empty': 'Keine Aufträge vorhanden',
+          'tracker.placeholder': 'Folio-Nummer eingeben, z.B. #0001',
+          'tracker.empty': 'Gib deine Folio-Nummer ein, um den Status zu sehen.',
           'tracker.error': 'Aufträge konnten nicht geladen werden.',
           'tracker.found': '{n} Auftrag/Aufträge gefunden.',
           'tracker.notfound': 'Kein Auftrag gefunden.',
@@ -4696,6 +4703,10 @@
           'val.discord': 'Gib deinen Discord-Nutzernamen ein',
           'val.discord.format': 'Discord-Nutzername muss 2–32 Zeichen ohne Leerzeichen haben',
           'status.waiting': 'Wartend',
+          'status.sketch': 'Skizze',
+          'status.color': 'Kolorierung',
+          'status.revision': 'In Überprüfung',
+          'status.delivered': 'Geliefert',
           'status.notified': 'Benachrichtigt',
           'status.quoted': 'Angebot gesendet',
           'status.active': 'In Bearbeitung',
@@ -5073,7 +5084,6 @@
         const ti = document.getElementById('folio-input');
         if (ti) ti.placeholder = t('tracker.placeholder');
         setText('th-folio', t('tracker.col.folio'));
-        setText('th-client', t('tracker.col.client'));
         setText('th-desc', t('tracker.col.desc'));
         setText('th-date', t('tracker.col.date'));
         setText('th-queue', t('tracker.col.queue'));
@@ -5399,15 +5409,13 @@
         }
         if (comisionesAbiertas) {
           try {
-            const { count, error } = await db
-              .from('seguimiento_publico')
-              .select('folio', { count: 'exact', head: true })
-              .not('status', 'in', '(completed,cancelled,expired)');
+            // Solo el número: el sitio ya no puede listar comisiones.
+            const { data: activas, error } = await db.rpc('contar_comisiones_activas');
             if (error) {
               console.error('No se pudo contar las comisiones activas:', error);
               estadoDesconocido = true;
             }
-            activeCount = count || 0;
+            activeCount = activas || 0;
             slotsFull = activeCount >= maxSlots;
           } catch (e) {
             console.error('No se pudo contar las comisiones activas:', e);
@@ -5546,11 +5554,13 @@
       };
       const eClass = {
         waiting: 's-pending',
-        notified: 's-progress',
         quoted: 's-quoted',
+        sketch: 's-sent',
+        color: 's-sent',
         active: 's-sent',
+        revision: 's-progress',
+        delivered: 's-paid',
         completed: 's-paid',
-        expired: 's-expired',
         cancelled: 's-expired',
       };
       let foliosGlobales = [];
@@ -5560,7 +5570,7 @@
         const tbody = document.getElementById('folio-tbody');
         if (!tbody) return;
         if (!lista.length) {
-          tbody.innerHTML = `<tr><td colspan="6" class="tracker-empty"><i class="ti ti-inbox"></i> ${t('tracker.empty')}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="5" class="tracker-empty"><i class="ti ti-inbox"></i> ${t('tracker.empty')}</td></tr>`;
           return;
         }
         tbody.innerHTML = lista
@@ -5575,33 +5585,15 @@
             const fila = f.lugar_en_fila
               ? `<span class="fila-badge"><i class="ti ti-list-numbers"></i> #${esc(f.lugar_en_fila)}</span>`
               : '—';
-            return `<tr><td class="folio-num">#${esc(String(f.folio).padStart(4, '0'))}</td><td>${esc(f.cliente_tag) || '—'}</td><td>${esc(f.tipo_ilustracion || f.tipo_servicio) || '—'}</td><td>${fecha}</td><td>${fila}</td><td><span class="pill ${eClass[status] || 's-pending'}">${t('status.' + status)}</span></td></tr>`;
+            return `<tr><td class="folio-num">#${esc(String(f.folio).padStart(4, '0'))}</td><td>${esc(f.tipo_ilustracion || f.tipo_servicio) || '—'}</td><td>${fecha}</td><td>${fila}</td><td><span class="pill ${eClass[status] || 's-pending'}">${t('status.' + status)}</span></td></tr>`;
           })
           .join('');
       }
 
-      async function cargarFolios() {
-        const tbody = document.getElementById('folio-tbody');
-        if (!tbody) return;
-        tbody.innerHTML = `<tr><td colspan="6" class="tracker-loading"><i class="ti ti-loader-2"></i> ${t('tracker.loading')}</td></tr>`;
-        try {
-          const { data, error } = await db
-            .from('seguimiento_publico')
-            .select(
-              'folio,cliente_tag,tipo_ilustracion,tipo_servicio,status,lugar_en_fila,created_at',
-            )
-            .order('folio', { ascending: true });
-          if (error) throw error;
-          foliosGlobales = data || [];
-          renderFolios(foliosGlobales);
-        } catch (e) {
-          console.error('Supabase error:', e);
-          document.getElementById('folio-tbody').innerHTML =
-            `<tr><td colspan="6" class="tracker-empty"><i class="ti ti-wifi-off"></i> ${t('tracker.error')}</td></tr>`;
-        }
-      }
-
-      function buscarFolio() {
+      // El tracker es solo por folio: no se carga ninguna lista al abrir. Cada
+      // búsqueda pide una comisión a la función buscar_folio() (columnas
+      // públicas, sin datos del cliente).
+      async function buscarFolio() {
         const q = document
           .getElementById('folio-input')
           .value.trim()
@@ -5610,21 +5602,35 @@
         const res = document.getElementById('tracker-result');
         if (!q) {
           if (res) res.style.display = 'none';
+          foliosGlobales = [];
           renderFolios(foliosGlobales);
           return;
         }
-        const found = foliosGlobales.filter(
-          (f) =>
-            String(f.folio).padStart(4, '0').includes(q) ||
-            String(f.folio).includes(q) ||
-            (f.cliente_tag || '').toLowerCase().includes(q),
-        );
+        const numero = /^\d+$/.test(q) ? Number(q) : NaN;
+        let found = [];
+        if (Number.isSafeInteger(numero) && numero > 0 && numero <= 2147483647) {
+          const tbody = document.getElementById('folio-tbody');
+          if (tbody)
+            tbody.innerHTML = `<tr><td colspan="5" class="tracker-loading"><i class="ti ti-loader-2"></i> ${t('tracker.loading')}</td></tr>`;
+          try {
+            const { data, error } = await db.rpc('buscar_folio', { p_folio: numero });
+            if (error) throw error;
+            found = Array.isArray(data) ? data : [];
+          } catch (e) {
+            console.error('No se pudo buscar el folio:', e);
+            if (res) res.style.display = 'none';
+            if (tbody)
+              tbody.innerHTML = `<tr><td colspan="5" class="tracker-empty"><i class="ti ti-wifi-off"></i> ${t('tracker.error')}</td></tr>`;
+            return;
+          }
+        }
         if (res) {
           res.style.display = 'block';
           res.textContent = found.length
             ? t('tracker.found', { n: found.length })
             : t('tracker.notfound');
         }
+        foliosGlobales = found;
         renderFolios(found);
       }
 
@@ -6277,7 +6283,7 @@
           fi.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') buscarFolio();
           });
-        cargarFolios();
+        renderFolios(foliosGlobales);
         cargarEstadoComisiones();
         // URL params
         const p = new URLSearchParams(window.location.search);

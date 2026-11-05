@@ -795,6 +795,194 @@
         background: #082f49;
         color: #7dd3fc;
       }
+      .s-color {
+        background: #ffedd5;
+        color: #9a3412;
+      }
+      [data-theme='dark'] .s-color {
+        background: #3b1a06;
+        color: #fdba74;
+      }
+
+      /* ── Tablero ───────────────────────────────────────────── */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .vista-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .vista-bar input[type='search'] {
+        flex: 1 1 200px;
+      }
+      .vista-bar input {
+        min-height: 44px;
+        padding: 0 12px;
+        border: 0.5px solid var(--border);
+        border-radius: 10px;
+        background: var(--card);
+        color: var(--dark);
+        font-family: var(--sans);
+        font-size: 14px;
+      }
+      .busca-fecha {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .vista-toggle {
+        display: flex;
+        border: 0.5px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .vista-btn,
+      .kanban-chip {
+        min-height: 44px;
+        padding: 0 14px;
+        border: none;
+        background: var(--card);
+        color: var(--muted);
+        font-family: var(--sans);
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .vista-btn[aria-pressed='true'],
+      .kanban-chip[aria-pressed='true'] {
+        background: var(--gl);
+        color: var(--cream);
+      }
+      .kanban {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(220px, 1fr));
+        gap: 0.75rem;
+        overflow-x: auto;
+        align-items: start;
+      }
+      .kanban-chip[aria-pressed='true'] .kc-count {
+        color: var(--cream);
+        border-color: currentColor;
+      }
+      .kanban-col {
+        background: var(--gp);
+        border: 0.5px solid var(--border);
+        border-radius: 12px;
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        min-width: 0;
+      }
+      .kanban-col h3 {
+        margin: 0;
+        font-family: var(--serif);
+        font-size: 1.15rem;
+        font-weight: 500;
+        color: var(--dark);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .kc-count {
+        font-family: var(--sans);
+        font-size: 11px;
+        color: var(--muted);
+        border: 0.5px solid var(--border);
+        border-radius: 99px;
+        padding: 1px 8px;
+      }
+      .kanban-card {
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-left: 3px solid var(--sc);
+        border-radius: 10px;
+        padding: 0.7rem 0.8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .kc-top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        align-items: center;
+      }
+      .kc-cliente {
+        font-size: 14px;
+        color: var(--dark);
+        overflow-wrap: anywhere;
+      }
+      .kc-meta,
+      .kanban-vacio {
+        font-size: 12px;
+        color: var(--hint);
+        margin: 0;
+      }
+      .kc-acciones {
+        display: flex;
+        gap: 0.4rem;
+        margin-top: 0.25rem;
+      }
+      .kc-acciones .status-select {
+        flex: 1;
+        min-width: 0;
+      }
+      /* Las acciones del tablero miden 44 px siempre (también en escritorio
+         táctil), no solo en pantallas estrechas. */
+      .kc-acciones .status-select,
+      .kc-acciones .act-btn,
+      .vista-bar .icon-btn {
+        min-height: 44px;
+      }
+      .kanban-chips {
+        display: none;
+      }
+      @media (max-width: 899px) {
+        .kanban {
+          grid-template-columns: 1fr;
+        }
+        .kanban-col:not(.activa) {
+          display: none;
+        }
+        .kanban-chips {
+          display: flex;
+          gap: 0.4rem;
+          overflow-x: auto;
+          padding-bottom: 0.25rem;
+        }
+        .kanban-chip {
+          border: 0.5px solid var(--border);
+          border-radius: 99px;
+          white-space: nowrap;
+        }
+      }
+      /* Objetivos táctiles de 44 px en pantallas táctiles o estrechas. */
+      @media (pointer: coarse), (max-width: 768px) {
+        .act-btn,
+        .filter-btn,
+        .icon-btn,
+        .add-btn,
+        .view-tab,
+        .status-select,
+        .port-item-del,
+        .login-btn,
+        .btn-save {
+          min-height: 44px;
+          min-width: 44px;
+        }
+      }
       [data-theme='dark'] .s-quoted {
         background: #3a2e00;
         color: #f5d000;
@@ -1198,13 +1386,52 @@
             </div>
           </div>
 
+          <!-- Vista y búsqueda -->
+          <div class="vista-bar">
+            <div class="vista-toggle" role="group" aria-label="Vista">
+              <button
+                class="vista-btn"
+                data-vista="tablero"
+                aria-pressed="true"
+                onclick="setVista('tablero')"
+              >
+                <i class="ti ti-layout-kanban"></i> Tablero
+              </button>
+              <button
+                class="vista-btn"
+                data-vista="lista"
+                aria-pressed="false"
+                onclick="setVista('lista')"
+              >
+                <i class="ti ti-list"></i> Lista
+              </button>
+            </div>
+            <label class="sr-only" for="busca-q">Buscar por folio, cliente o email</label>
+            <input
+              id="busca-q"
+              type="search"
+              placeholder="Folio, cliente o email"
+              oninput="renderComisiones()"
+            />
+            <label class="busca-fecha"
+              >Desde <input id="busca-desde" type="date" onchange="renderComisiones()"
+            /></label>
+            <label class="busca-fecha"
+              >Hasta <input id="busca-hasta" type="date" onchange="renderComisiones()"
+            /></label>
+            <button class="icon-btn" onclick="limpiarBusqueda()">
+              <i class="ti ti-x"></i> Limpiar
+            </button>
+          </div>
+
           <!-- Toolbar -->
           <div class="toolbar">
-            <div class="filter-group">
+            <div class="filter-group" id="filtros-lista" hidden>
               <button class="filter-btn active" onclick="setFilter('all', this)">Todas</button>
               <button class="filter-btn" onclick="setFilter('waiting', this)">En espera</button>
               <button class="filter-btn" onclick="setFilter('quoted', this)">Cotizadas</button>
-              <button class="filter-btn" onclick="setFilter('active', this)">En progreso</button>
+              <button class="filter-btn" onclick="setFilter('sketch', this)">Boceto</button>
+              <button class="filter-btn" onclick="setFilter('color', this)">Color</button>
               <button class="filter-btn" onclick="setFilter('revision', this)">En revisión</button>
               <button class="filter-btn" onclick="setFilter('delivered', this)">Entregadas</button>
               <button class="filter-btn" onclick="setFilter('completed', this)">Completadas</button>
@@ -1255,8 +1482,11 @@
             </button>
           </div>
 
+          <!-- Tablero -->
+          <div id="tablero" aria-live="polite"></div>
+
           <!-- Table -->
-          <div class="table-wrap">
+          <div class="table-wrap" id="lista-wrap" hidden>
             <table class="admin-table">
               <thead>
                 <tr>
@@ -1888,15 +2118,32 @@
       const statusLabel = {
         waiting: 'En espera',
         quoted: 'Cotizada',
-        active: 'En progreso',
+        sketch: 'Boceto',
+        color: 'Color',
         revision: 'En revisión',
         delivered: 'Entregada',
         completed: 'Completada',
         cancelled: 'Cancelada',
+        // Estado anterior a boceto/color: se muestra, pero ya no se asigna.
+        active: 'En progreso',
       };
+      // Los que se pueden elegir en "Mover a →" (ESTADOS_ASIGNABLES en
+      // niko-studio/estados.py). Un estado que no esté aquí da 400.
+      const ESTADOS_ASIGNABLES = [
+        'waiting',
+        'quoted',
+        'sketch',
+        'color',
+        'revision',
+        'delivered',
+        'completed',
+        'cancelled',
+      ];
       const statusClass = {
         waiting: 's-waiting',
         quoted: 's-quoted',
+        sketch: 's-active',
+        color: 's-color',
         active: 's-active',
         revision: 's-revision',
         delivered: 's-delivered',
@@ -1906,15 +2153,33 @@
       const statusColor = {
         waiting: '#B8860B',
         quoted: '#D97706',
+        sketch: '#1F8F85',
+        color: '#C2410C',
         active: '#1F8F85',
         revision: '#7C3AED',
         delivered: '#0E7490',
         completed: '#059669',
         cancelled: '#666',
       };
-      // Ocupan slot: igual que ACTIVE_STATUSES en niko-studio/utils.py, para que
-      // el contador del panel coincida con lo que decide el webhook.
-      const ESTADOS_ACTIVOS = ['waiting', 'quoted', 'active', 'revision', 'delivered'];
+      // Ocupan slot: igual que ACTIVE_STATUSES en niko-studio/estados.py, para
+      // que el contador del panel coincida con lo que decide el webhook.
+      const ESTADOS_ACTIVOS = [
+        'waiting',
+        'quoted',
+        'sketch',
+        'color',
+        'active',
+        'revision',
+        'delivered',
+      ];
+      // Columnas del tablero (COLUMNAS_TABLERO en niko-studio/estados.py).
+      const COLUMNAS = [
+        { clave: 'recibida', etiqueta: 'Recibida', estados: ['waiting', 'quoted'] },
+        { clave: 'boceto', etiqueta: 'Boceto', estados: ['sketch', 'active'] },
+        { clave: 'color', etiqueta: 'Color', estados: ['color', 'revision'] },
+        { clave: 'entregada', etiqueta: 'Entregada', estados: ['delivered'] },
+        { clave: 'cerrada', etiqueta: 'Cerradas', estados: ['completed', 'cancelled'] },
+      ];
 
       async function cargarComisiones() {
         const tbody = document.getElementById('admin-tbody');
@@ -1940,8 +2205,8 @@
         document.getElementById('stat-waiting').textContent = comisiones.filter(
           (c) => c.status === 'waiting' || c.status === 'quoted',
         ).length;
-        document.getElementById('stat-active').textContent = comisiones.filter(
-          (c) => c.status === 'active' || c.status === 'revision',
+        document.getElementById('stat-active').textContent = comisiones.filter((c) =>
+          ['sketch', 'color', 'active', 'revision'].includes(c.status),
         ).length;
         document.getElementById('stat-completed').textContent = comisiones.filter(
           (c) => c.status === 'completed',
@@ -1949,10 +2214,119 @@
         actualizarToggleUI();
       }
 
+      // ━━ TABLERO Y FILTROS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      let vistaComisiones = 'tablero';
+      let columnaMovil = 'recibida';
+
+      // <option> de "Mover a →": los estados asignables menos el actual.
+      function opcionesMover(actual) {
+        return ESTADOS_ASIGNABLES.filter((valor) => valor !== actual)
+          .map((valor) => `<option value="${valor}">${statusLabel[valor]}</option>`)
+          .join('');
+      }
+
+      function valorCampo(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+      }
+
+      // Misma regla que GET /admin/comisiones?q=&desde=&hasta= en el backend:
+      // números → folio exacto; texto → nombre o email; fechas inclusive.
+      function filtrarComisiones(lista) {
+        const q = valorCampo('busca-q').replace(/^#/, '').toLowerCase();
+        const desde = valorCampo('busca-desde');
+        const hasta = valorCampo('busca-hasta');
+        return lista.filter((c) => {
+          const creada = String(c.created_at || '').slice(0, 10);
+          if (desde && (!creada || creada < desde)) return false;
+          if (hasta && (!creada || creada > hasta)) return false;
+          if (!q) return true;
+          if (/^\d+$/.test(q)) return Number(q) === Number(c.folio);
+          return [c.cliente_tag, c.email].some((v) => v && String(v).toLowerCase().includes(q));
+        });
+      }
+
+      function limpiarBusqueda() {
+        ['busca-q', 'busca-desde', 'busca-hasta'].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+        renderComisiones();
+      }
+
+      function setVista(vista) {
+        vistaComisiones = vista;
+        document.getElementById('tablero').hidden = vista !== 'tablero';
+        document.getElementById('lista-wrap').hidden = vista !== 'lista';
+        document.getElementById('filtros-lista').hidden = vista !== 'lista';
+        document.querySelectorAll('.vista-btn').forEach((b) => {
+          b.setAttribute('aria-pressed', String(b.dataset.vista === vista));
+        });
+      }
+
+      function setColumnaMovil(clave) {
+        columnaMovil = clave;
+        renderTablero();
+      }
+
+      function tarjetaComision(c) {
+        const num = Number(c.folio);
+        const st = esc(c.status || 'waiting');
+        const fecha = c.created_at
+          ? new Date(c.created_at).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })
+          : '';
+        const tipo = esc(c.tipo_ilustracion || c.tipo_servicio || '');
+        const folio = String(num).padStart(4, '0');
+        return `<article class="kanban-card" style="--sc:${statusColor[st] || '#666'}">
+  <div class="kc-top">
+    <span class="folio-num">#${folio}</span>
+    ${c.es_rush ? '<span class="rush-badge">⚡ RUSH</span>' : ''}
+    <span class="pill ${statusClass[st] || 's-waiting'}">${statusLabel[st] || st}</span>
+  </div>
+  <div class="kc-cliente">${esc(c.cliente_tag) || '—'}</div>
+  <div class="kc-meta">${[tipo, fecha].filter(Boolean).join(' · ')}</div>
+  <div class="kc-acciones">
+    <select class="status-select" aria-label="Mover folio #${folio} a otro estado" onchange="cambiarEstado(${num},this.value)">
+      <option value="">Mover a →</option>
+      ${opcionesMover(st)}
+    </select>
+    <button class="act-btn" onclick="abrirDetalle(${num})" aria-label="Ver folio #${folio}"><i class="ti ti-eye"></i> Ver</button>
+  </div>
+</article>`;
+      }
+
+      function renderTablero() {
+        const cont = document.getElementById('tablero');
+        if (!cont) return;
+        const lista = filtrarComisiones(comisiones);
+        const porColumna = COLUMNAS.map((col) => ({
+          ...col,
+          items: lista.filter((c) => col.estados.includes(c.status)),
+        }));
+        const chips = porColumna
+          .map(
+            (col) =>
+              `<button class="kanban-chip" aria-pressed="${col.clave === columnaMovil}" onclick="setColumnaMovil('${col.clave}')">${col.etiqueta} <span class="kc-count">${col.items.length}</span></button>`,
+          )
+          .join('');
+        const columnas = porColumna
+          .map(
+            (
+              col,
+            ) => `<section class="kanban-col${col.clave === columnaMovil ? ' activa' : ''}" aria-label="${col.etiqueta}">
+  <h3>${col.etiqueta} <span class="kc-count">${col.items.length}</span></h3>
+  ${col.items.length ? col.items.map(tarjetaComision).join('') : '<p class="kanban-vacio">Sin comisiones</p>'}
+</section>`,
+          )
+          .join('');
+        cont.innerHTML = `<div class="kanban-chips">${chips}</div><div class="kanban">${columnas}</div>`;
+      }
+
       function renderComisiones() {
+        renderTablero();
         const tbody = document.getElementById('admin-tbody');
-        const lista =
-          filtroActual === 'all' ? comisiones : comisiones.filter((c) => c.status === filtroActual);
+        const base = filtrarComisiones(comisiones);
+        const lista = filtroActual === 'all' ? base : base.filter((c) => c.status === filtroActual);
         if (!lista.length) {
           tbody.innerHTML =
             '<tr class="empty-row"><td colspan="7"><i class="ti ti-inbox"></i> Sin comisiones en esta categoría.</td></tr>';
@@ -1988,10 +2362,7 @@
         <div class="action-row">
           <select class="status-select" onchange="cambiarEstado(${num},this.value)" title="Cambiar estado">
             <option value="">Estado →</option>
-            ${Object.entries(statusLabel)
-              .filter(([valor]) => valor !== st)
-              .map(([valor, texto]) => `<option value="${valor}">${texto}</option>`)
-              .join('')}
+            ${opcionesMover(st)}
           </select>
           ${quoteBtn}
           <button class="act-btn" onclick="abrirDetalle(${num})" title="Ver detalles"><i class="ti ti-eye"></i> Ver</button>

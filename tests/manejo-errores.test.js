@@ -22,8 +22,8 @@ function thenable(outcome, base) {
 function fakeDb(byTable) {
   return {
     from(table) {
-      if (table === 'waitlist') {
-        throw new Error('El sitio no debe leer la tabla waitlist (tiene datos personales)');
+      if (table === 'waitlist' || table === 'seguimiento_publico') {
+        throw new Error(`El sitio no debe leer ${table}: usa las funciones de conteo`);
       }
       const outcome = byTable[table] ?? { data: null, count: null, error: null };
       const query = {
@@ -34,9 +34,12 @@ function fakeDb(byTable) {
       };
       return query;
     },
+    // Funciones de Postgres que devuelven un número: `byTable.<clave>.count`
+    // es lo que devuelve la función.
     rpc(fn) {
-      if (fn !== 'contar_waitlist') throw new Error(`rpc inesperada: ${fn}`);
-      const { count, ...outcome } = byTable.waitlist ?? {};
+      const clave = { contar_waitlist: 'waitlist', contar_comisiones_activas: 'activas' }[fn];
+      if (!clave) throw new Error(`rpc inesperada: ${fn}`);
+      const { count, ...outcome } = byTable[clave] ?? {};
       return thenable(outcome, { data: count ?? null, error: null });
     },
   };
@@ -114,7 +117,7 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
             { key: 'max_waitlist', value: '10' },
           ],
         },
-        seguimiento_publico: { count: 3 },
+        activas: { count: 3 },
         waitlist: { count: 4 },
       });
       assert.deepEqual(calls, { warn: [], error: [] });
@@ -128,7 +131,7 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
     it('si Supabase devuelve error lo registra y la disponibilidad queda desconocida', async () => {
       const { calls, estado } = await cargar(page, {
         config: { error: supabaseError },
-        seguimiento_publico: { error: supabaseError },
+        activas: { error: supabaseError },
         waitlist: { error: supabaseError },
       });
       assert.equal(calls.error.length, 3);
@@ -141,7 +144,7 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
     it('basta con que falle el conteo de slots para que sea desconocida', async () => {
       const { estado } = await cargar(page, {
         config: { data: [{ key: 'max_slots', value: '3' }] },
-        seguimiento_publico: { error: supabaseError },
+        activas: { error: supabaseError },
         waitlist: { count: 0 },
       });
       assert.equal(estado.estadoDesconocido, true);
@@ -165,7 +168,7 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
     it('si falla la configuración, la waitlist también es desconocida (su límite sale de ahí)', async () => {
       const { estado } = await cargar(page, {
         config: { error: supabaseError },
-        seguimiento_publico: { count: 0 },
+        activas: { count: 0 },
         waitlist: { count: 0 },
       });
       assert.equal(estado.waitlistDesconocida, true);
@@ -174,7 +177,7 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
     it('si sólo falla el conteo de slots, la waitlist sí se conoce', async () => {
       const { estado } = await cargar(page, {
         config: { data: [] },
-        seguimiento_publico: { error: supabaseError },
+        activas: { error: supabaseError },
         waitlist: { count: 60 },
       });
       assert.equal(estado.waitlistDesconocida, false);
@@ -204,7 +207,7 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
       const red = new TypeError('Failed to fetch');
       const { calls, estado } = await cargar(page, {
         config: { throw: red },
-        seguimiento_publico: { throw: red },
+        activas: { throw: red },
         waitlist: { throw: red },
       });
       assert.equal(calls.error.length, 3);

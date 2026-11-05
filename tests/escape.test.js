@@ -62,14 +62,27 @@ const PRELUDE_ADMIN = `
   const statusLabel = { waiting: 'En espera' };
   const statusClass = { waiting: 's-waiting' };
   const statusColor = { waiting: '#999' };
+  const ESTADOS_ASIGNABLES = ['waiting'];
+  const COLUMNAS = [{ clave: 'recibida', etiqueta: 'Recibida', estados: ['waiting'] }];
+  let columnaMovil = 'recibida';
 `;
+const LISTA_FNS = [
+  'renderComisiones',
+  'renderTablero',
+  'tarjetaComision',
+  'filtrarComisiones',
+  'valorCampo',
+  'opcionesMover',
+  'necesitaCotizacion',
+  'jsArg',
+];
 
 describe('admin.html: escape al pintar', () => {
   it('lista de comisiones', () => {
     const { ctx, doc } = pagina(
       'admin.html',
-      ['renderComisiones', 'necesitaCotizacion', 'jsArg'],
-      '<table><tbody id="admin-tbody"></tbody></table>',
+      LISTA_FNS,
+      '<table><tbody id="admin-tbody"></tbody></table><div id="tablero"></div>',
       PRELUDE_ADMIN,
     );
     vm.runInContext(
@@ -84,8 +97,8 @@ describe('admin.html: escape al pintar', () => {
   it('un status desconocido no rompe el atributo', () => {
     const { ctx, doc } = pagina(
       'admin.html',
-      ['renderComisiones', 'necesitaCotizacion', 'jsArg'],
-      '<table><tbody id="admin-tbody"></tbody></table>',
+      LISTA_FNS,
+      '<table><tbody id="admin-tbody"></tbody></table><div id="tablero"></div>',
       PRELUDE_ADMIN,
     );
     vm.runInContext(`comisiones = [{ folio: 1, status: '"><b id=x>' }]`, ctx);

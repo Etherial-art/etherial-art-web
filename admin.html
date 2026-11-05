@@ -1,735 +1,1917 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin · Etherial_Art</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="robots" content="noindex,nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gl:#1F8F85;--gp:#DFF2EF;--gb:#B2DDD9;
-  --teal:#A8D8D4;--gold:#F5D000;--cream:#F5FAFA;
-  --dark:#0F2B29;--dg:#155950;--muted:#3D706B;--hint:#467874;
-  --card:#ffffff;--border:#B2DDD9;
-  --serif:'Cormorant Garamond',Georgia,serif;
-  --sans:'DM Sans',sans-serif;
-  --danger:#DC2626;--dangerbg:#FEF2F2;
-  --warn:#D97706;--warnbg:#FFFBEB;
-  --success:#059669;--successbg:#ECFDF5;
-}
-[data-theme="dark"]{
-  --gl:#4DBDB5;--gp:#122422;--gb:#1F4744;
-  --teal:#5EC9C1;--gold:#F5D000;--cream:#0A1F1E;
-  --dark:#E8F5F4;--dg:#A8DDD9;--muted:#7BB8B4;--hint:#5E9F9A;
-  --card:#122422;--border:#1F4744;
-  --dangerbg:#2A0A0A;--warnbg:#2A1E00;--successbg:#022A1A;
-}
-html,body{height:100%;overflow:hidden;font-family:var(--sans)}
-body{background:var(--cream);color:var(--dark);display:flex;flex-direction:column;transition:background .3s,color .3s}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin · Etherial_Art</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --gl: #1f8f85;
+        --gp: #dff2ef;
+        --gb: #b2ddd9;
+        --teal: #a8d8d4;
+        --gold: #f5d000;
+        --cream: #f5fafa;
+        --dark: #0f2b29;
+        --dg: #155950;
+        --muted: #3d706b;
+        --hint: #467874;
+        --card: #ffffff;
+        --border: #b2ddd9;
+        --serif: 'Cormorant Garamond', Georgia, serif;
+        --sans: 'DM Sans', sans-serif;
+        --danger: #dc2626;
+        --dangerbg: #fef2f2;
+        --warn: #d97706;
+        --warnbg: #fffbeb;
+        --success: #059669;
+        --successbg: #ecfdf5;
+      }
+      [data-theme='dark'] {
+        --gl: #4dbdb5;
+        --gp: #122422;
+        --gb: #1f4744;
+        --teal: #5ec9c1;
+        --gold: #f5d000;
+        --cream: #0a1f1e;
+        --dark: #e8f5f4;
+        --dg: #a8ddd9;
+        --muted: #7bb8b4;
+        --hint: #5e9f9a;
+        --card: #122422;
+        --border: #1f4744;
+        --dangerbg: #2a0a0a;
+        --warnbg: #2a1e00;
+        --successbg: #022a1a;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+        font-family: var(--sans);
+      }
+      body {
+        background: var(--cream);
+        color: var(--dark);
+        display: flex;
+        flex-direction: column;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
 
-/* ══ LOGIN ══════════════════════════════════════════════ */
-#login-screen{position:fixed;inset:0;background:var(--cream);display:flex;align-items:center;justify-content:center;z-index:999;transition:background .3s}
-.login-box{background:var(--card);border:0.5px solid var(--border);border-radius:16px;padding:3rem 2.5rem;width:100%;max-width:380px;text-align:center;box-shadow:0 8px 32px rgba(15,43,41,.08)}
-.login-logo{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--gl);letter-spacing:.08em;margin-bottom:.25rem}
-.login-sub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--hint);margin-bottom:2.5rem}
-.login-field{position:relative;margin-bottom:1rem}
-.login-field input{width:100%;padding:12px 16px;border:0.5px solid var(--border);border-radius:8px;font-size:14px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none;transition:border-color .2s}
-.login-field input:focus{border-color:var(--gl)}
-.login-btn{width:100%;padding:12px;background:var(--gl);color:#fff;border:1.5px solid var(--gold);border-radius:8px;font-size:13px;letter-spacing:.08em;cursor:pointer;font-family:var(--sans);transition:opacity .2s;margin-top:.5rem}
-.login-btn:hover{opacity:.85}
-.login-error{font-size:12px;color:var(--danger);margin-top:.75rem;display:none}
+      /* ══ LOGIN ══════════════════════════════════════════════ */
+      #login-screen {
+        position: fixed;
+        inset: 0;
+        background: var(--cream);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        transition: background 0.3s;
+      }
+      .login-box {
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-radius: 16px;
+        padding: 3rem 2.5rem;
+        width: 100%;
+        max-width: 380px;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(15, 43, 41, 0.08);
+      }
+      .login-logo {
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 300;
+        color: var(--gl);
+        letter-spacing: 0.08em;
+        margin-bottom: 0.25rem;
+      }
+      .login-sub {
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--hint);
+        margin-bottom: 2.5rem;
+      }
+      .login-field {
+        position: relative;
+        margin-bottom: 1rem;
+      }
+      .login-field input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 0.5px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        background: var(--card);
+        color: var(--dark);
+        font-family: var(--sans);
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .login-field input:focus {
+        border-color: var(--gl);
+      }
+      .login-btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--gl);
+        color: #fff;
+        border: 1.5px solid var(--gold);
+        border-radius: 8px;
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        font-family: var(--sans);
+        transition: opacity 0.2s;
+        margin-top: 0.5rem;
+      }
+      .login-btn:hover {
+        opacity: 0.85;
+      }
+      .login-error {
+        font-size: 12px;
+        color: var(--danger);
+        margin-top: 0.75rem;
+        display: none;
+      }
 
-/* ══ TOPBAR ═════════════════════════════════════════════ */
-.topbar{flex-shrink:0;background:var(--cream);border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;z-index:50;transition:background .3s,border-color .3s}
-.brand{font-family:var(--serif);font-size:18px;font-weight:300;letter-spacing:.1em;color:var(--gl)}
-.brand b{font-weight:500}
-.brand-badge{font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:var(--gold);color:#2D1500;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle;font-family:var(--sans);font-weight:500}
-.topbar-right{display:flex;align-items:center;gap:8px}
-.icon-btn{background:none;border:0.5px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:5px;font-family:var(--sans);font-size:12px;transition:all .2s}
-.icon-btn:hover{border-color:var(--gl);color:var(--gl)}
-.icon-btn i{font-size:16px}
+      /* ══ TOPBAR ═════════════════════════════════════════════ */
+      .topbar {
+        flex-shrink: 0;
+        background: var(--cream);
+        border-bottom: 0.5px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+        height: 52px;
+        z-index: 50;
+        transition:
+          background 0.3s,
+          border-color 0.3s;
+      }
+      .brand {
+        font-family: var(--serif);
+        font-size: 18px;
+        font-weight: 300;
+        letter-spacing: 0.1em;
+        color: var(--gl);
+      }
+      .brand b {
+        font-weight: 500;
+      }
+      .brand-badge {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        background: var(--gold);
+        color: #2d1500;
+        padding: 2px 8px;
+        border-radius: 10px;
+        margin-left: 8px;
+        vertical-align: middle;
+        font-family: var(--sans);
+        font-weight: 500;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .icon-btn {
+        background: none;
+        border: 0.5px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 10px;
+        cursor: pointer;
+        font-size: 14px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-family: var(--sans);
+        font-size: 12px;
+        transition: all 0.2s;
+      }
+      .icon-btn:hover {
+        border-color: var(--gl);
+        color: var(--gl);
+      }
+      .icon-btn i {
+        font-size: 16px;
+      }
 
-/* ══ MAIN ════════════════════════════════════════════════ */
-.main{flex:1;overflow-y:auto;padding:2rem;display:flex;flex-direction:column;gap:1.5rem}
+      /* ══ MAIN ════════════════════════════════════════════════ */
+      .main {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
 
-/* ══ STATS ═══════════════════════════════════════════════ */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.stat-card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem;transition:background .3s}
-.stat-icon{width:40px;height:40px;border-radius:10px;background:var(--gp);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--gl);flex-shrink:0}
-.stat-num{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--dg);line-height:1}
-.stat-label{font-size:11px;color:var(--hint);letter-spacing:.04em;margin-top:2px}
+      /* ══ STATS ═══════════════════════════════════════════════ */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      .stat-card {
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: background 0.3s;
+      }
+      .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: var(--gp);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: var(--gl);
+        flex-shrink: 0;
+      }
+      .stat-num {
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 300;
+        color: var(--dg);
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 11px;
+        color: var(--hint);
+        letter-spacing: 0.04em;
+        margin-top: 2px;
+      }
 
-/* ══ TOOLBAR ═════════════════════════════════════════════ */
-.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.filter-group{display:flex;gap:4px;background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:3px}
-.filter-btn{background:none;border:none;border-radius:7px;padding:5px 14px;font-size:11px;letter-spacing:.06em;cursor:pointer;color:var(--muted);font-family:var(--sans);transition:all .2s;white-space:nowrap}
-.filter-btn.active{background:var(--gl);color:#fff}
-.filter-btn:hover:not(.active){background:var(--gp);color:var(--dg)}
-.spacer{flex:1}
-.add-btn{display:flex;align-items:center;gap:6px;padding:8px 18px;background:var(--gl);color:#fff;border:1.5px solid var(--gold);border-radius:8px;font-size:12px;letter-spacing:.06em;cursor:pointer;font-family:var(--sans);transition:opacity .2s;white-space:nowrap}
-.add-btn:hover{opacity:.85}
-.add-btn i{font-size:16px}
+      /* ══ TOOLBAR ═════════════════════════════════════════════ */
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .filter-group {
+        display: flex;
+        gap: 4px;
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-radius: 10px;
+        padding: 3px;
+      }
+      .filter-btn {
+        background: none;
+        border: none;
+        border-radius: 7px;
+        padding: 5px 14px;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        color: var(--muted);
+        font-family: var(--sans);
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .filter-btn.active {
+        background: var(--gl);
+        color: #fff;
+      }
+      .filter-btn:hover:not(.active) {
+        background: var(--gp);
+        color: var(--dg);
+      }
+      .spacer {
+        flex: 1;
+      }
+      .add-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 18px;
+        background: var(--gl);
+        color: #fff;
+        border: 1.5px solid var(--gold);
+        border-radius: 8px;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        font-family: var(--sans);
+        transition: opacity 0.2s;
+        white-space: nowrap;
+      }
+      .add-btn:hover {
+        opacity: 0.85;
+      }
+      .add-btn i {
+        font-size: 16px;
+      }
 
-/* ══ TABLE ═══════════════════════════════════════════════ */
-.table-wrap{background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;transition:background .3s}
-.admin-table{width:100%;border-collapse:collapse;font-size:13px}
-.admin-table th{text-align:left;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);padding:.75rem 1rem;font-weight:500;border-bottom:0.5px solid var(--border);white-space:nowrap}
-.admin-table td{padding:.75rem 1rem;border-top:0.5px solid var(--border);color:var(--dark);vertical-align:middle}
-.admin-table tr:hover td{background:var(--gp)}
-.admin-table tr.hidden{display:none}
-.folio-num{color:var(--gl);font-weight:500;font-family:var(--serif);font-size:15px}
-.rush-badge{display:inline-block;padding:2px 8px;background:#FFF0E0;color:#C25A00;border-radius:10px;font-size:10px;letter-spacing:.06em;font-weight:500}
-[data-theme="dark"] .rush-badge{background:#3A1800;color:#F5A050}
-.pill{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:500}
-.s-waiting{background:#FEF8E0;color:#7A5900}
-.s-notified{background:#E8F0FF;color:#1A3A8A}
-.s-active{background:#EEF7F0;color:#1E4D2B}
-.s-completed{background:#E0F5F0;color:#085041}
-.s-cancelled,.s-expired{background:#F0F0F0;color:#777}
-[data-theme="dark"] .s-waiting{background:#3A2E00;color:#F5D000}
-[data-theme="dark"] .s-notified{background:#0D1A3A;color:#7BB8D4}
-[data-theme="dark"] .s-active{background:#0D2E1A;color:#4DBDB5}
-[data-theme="dark"] .s-completed{background:#0A2A22;color:#5EC9C1}
-[data-theme="dark"] .s-cancelled,[data-theme="dark"] .s-expired{background:#1A1A1A;color:#7BB8B4}
-.action-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.act-btn{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;font-size:11px;letter-spacing:.04em;cursor:pointer;font-family:var(--sans);border:0.5px solid var(--border);background:var(--card);color:var(--muted);transition:all .2s;white-space:nowrap}
-.act-btn:hover{border-color:var(--gl);color:var(--gl);background:var(--gp)}
-.act-btn.danger:hover{border-color:var(--danger);color:var(--danger);background:var(--dangerbg)}
-.act-btn.notify{border-color:var(--teal)}
-.act-btn i{font-size:13px}
-.status-select{padding:4px 8px;border:0.5px solid var(--border);border-radius:6px;font-size:11px;background:var(--card);color:var(--dark);font-family:var(--sans);cursor:pointer;outline:none}
-.status-select:focus{border-color:var(--gl)}
-.empty-row td{text-align:center;padding:3rem;color:var(--hint);font-size:13px}
-.empty-row i{font-size:32px;display:block;margin-bottom:.5rem;color:var(--border)}
+      /* ══ TABLE ═══════════════════════════════════════════════ */
+      .table-wrap {
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: background 0.3s;
+      }
+      .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      .admin-table th {
+        text-align: left;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--teal);
+        padding: 0.75rem 1rem;
+        font-weight: 500;
+        border-bottom: 0.5px solid var(--border);
+        white-space: nowrap;
+      }
+      .admin-table td {
+        padding: 0.75rem 1rem;
+        border-top: 0.5px solid var(--border);
+        color: var(--dark);
+        vertical-align: middle;
+      }
+      .admin-table tr:hover td {
+        background: var(--gp);
+      }
+      .admin-table tr.hidden {
+        display: none;
+      }
+      .folio-num {
+        color: var(--gl);
+        font-weight: 500;
+        font-family: var(--serif);
+        font-size: 15px;
+      }
+      .rush-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        background: #fff0e0;
+        color: #c25a00;
+        border-radius: 10px;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        font-weight: 500;
+      }
+      [data-theme='dark'] .rush-badge {
+        background: #3a1800;
+        color: #f5a050;
+      }
+      .pill {
+        display: inline-block;
+        padding: 3px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .s-waiting {
+        background: #fef8e0;
+        color: #7a5900;
+      }
+      .s-notified {
+        background: #e8f0ff;
+        color: #1a3a8a;
+      }
+      .s-active {
+        background: #eef7f0;
+        color: #1e4d2b;
+      }
+      .s-completed {
+        background: #e0f5f0;
+        color: #085041;
+      }
+      .s-cancelled,
+      .s-expired {
+        background: #f0f0f0;
+        color: #777;
+      }
+      [data-theme='dark'] .s-waiting {
+        background: #3a2e00;
+        color: #f5d000;
+      }
+      [data-theme='dark'] .s-notified {
+        background: #0d1a3a;
+        color: #7bb8d4;
+      }
+      [data-theme='dark'] .s-active {
+        background: #0d2e1a;
+        color: #4dbdb5;
+      }
+      [data-theme='dark'] .s-completed {
+        background: #0a2a22;
+        color: #5ec9c1;
+      }
+      [data-theme='dark'] .s-cancelled,
+      [data-theme='dark'] .s-expired {
+        background: #1a1a1a;
+        color: #7bb8b4;
+      }
+      .action-row {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .act-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        font-family: var(--sans);
+        border: 0.5px solid var(--border);
+        background: var(--card);
+        color: var(--muted);
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .act-btn:hover {
+        border-color: var(--gl);
+        color: var(--gl);
+        background: var(--gp);
+      }
+      .act-btn.danger:hover {
+        border-color: var(--danger);
+        color: var(--danger);
+        background: var(--dangerbg);
+      }
+      .act-btn.notify {
+        border-color: var(--teal);
+      }
+      .act-btn i {
+        font-size: 13px;
+      }
+      .status-select {
+        padding: 4px 8px;
+        border: 0.5px solid var(--border);
+        border-radius: 6px;
+        font-size: 11px;
+        background: var(--card);
+        color: var(--dark);
+        font-family: var(--sans);
+        cursor: pointer;
+        outline: none;
+      }
+      .status-select:focus {
+        border-color: var(--gl);
+      }
+      .empty-row td {
+        text-align: center;
+        padding: 3rem;
+        color: var(--hint);
+        font-size: 13px;
+      }
+      .empty-row i {
+        font-size: 32px;
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--border);
+      }
 
-/* ══ MODAL ═══════════════════════════════════════════════ */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
-.modal-overlay.open{display:flex}
-.modal{background:var(--card);border:0.5px solid var(--border);border-radius:16px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;transition:background .3s}
-.modal-head{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 1.75rem;border-bottom:0.5px solid var(--border)}
-.modal-title{font-family:var(--serif);font-size:22px;font-weight:300;color:var(--dark)}
-.modal-close{background:none;border:none;cursor:pointer;font-size:20px;color:var(--hint);line-height:1;transition:color .2s}
-.modal-close:hover{color:var(--dark)}
-.modal-body{padding:1.75rem}
-.mfield{margin-bottom:1.25rem}
-.mfield label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
-.mfield input,.mfield select,.mfield textarea{width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none;transition:border-color .2s}
-.mfield input:focus,.mfield select:focus,.mfield textarea:focus{border-color:var(--gl)}
-.mfield textarea{height:80px;resize:vertical}
-.mfield-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.mfield-check{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--dark)}
-.mfield-check input{width:16px;height:16px;cursor:pointer;accent-color:var(--gl)}
-.modal-foot{padding:1.25rem 1.75rem;border-top:0.5px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
-.btn-cancel{padding:9px 20px;background:transparent;color:var(--muted);border:0.5px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--sans);transition:all .2s}
-.btn-cancel:hover{border-color:var(--gl);color:var(--gl)}
-.btn-save{padding:9px 24px;background:var(--gl);color:#fff;border:1.5px solid var(--gold);border-radius:8px;font-size:12px;letter-spacing:.05em;cursor:pointer;font-family:var(--sans);transition:opacity .2s}
-.btn-save:hover{opacity:.85}
-.btn-save:disabled{opacity:.5;cursor:not-allowed}
+      /* ══ MODAL ═══════════════════════════════════════════════ */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 200;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-radius: 16px;
+        width: 100%;
+        max-width: 560px;
+        max-height: 90vh;
+        overflow-y: auto;
+        transition: background 0.3s;
+      }
+      .modal-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem 1.75rem;
+        border-bottom: 0.5px solid var(--border);
+      }
+      .modal-title {
+        font-family: var(--serif);
+        font-size: 22px;
+        font-weight: 300;
+        color: var(--dark);
+      }
+      .modal-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 20px;
+        color: var(--hint);
+        line-height: 1;
+        transition: color 0.2s;
+      }
+      .modal-close:hover {
+        color: var(--dark);
+      }
+      .modal-body {
+        padding: 1.75rem;
+      }
+      .mfield {
+        margin-bottom: 1.25rem;
+      }
+      .mfield label {
+        display: block;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-bottom: 6px;
+      }
+      .mfield input,
+      .mfield select,
+      .mfield textarea {
+        width: 100%;
+        padding: 10px 14px;
+        border: 0.5px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+        background: var(--card);
+        color: var(--dark);
+        font-family: var(--sans);
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .mfield input:focus,
+      .mfield select:focus,
+      .mfield textarea:focus {
+        border-color: var(--gl);
+      }
+      .mfield textarea {
+        height: 80px;
+        resize: vertical;
+      }
+      .mfield-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .mfield-check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--dark);
+      }
+      .mfield-check input {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: var(--gl);
+      }
+      .modal-foot {
+        padding: 1.25rem 1.75rem;
+        border-top: 0.5px solid var(--border);
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+      .btn-cancel {
+        padding: 9px 20px;
+        background: transparent;
+        color: var(--muted);
+        border: 0.5px solid var(--border);
+        border-radius: 8px;
+        font-size: 12px;
+        cursor: pointer;
+        font-family: var(--sans);
+        transition: all 0.2s;
+      }
+      .btn-cancel:hover {
+        border-color: var(--gl);
+        color: var(--gl);
+      }
+      .btn-save {
+        padding: 9px 24px;
+        background: var(--gl);
+        color: #fff;
+        border: 1.5px solid var(--gold);
+        border-radius: 8px;
+        font-size: 12px;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        font-family: var(--sans);
+        transition: opacity 0.2s;
+      }
+      .btn-save:hover {
+        opacity: 0.85;
+      }
+      .btn-save:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
 
-/* ══ TOAST ═══════════════════════════════════════════════ */
-.toast{position:fixed;bottom:2rem;right:2rem;z-index:500;background:var(--dg);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;max-width:320px}
-.toast.show{opacity:1;transform:translateY(0)}
-.toast.error{background:var(--danger)}
-.toast.ok{background:var(--success)}
+      /* ══ TOAST ═══════════════════════════════════════════════ */
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 500;
+        background: var(--dg);
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 13px;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: all 0.3s;
+        pointer-events: none;
+        max-width: 320px;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .toast.error {
+        background: var(--danger);
+      }
+      .toast.ok {
+        background: var(--success);
+      }
 
-/* ══ RESPONSIVE ══════════════════════════════════════════ */
-@media(max-width:768px){
-  .main{padding:1.25rem}
-  .stats-row{grid-template-columns:repeat(2,1fr)}
-  .toolbar{gap:8px}
-  .filter-group{overflow-x:auto;max-width:100%}
-  .admin-table{font-size:12px}
-  .admin-table th,.admin-table td{padding:.6rem .75rem}
-  .table-wrap{overflow-x:auto}
-  .mfield-row{grid-template-columns:1fr}
-}
-@media(max-width:480px){
-  .stats-row{grid-template-columns:1fr 1fr}
-  .stat-card{padding:1rem}
-}
-@media(max-width:600px){
-  .admin-table th:nth-child(3),.admin-table td:nth-child(3),
-  .admin-table th:nth-child(4),.admin-table td:nth-child(4),
-  .admin-table th:nth-child(5),.admin-table td:nth-child(5),
-  .admin-table th:nth-child(6),.admin-table td:nth-child(6){display:none}
-  .admin-table tr[data-status] td:first-child{border-left:3px solid transparent}
-  .admin-table tr[data-status="waiting"] td:first-child{border-left-color:#C9900A}
-  .admin-table tr[data-status="notified"] td:first-child{border-left-color:#3D5FC0}
-  .admin-table tr[data-status="quoted"] td:first-child{border-left-color:#D97706}
-  .admin-table tr[data-status="active"] td:first-child{border-left-color:#1F8F85}
-  .admin-table tr[data-status="completed"] td:first-child{border-left-color:#059669}
-  .admin-table tr[data-status="cancelled"] td:first-child,
-  .admin-table tr[data-status="expired"] td:first-child{border-left-color:#999}
-  .admin-table tr[data-status]{cursor:pointer}
-  .admin-table tr[data-status].peeking td{background:var(--sc)!important;transition:background .15s}
-  .admin-table tr[data-status].peeking td *{visibility:hidden}
-  .admin-table tr[data-status].peeking td:nth-child(2){position:relative}
-  .admin-table tr[data-status].peeking td:nth-child(2)::after{
-    content:attr(data-lbl);visibility:visible;
-    position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);
-    text-align:center;color:#fff;font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-  }
-}
+      /* ══ RESPONSIVE ══════════════════════════════════════════ */
+      @media (max-width: 768px) {
+        .main {
+          padding: 1.25rem;
+        }
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .toolbar {
+          gap: 8px;
+        }
+        .filter-group {
+          overflow-x: auto;
+          max-width: 100%;
+        }
+        .admin-table {
+          font-size: 12px;
+        }
+        .admin-table th,
+        .admin-table td {
+          padding: 0.6rem 0.75rem;
+        }
+        .table-wrap {
+          overflow-x: auto;
+        }
+        .mfield-row {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 480px) {
+        .stats-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .stat-card {
+          padding: 1rem;
+        }
+      }
+      @media (max-width: 600px) {
+        .admin-table th:nth-child(3),
+        .admin-table td:nth-child(3),
+        .admin-table th:nth-child(4),
+        .admin-table td:nth-child(4),
+        .admin-table th:nth-child(5),
+        .admin-table td:nth-child(5),
+        .admin-table th:nth-child(6),
+        .admin-table td:nth-child(6) {
+          display: none;
+        }
+        .admin-table tr[data-status] td:first-child {
+          border-left: 3px solid transparent;
+        }
+        .admin-table tr[data-status='waiting'] td:first-child {
+          border-left-color: #c9900a;
+        }
+        .admin-table tr[data-status='notified'] td:first-child {
+          border-left-color: #3d5fc0;
+        }
+        .admin-table tr[data-status='quoted'] td:first-child {
+          border-left-color: #d97706;
+        }
+        .admin-table tr[data-status='active'] td:first-child {
+          border-left-color: #1f8f85;
+        }
+        .admin-table tr[data-status='completed'] td:first-child {
+          border-left-color: #059669;
+        }
+        .admin-table tr[data-status='cancelled'] td:first-child,
+        .admin-table tr[data-status='expired'] td:first-child {
+          border-left-color: #999;
+        }
+        .admin-table tr[data-status] {
+          cursor: pointer;
+        }
+        .admin-table tr[data-status].peeking td {
+          background: var(--sc) !important;
+          transition: background 0.15s;
+        }
+        .admin-table tr[data-status].peeking td * {
+          visibility: hidden;
+        }
+        .admin-table tr[data-status].peeking td:nth-child(2) {
+          position: relative;
+        }
+        .admin-table tr[data-status].peeking td:nth-child(2)::after {
+          content: attr(data-lbl);
+          visibility: visible;
+          position: absolute;
+          top: 50%;
+          left: 0;
+          right: 0;
+          transform: translateY(-50%);
+          text-align: center;
+          color: #fff;
+          font-weight: 500;
+          font-size: 11px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+      }
 
-/* ══ COTIZACIÓN ══════════════════════════════════════════ */
-.s-quoted{background:#FFF9E0;color:#7A5900}
-[data-theme="dark"] .s-quoted{background:#3A2E00;color:#F5D000}
-.act-btn.quote{border-color:var(--gold)}
-.act-btn.quote:hover{border-color:var(--warn);color:var(--warn);background:var(--warnbg)}
-.q-summary{background:var(--gp);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;flex-direction:column;gap:.5rem}
-.q-row{display:flex;gap:.75rem;font-size:13px;align-items:baseline}
-.q-lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);min-width:80px;flex-shrink:0}
-.q-breakdown{border:0.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:1rem}
-.q-brow{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;border-bottom:0.5px solid var(--border);font-size:13px;color:var(--dark)}
-.q-brow span{flex:1}
-.q-brow input{width:120px;padding:6px 10px;border:0.5px solid var(--border);border-radius:6px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none;text-align:right;transition:border-color .2s}
-.q-brow input:focus{border-color:var(--gl)}
-.q-total-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:var(--gp)}
-.q-total-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dg);font-weight:500}
-#q-total{font-family:var(--serif);font-size:20px;font-weight:500;color:var(--gl)}
-.q-paypal-block{border:0.5px solid rgba(0,112,186,.3);border-radius:10px;padding:1rem 1.25rem;background:rgba(0,112,186,.05);margin-top:1rem}
-[data-theme="dark"] .q-paypal-block{background:rgba(0,112,186,.1)}
-.q-paypal-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#0070BA;margin-bottom:.75rem;display:flex;align-items:center;gap:6px;font-weight:500}
-[data-theme="dark"] .q-paypal-label{color:#5BB8FF}
-.q-paypal-link-row{display:flex;gap:8px;align-items:center}
-#q-paypal-link{flex:1;padding:8px 12px;border:0.5px solid rgba(0,112,186,.3);border-radius:8px;font-size:11px;background:var(--card);color:var(--dark);font-family:monospace;outline:none}
-.icon-btn.closed{border-color:var(--danger)!important;color:var(--danger)!important}
-.icon-btn.closed:hover{background:var(--dangerbg)!important}
+      /* ══ COTIZACIÓN ══════════════════════════════════════════ */
+      .s-quoted {
+        background: #fff9e0;
+        color: #7a5900;
+      }
+      [data-theme='dark'] .s-quoted {
+        background: #3a2e00;
+        color: #f5d000;
+      }
+      .act-btn.quote {
+        border-color: var(--gold);
+      }
+      .act-btn.quote:hover {
+        border-color: var(--warn);
+        color: var(--warn);
+        background: var(--warnbg);
+      }
+      .q-summary {
+        background: var(--gp);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .q-row {
+        display: flex;
+        gap: 0.75rem;
+        font-size: 13px;
+        align-items: baseline;
+      }
+      .q-lbl {
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--teal);
+        min-width: 80px;
+        flex-shrink: 0;
+      }
+      .q-breakdown {
+        border: 0.5px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+      }
+      .q-brow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.7rem 1rem;
+        border-bottom: 0.5px solid var(--border);
+        font-size: 13px;
+        color: var(--dark);
+      }
+      .q-brow span {
+        flex: 1;
+      }
+      .q-brow input {
+        width: 120px;
+        padding: 6px 10px;
+        border: 0.5px solid var(--border);
+        border-radius: 6px;
+        font-size: 13px;
+        background: var(--card);
+        color: var(--dark);
+        font-family: var(--sans);
+        outline: none;
+        text-align: right;
+        transition: border-color 0.2s;
+      }
+      .q-brow input:focus {
+        border-color: var(--gl);
+      }
+      .q-total-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        background: var(--gp);
+      }
+      .q-total-label {
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--dg);
+        font-weight: 500;
+      }
+      #q-total {
+        font-family: var(--serif);
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--gl);
+      }
+      .q-paypal-block {
+        border: 0.5px solid rgba(0, 112, 186, 0.3);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        background: rgba(0, 112, 186, 0.05);
+        margin-top: 1rem;
+      }
+      [data-theme='dark'] .q-paypal-block {
+        background: rgba(0, 112, 186, 0.1);
+      }
+      .q-paypal-label {
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #0070ba;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 500;
+      }
+      [data-theme='dark'] .q-paypal-label {
+        color: #5bb8ff;
+      }
+      .q-paypal-link-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      #q-paypal-link {
+        flex: 1;
+        padding: 8px 12px;
+        border: 0.5px solid rgba(0, 112, 186, 0.3);
+        border-radius: 8px;
+        font-size: 11px;
+        background: var(--card);
+        color: var(--dark);
+        font-family: monospace;
+        outline: none;
+      }
+      .icon-btn.closed {
+        border-color: var(--danger) !important;
+        color: var(--danger) !important;
+      }
+      .icon-btn.closed:hover {
+        background: var(--dangerbg) !important;
+      }
 
-/* ══ PORTAFOLIO ADMIN ════════════════════════════════════ */
-.view-tabs{display:flex;gap:4px;background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:3px;align-self:flex-start}
-.view-tab{background:none;border:none;border-radius:7px;padding:5px 16px;font-size:11px;letter-spacing:.06em;cursor:pointer;color:var(--muted);font-family:var(--sans);transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:5px}
-.view-tab.active{background:var(--gl);color:#fff}
-.view-tab:hover:not(.active){background:var(--gp);color:var(--dg)}
-.view-tab i{font-size:15px}
-.port-add-card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:1.5rem;transition:background .3s}
-.port-add-title{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--dark);margin-bottom:1.25rem}
-.port-add-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.port-grid-admin{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-.port-item-card{background:var(--card);border:0.5px solid var(--border);border-radius:10px;overflow:hidden;position:relative;transition:background .3s}
-.port-item-thumb{height:130px;object-fit:cover;width:100%;display:block;background:var(--gp)}
-.port-item-placeholder{height:130px;display:flex;align-items:center;justify-content:center;background:var(--gp);color:var(--hint);font-size:28px}
-.port-item-info{padding:.65rem .75rem}
-.port-item-name{font-size:12px;font-weight:500;color:var(--dark);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.port-item-meta{font-size:10px;color:var(--hint);display:flex;justify-content:space-between}
-.port-item-del{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.55);border:none;border-radius:6px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;font-size:13px;transition:background .2s}
-.port-item-del:hover{background:var(--danger)}
-.port-hint{font-size:10px;color:var(--hint);margin-top:3px}
-.port-empty{text-align:center;padding:2.5rem;color:var(--hint);font-size:13px}
-.port-empty i{font-size:32px;display:block;margin-bottom:.5rem;color:var(--border)}
-@media(max-width:768px){.port-add-form{grid-template-columns:1fr}}
+      /* ══ PORTAFOLIO ADMIN ════════════════════════════════════ */
+      .view-tabs {
+        display: flex;
+        gap: 4px;
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-radius: 10px;
+        padding: 3px;
+        align-self: flex-start;
+      }
+      .view-tab {
+        background: none;
+        border: none;
+        border-radius: 7px;
+        padding: 5px 16px;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        color: var(--muted);
+        font-family: var(--sans);
+        transition: all 0.2s;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .view-tab.active {
+        background: var(--gl);
+        color: #fff;
+      }
+      .view-tab:hover:not(.active) {
+        background: var(--gp);
+        color: var(--dg);
+      }
+      .view-tab i {
+        font-size: 15px;
+      }
+      .port-add-card {
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: background 0.3s;
+      }
+      .port-add-title {
+        font-family: var(--serif);
+        font-size: 20px;
+        font-weight: 300;
+        color: var(--dark);
+        margin-bottom: 1.25rem;
+      }
+      .port-add-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .port-grid-admin {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 12px;
+      }
+      .port-item-card {
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        transition: background 0.3s;
+      }
+      .port-item-thumb {
+        height: 130px;
+        object-fit: cover;
+        width: 100%;
+        display: block;
+        background: var(--gp);
+      }
+      .port-item-placeholder {
+        height: 130px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--gp);
+        color: var(--hint);
+        font-size: 28px;
+      }
+      .port-item-info {
+        padding: 0.65rem 0.75rem;
+      }
+      .port-item-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--dark);
+        margin-bottom: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .port-item-meta {
+        font-size: 10px;
+        color: var(--hint);
+        display: flex;
+        justify-content: space-between;
+      }
+      .port-item-del {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: rgba(0, 0, 0, 0.55);
+        border: none;
+        border-radius: 6px;
+        width: 26px;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        cursor: pointer;
+        font-size: 13px;
+        transition: background 0.2s;
+      }
+      .port-item-del:hover {
+        background: var(--danger);
+      }
+      .port-hint {
+        font-size: 10px;
+        color: var(--hint);
+        margin-top: 3px;
+      }
+      .port-empty {
+        text-align: center;
+        padding: 2.5rem;
+        color: var(--hint);
+        font-size: 13px;
+      }
+      .port-empty i {
+        font-size: 32px;
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--border);
+      }
+      @media (max-width: 768px) {
+        .port-add-form {
+          grid-template-columns: 1fr;
+        }
+      }
 
-/* a11y: indicador de foco visible para navegación con teclado */
-:focus-visible{outline:2px solid var(--gl)!important;outline-offset:2px}
-.form-section-title:focus{outline:none}
-/* a11y: en modo oscuro --gl es claro; texto blanco encima quedaba < 3:1 */
-[data-theme="dark"] .login-btn,[data-theme="dark"] .filter-btn.active,[data-theme="dark"] .add-btn,[data-theme="dark"] .btn-save,[data-theme="dark"] .view-tab.active{color:var(--cream)}
-</style>
-</head>
-<body>
-
-<!-- ══ LOGIN ════════════════════════════════════════════ -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">Etherial_<b>Art</b></div>
-    <div class="login-sub">Panel de administración</div>
-    <div class="login-field">
-      <label for="pwd-input" class="login-sub" style="display:block;margin-bottom:.5rem">Token de admin</label>
-      <input type="password" id="pwd-input" placeholder="Token de admin" autocomplete="current-password" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="login-btn" id="login-btn" onclick="doLogin()">Entrar →</button>
-    <button class="login-btn" onclick="history.length>1?history.back():location.href='index.html'" style="margin-top:.5rem;background:transparent;color:var(--muted);border-color:var(--border);">← Volver</button>
-    <div class="login-error" id="login-error" role="alert">Token incorrecto.</div>
-  </div>
-</div>
-
-<!-- ══ ADMIN PANEL ═══════════════════════════════════════ -->
-<div id="admin-panel" style="display:none;flex-direction:column;height:100%">
-
-  <!-- Topbar -->
-  <div class="topbar">
-    <div class="brand">Etherial_<b>Art</b> <span class="brand-badge">ADMIN</span></div>
-    <div class="topbar-right">
-      <a href="index.html" class="icon-btn" title="Volver al sitio"><i class="ti ti-arrow-left"></i></a>
-      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn"><i class="ti ti-moon" id="theme-icon"></i></button>
-      <button class="icon-btn" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
-    </div>
-  </div>
-
-  <!-- Main -->
-  <div class="main">
-
-    <!-- View tabs -->
-    <div class="view-tabs">
-      <button class="view-tab active" id="tab-comisiones" onclick="switchView('comisiones')"><i class="ti ti-files"></i> Comisiones</button>
-      <button class="view-tab" id="tab-portafolio" onclick="switchView('portafolio')"><i class="ti ti-layout-grid"></i> Portafolio</button>
-      <button class="view-tab" id="tab-waitlist" onclick="switchView('waitlist')"><i class="ti ti-list"></i> Waitlist</button>
-    </div>
-
-    <!-- Comisiones section -->
-    <div id="comisiones-section" style="display:flex;flex-direction:column;gap:1.5rem">
-
-      <!-- Stats -->
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-icon"><i class="ti ti-files"></i></div><div><div class="stat-num" id="stat-total">—</div><div class="stat-label">Total</div></div></div>
-        <div class="stat-card"><div class="stat-icon"><i class="ti ti-clock"></i></div><div><div class="stat-num" id="stat-waiting">—</div><div class="stat-label">En cola</div></div></div>
-        <div class="stat-card"><div class="stat-icon"><i class="ti ti-pencil"></i></div><div><div class="stat-num" id="stat-active">—</div><div class="stat-label">Activas</div></div></div>
-        <div class="stat-card"><div class="stat-icon"><i class="ti ti-circle-check"></i></div><div><div class="stat-num" id="stat-completed">—</div><div class="stat-label">Completadas</div></div></div>
-      </div>
-
-      <!-- Toolbar -->
-      <div class="toolbar">
-        <div class="filter-group">
-          <button class="filter-btn active" onclick="setFilter('all',this)">Todas</button>
-          <button class="filter-btn" onclick="setFilter('waiting',this)">En espera</button>
-          <button class="filter-btn" onclick="setFilter('notified',this)">Notificadas</button>
-          <button class="filter-btn" onclick="setFilter('quoted',this)">Cotizadas</button>
-          <button class="filter-btn" onclick="setFilter('active',this)">Activas</button>
-          <button class="filter-btn" onclick="setFilter('completed',this)">Completadas</button>
-          <button class="filter-btn" onclick="setFilter('cancelled',this)">Canceladas</button>
+      /* a11y: indicador de foco visible para navegación con teclado */
+      :focus-visible {
+        outline: 2px solid var(--gl) !important;
+        outline-offset: 2px;
+      }
+      .form-section-title:focus {
+        outline: none;
+      }
+      /* a11y: en modo oscuro --gl es claro; texto blanco encima quedaba < 3:1 */
+      [data-theme='dark'] .login-btn,
+      [data-theme='dark'] .filter-btn.active,
+      [data-theme='dark'] .add-btn,
+      [data-theme='dark'] .btn-save,
+      [data-theme='dark'] .view-tab.active {
+        color: var(--cream);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══ LOGIN ════════════════════════════════════════════ -->
+    <div id="login-screen">
+      <div class="login-box">
+        <div class="login-logo">Etherial_<b>Art</b></div>
+        <div class="login-sub">Panel de administración</div>
+        <div class="login-field">
+          <label for="pwd-input" class="login-sub" style="display: block; margin-bottom: 0.5rem"
+            >Token de admin</label
+          >
+          <input
+            type="password"
+            id="pwd-input"
+            placeholder="Token de admin"
+            autocomplete="current-password"
+            autocapitalize="off"
+            spellcheck="false"
+            onkeydown="if (event.key === 'Enter') doLogin();"
+          />
         </div>
-        <div class="spacer"></div>
-        <button class="icon-btn" onclick="cargarComisiones()"><i class="ti ti-refresh"></i> Actualizar</button>
-        <button class="icon-btn" id="toggle-comisiones" onclick="toggleComisiones()"><i class="ti ti-lock-open" id="toggle-icon"></i> <span id="toggle-label">Abiertas</span></button>
-        <span id="slot-counter" style="font-size:11px;color:var(--muted);border:0.5px solid var(--border);border-radius:8px;padding:5px 10px;white-space:nowrap">0/25</span>
-        <input type="number" id="slot-limit-input" min="1" max="100" value="25" title="Límite de comisiones activas" style="width:65px;padding:5px 8px;border:0.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none" onchange="actualizarMaxSlots(this.value)">
-        <button class="add-btn" onclick="abrirModal()"><i class="ti ti-plus"></i> Nueva comisión</button>
+        <button class="login-btn" id="login-btn" onclick="doLogin()">Entrar →</button>
+        <button
+          class="login-btn"
+          onclick="history.length > 1 ? history.back() : (location.href = 'index.html')"
+          style="
+            margin-top: 0.5rem;
+            background: transparent;
+            color: var(--muted);
+            border-color: var(--border);
+          "
+        >
+          ← Volver
+        </button>
+        <div class="login-error" id="login-error" role="alert">Token incorrecto.</div>
+      </div>
+    </div>
+
+    <!-- ══ ADMIN PANEL ═══════════════════════════════════════ -->
+    <div id="admin-panel" style="display: none; flex-direction: column; height: 100%">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="brand">Etherial_<b>Art</b> <span class="brand-badge">ADMIN</span></div>
+        <div class="topbar-right">
+          <a href="index.html" class="icon-btn" title="Volver al sitio"
+            ><i class="ti ti-arrow-left"></i
+          ></a>
+          <button class="icon-btn" onclick="toggleTheme()" id="theme-btn">
+            <i class="ti ti-moon" id="theme-icon"></i>
+          </button>
+          <button class="icon-btn" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
+        </div>
       </div>
 
-      <!-- Table -->
-      <div class="table-wrap">
-        <table class="admin-table">
-          <thead><tr>
-            <th>Folio</th>
-            <th>Cliente</th>
-            <th>Tipo</th>
-            <th>Rush</th>
-            <th>Estado</th>
-            <th>Fecha</th>
-            <th>Acciones</th>
-          </tr></thead>
-          <tbody id="admin-tbody">
-            <tr class="empty-row"><td colspan="7"><i class="ti ti-loader-2"></i> Cargando...</td></tr>
-          </tbody>
-        </table>
+      <!-- Main -->
+      <div class="main">
+        <!-- View tabs -->
+        <div class="view-tabs">
+          <button class="view-tab active" id="tab-comisiones" onclick="switchView('comisiones')">
+            <i class="ti ti-files"></i> Comisiones
+          </button>
+          <button class="view-tab" id="tab-portafolio" onclick="switchView('portafolio')">
+            <i class="ti ti-layout-grid"></i> Portafolio
+          </button>
+          <button class="view-tab" id="tab-waitlist" onclick="switchView('waitlist')">
+            <i class="ti ti-list"></i> Waitlist
+          </button>
+        </div>
+
+        <!-- Comisiones section -->
+        <div id="comisiones-section" style="display: flex; flex-direction: column; gap: 1.5rem">
+          <!-- Stats -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="ti ti-files"></i></div>
+              <div>
+                <div class="stat-num" id="stat-total">—</div>
+                <div class="stat-label">Total</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="ti ti-clock"></i></div>
+              <div>
+                <div class="stat-num" id="stat-waiting">—</div>
+                <div class="stat-label">En cola</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="ti ti-pencil"></i></div>
+              <div>
+                <div class="stat-num" id="stat-active">—</div>
+                <div class="stat-label">Activas</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="ti ti-circle-check"></i></div>
+              <div>
+                <div class="stat-num" id="stat-completed">—</div>
+                <div class="stat-label">Completadas</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toolbar -->
+          <div class="toolbar">
+            <div class="filter-group">
+              <button class="filter-btn active" onclick="setFilter('all', this)">Todas</button>
+              <button class="filter-btn" onclick="setFilter('waiting', this)">En espera</button>
+              <button class="filter-btn" onclick="setFilter('notified', this)">Notificadas</button>
+              <button class="filter-btn" onclick="setFilter('quoted', this)">Cotizadas</button>
+              <button class="filter-btn" onclick="setFilter('active', this)">Activas</button>
+              <button class="filter-btn" onclick="setFilter('completed', this)">Completadas</button>
+              <button class="filter-btn" onclick="setFilter('cancelled', this)">Canceladas</button>
+            </div>
+            <div class="spacer"></div>
+            <button class="icon-btn" onclick="cargarComisiones()">
+              <i class="ti ti-refresh"></i> Actualizar
+            </button>
+            <button class="icon-btn" id="toggle-comisiones" onclick="toggleComisiones()">
+              <i class="ti ti-lock-open" id="toggle-icon"></i>
+              <span id="toggle-label">Abiertas</span>
+            </button>
+            <span
+              id="slot-counter"
+              style="
+                font-size: 11px;
+                color: var(--muted);
+                border: 0.5px solid var(--border);
+                border-radius: 8px;
+                padding: 5px 10px;
+                white-space: nowrap;
+              "
+              >0/25</span
+            >
+            <input
+              type="number"
+              id="slot-limit-input"
+              min="1"
+              max="100"
+              value="25"
+              title="Límite de comisiones activas"
+              style="
+                width: 65px;
+                padding: 5px 8px;
+                border: 0.5px solid var(--border);
+                border-radius: 8px;
+                font-size: 12px;
+                background: var(--card);
+                color: var(--dark);
+                font-family: var(--sans);
+                outline: none;
+              "
+              onchange="actualizarMaxSlots(this.value)"
+            />
+            <button class="add-btn" onclick="abrirModal()">
+              <i class="ti ti-plus"></i> Nueva comisión
+            </button>
+          </div>
+
+          <!-- Table -->
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Folio</th>
+                  <th>Cliente</th>
+                  <th>Tipo</th>
+                  <th>Rush</th>
+                  <th>Estado</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="admin-tbody">
+                <tr class="empty-row">
+                  <td colspan="7"><i class="ti ti-loader-2"></i> Cargando...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- /comisiones-section -->
+
+        <!-- Portfolio section -->
+        <div id="port-section" style="display: none; flex-direction: column; gap: 1.5rem">
+          <!-- Agregar obra -->
+          <div class="port-add-card">
+            <div class="port-add-title">Agregar obra</div>
+            <div class="port-add-form">
+              <div class="mfield">
+                <label>Nombre de la obra</label>
+                <input type="text" id="p-nombre" placeholder="Ej: Comisión de personaje" />
+              </div>
+              <div class="mfield">
+                <label>Nombre de archivo</label>
+                <input type="text" id="p-imagen" placeholder="galeria-14.jpg" />
+                <div class="port-hint">Nombre del archivo que subirás a /img/ en GitHub</div>
+              </div>
+              <div class="mfield">
+                <label>Categoría</label>
+                <select id="p-categoria">
+                  <option value="ilustracion">Ilustración</option>
+                  <option value="furry">Furry</option>
+                  <option value="editorial">Editorial</option>
+                  <option value="print">Print</option>
+                  <option value="sticker">Sticker</option>
+                </select>
+              </div>
+              <div class="mfield">
+                <label>Sitio</label>
+                <select id="p-site">
+                  <option value="art">Etherial Art / Mango</option>
+                  <option value="wuff">Etherial Wuff</option>
+                </select>
+              </div>
+              <div class="mfield">
+                <label>Año</label>
+                <input type="text" id="p-anio" value="2026" placeholder="2026" />
+              </div>
+              <div class="mfield" style="display: flex; align-items: flex-end; padding-bottom: 2px">
+                <label class="mfield-check"
+                  ><input type="checkbox" id="p-galeria" checked /> Mostrar en galería
+                  principal</label
+                >
+              </div>
+            </div>
+            <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end">
+              <button class="btn-save" id="btn-agregar" onclick="agregarObra()">
+                <i class="ti ti-plus"></i> Agregar obra
+              </button>
+            </div>
+          </div>
+
+          <!-- Lista actual -->
+          <div class="port-add-card">
+            <div class="port-add-title">Portafolio actual</div>
+            <div id="port-list">
+              <div class="port-empty"><i class="ti ti-loader-2"></i> Cargando...</div>
+            </div>
+          </div>
+        </div>
+        <!-- /port-section -->
+
+        <!-- Waitlist section -->
+        <div id="waitlist-section" style="display: none; flex-direction: column; gap: 1.5rem">
+          <div class="toolbar">
+            <div class="spacer"></div>
+            <button class="icon-btn" onclick="cargarWaitlist()">
+              <i class="ti ti-refresh"></i> Actualizar
+            </button>
+            <span
+              id="wl-counter"
+              style="
+                font-size: 11px;
+                color: var(--muted);
+                border: 0.5px solid var(--border);
+                border-radius: 8px;
+                padding: 5px 10px;
+                white-space: nowrap;
+              "
+              >0/?</span
+            >
+            <input
+              type="number"
+              id="wl-limit-input"
+              min="1"
+              max="500"
+              value="50"
+              title="Límite de waitlist"
+              style="
+                width: 65px;
+                padding: 5px 8px;
+                border: 0.5px solid var(--border);
+                border-radius: 8px;
+                font-size: 12px;
+                background: var(--card);
+                color: var(--dark);
+                font-family: var(--sans);
+                outline: none;
+              "
+              onchange="actualizarMaxWaitlist(this.value)"
+            />
+          </div>
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Interés</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="waitlist-tbody">
+                <tr class="empty-row">
+                  <td colspan="6"><i class="ti ti-loader-2"></i> Cargando...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- /waitlist-section -->
       </div>
+      <!-- /main -->
+    </div>
+    <!-- /admin-panel -->
 
-    </div><!-- /comisiones-section -->
-
-    <!-- Portfolio section -->
-    <div id="port-section" style="display:none;flex-direction:column;gap:1.5rem">
-
-      <!-- Agregar obra -->
-      <div class="port-add-card">
-        <div class="port-add-title">Agregar obra</div>
-        <div class="port-add-form">
-          <div class="mfield">
-            <label>Nombre de la obra</label>
-            <input type="text" id="p-nombre" placeholder="Ej: Comisión de personaje">
+    <!-- ══ MODAL: NUEVA COMISIÓN ════════════════════════════ -->
+    <div
+      class="modal-overlay"
+      id="modal-overlay"
+      onclick="if (event.target === this) cerrarModal();"
+    >
+      <div class="modal">
+        <div class="modal-head">
+          <div class="modal-title">Nueva comisión</div>
+          <button class="modal-close" onclick="cerrarModal()"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="mfield-row">
+            <div class="mfield">
+              <label>Cliente / @</label><input id="m-tag" placeholder="@usuario o Nombre" />
+            </div>
+            <div class="mfield">
+              <label>Email</label
+              ><input id="m-email" type="email" placeholder="correo@ejemplo.com" />
+            </div>
+          </div>
+          <div class="mfield-row">
+            <div class="mfield">
+              <label>Servicio</label>
+              <select id="m-servicio" onchange="actualizarTipoOpts()">
+                <option value="">— Selecciona —</option>
+                <option value="Ilustración digital">Ilustración digital</option>
+                <option value="Diseño Editorial">Diseño Editorial</option>
+                <option value="Arte Digital para Imprimir">Arte Digital para Imprimir</option>
+              </select>
+            </div>
+            <div class="mfield">
+              <label>Tipo de ilustración</label>
+              <select id="m-tipo">
+                <option value="">— Selecciona —</option>
+                <option>Sticker single</option>
+                <option>Sticker Bundle x5</option>
+                <option>Sticker animado</option>
+                <option>Icon / Asset spot</option>
+                <option>PFP / Profile Picture</option>
+                <option>Badge</option>
+                <option>Half Body</option>
+                <option>Full Body</option>
+                <option>Cinematic Scene</option>
+              </select>
+            </div>
           </div>
           <div class="mfield">
-            <label>Nombre de archivo</label>
-            <input type="text" id="p-imagen" placeholder="galeria-14.jpg">
-            <div class="port-hint">Nombre del archivo que subirás a /img/ en GitHub</div>
+            <label>Descripción del arte</label
+            ><textarea
+              id="m-desc"
+              placeholder="Describe brevemente qué quiere el cliente..."
+            ></textarea>
+          </div>
+          <div class="mfield-row">
+            <div class="mfield">
+              <label>Idioma preferido</label>
+              <select id="m-lang">
+                <option value="es">Español</option>
+                <option value="en">English</option>
+                <option value="de">Deutsch</option>
+              </select>
+            </div>
+            <div class="mfield">
+              <label>Código de descuento</label><input id="m-descuento" placeholder="Opcional" />
+            </div>
           </div>
           <div class="mfield">
-            <label>Categoría</label>
-            <select id="p-categoria">
-              <option value="ilustracion">Ilustración</option>
-              <option value="furry">Furry</option>
-              <option value="editorial">Editorial</option>
-              <option value="print">Print</option>
-              <option value="sticker">Sticker</option>
-            </select>
+            <label class="mfield-check"
+              ><input type="checkbox" id="m-rush" /> ⚡ Comisión Rush</label
+            >
           </div>
           <div class="mfield">
-            <label>Sitio</label>
-            <select id="p-site">
-              <option value="art">Etherial Art / Mango</option>
-              <option value="wuff">Etherial Wuff</option>
-            </select>
+            <label class="mfield-check"
+              ><input type="checkbox" id="m-primera" checked /> Primera comisión con Etherial</label
+            >
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+          <button class="btn-save" id="btn-save" onclick="guardarComision()">
+            <i class="ti ti-send"></i> Crear comisión
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MODAL: COTIZACIÓN ════════════════════════════════ -->
+    <div
+      class="modal-overlay"
+      id="quote-overlay"
+      onclick="if (event.target === this) cerrarCotizacion();"
+    >
+      <div class="modal" style="max-width: 600px">
+        <div class="modal-head">
+          <div class="modal-title">
+            Cotización <span id="q-folio-title" style="color: var(--gl)"></span>
+          </div>
+          <button class="modal-close" onclick="cerrarCotizacion()"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="q-summary">
+            <div class="q-row"><span class="q-lbl">Cliente</span><span id="q-client">—</span></div>
+            <div class="q-row">
+              <span class="q-lbl">Servicio</span><span id="q-service">—</span>
+            </div>
+            <div class="q-row">
+              <span class="q-lbl">Descripción</span
+              ><span id="q-desc" style="color: var(--muted)">—</span>
+            </div>
+          </div>
+          <div class="q-breakdown">
+            <div class="q-brow">
+              <span>Precio base</span
+              ><input
+                type="number"
+                id="q-base"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                oninput="calcularTotal()"
+              />
+            </div>
+            <div class="q-brow" id="q-rush-row">
+              <span>⚡ Cargo Rush</span
+              ><input
+                type="number"
+                id="q-rush-fee"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                oninput="calcularTotal()"
+              />
+            </div>
+            <div class="q-brow">
+              <span>Extras / add-ons</span
+              ><input
+                type="number"
+                id="q-extras"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                oninput="calcularTotal()"
+              />
+            </div>
+            <div class="q-brow">
+              <span>Descuento</span
+              ><input
+                type="number"
+                id="q-discount"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                oninput="calcularTotal()"
+              />
+            </div>
+            <div class="q-total-row">
+              <span class="q-total-label">Total</span><span id="q-total">$0.00 USD</span>
+            </div>
           </div>
           <div class="mfield">
-            <label>Año</label>
-            <input type="text" id="p-anio" value="2026" placeholder="2026">
+            <label>Notas para el cliente (opcional)</label>
+            <textarea
+              id="q-notes"
+              placeholder="Ej: Incluye 2 rondas de revisión, entrega en 4 semanas..."
+            ></textarea>
           </div>
-          <div class="mfield" style="display:flex;align-items:flex-end;padding-bottom:2px">
-            <label class="mfield-check"><input type="checkbox" id="p-galeria" checked> Mostrar en galería principal</label>
+          <div class="q-paypal-block">
+            <div class="q-paypal-label"><i class="ti ti-brand-paypal"></i> Link de pago PayPal</div>
+            <div class="q-paypal-link-row">
+              <input
+                type="text"
+                id="q-paypal-link"
+                readonly
+                placeholder="El link aparece al ingresar un monto"
+              />
+              <button class="act-btn" onclick="copiarLinkPaypal()" id="btn-copy-paypal">
+                <i class="ti ti-copy"></i> Copiar
+              </button>
+            </div>
           </div>
         </div>
-        <div style="margin-top:1.25rem;display:flex;justify-content:flex-end">
-          <button class="btn-save" id="btn-agregar" onclick="agregarObra()"><i class="ti ti-plus"></i> Agregar obra</button>
-        </div>
-      </div>
-
-      <!-- Lista actual -->
-      <div class="port-add-card">
-        <div class="port-add-title">Portafolio actual</div>
-        <div id="port-list"><div class="port-empty"><i class="ti ti-loader-2"></i> Cargando...</div></div>
-      </div>
-
-    </div><!-- /port-section -->
-
-    <!-- Waitlist section -->
-    <div id="waitlist-section" style="display:none;flex-direction:column;gap:1.5rem">
-      <div class="toolbar">
-        <div class="spacer"></div>
-        <button class="icon-btn" onclick="cargarWaitlist()"><i class="ti ti-refresh"></i> Actualizar</button>
-        <span id="wl-counter" style="font-size:11px;color:var(--muted);border:0.5px solid var(--border);border-radius:8px;padding:5px 10px;white-space:nowrap">0/?</span>
-        <input type="number" id="wl-limit-input" min="1" max="500" value="50" title="Límite de waitlist" style="width:65px;padding:5px 8px;border:0.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none" onchange="actualizarMaxWaitlist(this.value)">
-      </div>
-      <div class="table-wrap">
-        <table class="admin-table">
-          <thead><tr>
-            <th>#</th><th>Nombre</th><th>Email</th><th>Interés</th><th>Fecha</th><th>Acciones</th>
-          </tr></thead>
-          <tbody id="waitlist-tbody">
-            <tr class="empty-row"><td colspan="6"><i class="ti ti-loader-2"></i> Cargando...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div><!-- /waitlist-section -->
-
-  </div><!-- /main -->
-</div><!-- /admin-panel -->
-
-<!-- ══ MODAL: NUEVA COMISIÓN ════════════════════════════ -->
-<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)cerrarModal()">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title">Nueva comisión</div>
-      <button class="modal-close" onclick="cerrarModal()"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="mfield-row">
-        <div class="mfield"><label>Cliente / @</label><input id="m-tag" placeholder="@usuario o Nombre"></div>
-        <div class="mfield"><label>Email</label><input id="m-email" type="email" placeholder="correo@ejemplo.com"></div>
-      </div>
-      <div class="mfield-row">
-        <div class="mfield">
-          <label>Servicio</label>
-          <select id="m-servicio" onchange="actualizarTipoOpts()">
-            <option value="">— Selecciona —</option>
-            <option value="Ilustración digital">Ilustración digital</option>
-            <option value="Diseño Editorial">Diseño Editorial</option>
-            <option value="Arte Digital para Imprimir">Arte Digital para Imprimir</option>
-          </select>
-        </div>
-        <div class="mfield">
-          <label>Tipo de ilustración</label>
-          <select id="m-tipo">
-            <option value="">— Selecciona —</option>
-            <option>Sticker single</option>
-            <option>Sticker Bundle x5</option>
-            <option>Sticker animado</option>
-            <option>Icon / Asset spot</option>
-            <option>PFP / Profile Picture</option>
-            <option>Badge</option>
-            <option>Half Body</option>
-            <option>Full Body</option>
-            <option>Cinematic Scene</option>
-          </select>
-        </div>
-      </div>
-      <div class="mfield"><label>Descripción del arte</label><textarea id="m-desc" placeholder="Describe brevemente qué quiere el cliente..."></textarea></div>
-      <div class="mfield-row">
-        <div class="mfield"><label>Idioma preferido</label>
-          <select id="m-lang">
-            <option value="es">Español</option>
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
-          </select>
-        </div>
-        <div class="mfield"><label>Código de descuento</label><input id="m-descuento" placeholder="Opcional"></div>
-      </div>
-      <div class="mfield">
-        <label class="mfield-check"><input type="checkbox" id="m-rush"> ⚡ Comisión Rush</label>
-      </div>
-      <div class="mfield">
-        <label class="mfield-check"><input type="checkbox" id="m-primera" checked> Primera comisión con Etherial</label>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
-      <button class="btn-save" id="btn-save" onclick="guardarComision()"><i class="ti ti-send"></i> Crear comisión</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ MODAL: COTIZACIÓN ════════════════════════════════ -->
-<div class="modal-overlay" id="quote-overlay" onclick="if(event.target===this)cerrarCotizacion()">
-  <div class="modal" style="max-width:600px">
-    <div class="modal-head">
-      <div class="modal-title">Cotización <span id="q-folio-title" style="color:var(--gl)"></span></div>
-      <button class="modal-close" onclick="cerrarCotizacion()"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="q-summary">
-        <div class="q-row"><span class="q-lbl">Cliente</span><span id="q-client">—</span></div>
-        <div class="q-row"><span class="q-lbl">Servicio</span><span id="q-service">—</span></div>
-        <div class="q-row"><span class="q-lbl">Descripción</span><span id="q-desc" style="color:var(--muted)">—</span></div>
-      </div>
-      <div class="q-breakdown">
-        <div class="q-brow"><span>Precio base</span><input type="number" id="q-base" min="0" step="0.01" placeholder="0.00" oninput="calcularTotal()"></div>
-        <div class="q-brow" id="q-rush-row"><span>⚡ Cargo Rush</span><input type="number" id="q-rush-fee" min="0" step="0.01" placeholder="0.00" oninput="calcularTotal()"></div>
-        <div class="q-brow"><span>Extras / add-ons</span><input type="number" id="q-extras" min="0" step="0.01" placeholder="0.00" oninput="calcularTotal()"></div>
-        <div class="q-brow"><span>Descuento</span><input type="number" id="q-discount" min="0" step="0.01" placeholder="0.00" oninput="calcularTotal()"></div>
-        <div class="q-total-row"><span class="q-total-label">Total</span><span id="q-total">$0.00 USD</span></div>
-      </div>
-      <div class="mfield">
-        <label>Notas para el cliente (opcional)</label>
-        <textarea id="q-notes" placeholder="Ej: Incluye 2 rondas de revisión, entrega en 4 semanas..."></textarea>
-      </div>
-      <div class="q-paypal-block">
-        <div class="q-paypal-label"><i class="ti ti-brand-paypal"></i> Link de pago PayPal</div>
-        <div class="q-paypal-link-row">
-          <input type="text" id="q-paypal-link" readonly placeholder="El link aparece al ingresar un monto">
-          <button class="act-btn" onclick="copiarLinkPaypal()" id="btn-copy-paypal"><i class="ti ti-copy"></i> Copiar</button>
+        <div class="modal-foot">
+          <button class="btn-cancel" onclick="cerrarCotizacion()">Cancelar</button>
+          <button class="btn-save" id="btn-save-quote" onclick="guardarCotizacion()">
+            <i class="ti ti-send"></i> Guardar cotización
+          </button>
         </div>
       </div>
     </div>
-    <div class="modal-foot">
-      <button class="btn-cancel" onclick="cerrarCotizacion()">Cancelar</button>
-      <button class="btn-save" id="btn-save-quote" onclick="guardarCotizacion()"><i class="ti ti-send"></i> Guardar cotización</button>
-    </div>
-  </div>
-</div>
 
-<!-- ══ MODAL: DETALLES ══════════════════════════════════ -->
-<div class="modal-overlay" id="detail-overlay" onclick="if(event.target===this)cerrarDetalle()">
-  <div class="modal" style="max-width:600px">
-    <div class="modal-head">
-      <div class="modal-title">Comisión <span id="d-folio" style="color:var(--gl)"></span></div>
-      <button class="modal-close" onclick="cerrarDetalle()"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="modal-body" id="d-body"></div>
-    <div class="modal-foot">
-      <button class="btn-cancel" onclick="cerrarDetalle()">Cerrar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ EDIT OVERLAY ══════════════════════════════════════ -->
-<div class="modal-overlay" id="edit-overlay" onclick="if(event.target===this)cerrarEditar()">
-  <div class="modal" style="max-width:600px">
-    <div class="modal-head">
-      <div class="modal-title">Editar comisión <span id="e-folio" style="color:var(--gl)"></span></div>
-      <button class="modal-close" onclick="cerrarEditar()"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="mfield-row">
-        <div class="mfield">
-          <label>Cliente / handle</label>
-          <input id="e-tag" type="text" placeholder="@usuario">
+    <!-- ══ MODAL: DETALLES ══════════════════════════════════ -->
+    <div
+      class="modal-overlay"
+      id="detail-overlay"
+      onclick="if (event.target === this) cerrarDetalle();"
+    >
+      <div class="modal" style="max-width: 600px">
+        <div class="modal-head">
+          <div class="modal-title">
+            Comisión <span id="d-folio" style="color: var(--gl)"></span>
+          </div>
+          <button class="modal-close" onclick="cerrarDetalle()"><i class="ti ti-x"></i></button>
         </div>
-        <div class="mfield">
-          <label>Email</label>
-          <input id="e-email" type="email" placeholder="cliente@email.com">
-        </div>
-      </div>
-      <div class="mfield-row">
-        <div class="mfield">
-          <label>Servicio</label>
-          <select id="e-servicio">
-            <option value="">—</option>
-            <option value="Ilustración digital">Ilustración digital</option>
-            <option value="Diseño Editorial">Diseño Editorial</option>
-            <option value="Arte Digital para Imprimir">Arte Digital para Imprimir</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-        <div class="mfield">
-          <label>Tipo / subtipo</label>
-          <input id="e-tipo" type="text" placeholder="ej: Busto, Fullbody…">
-        </div>
-      </div>
-      <div class="mfield">
-        <label>Descripción</label>
-        <textarea id="e-desc" style="height:100px"></textarea>
-      </div>
-      <div class="mfield-row" style="align-items:center;padding:.25rem 0">
-        <label class="mfield-check"><input type="checkbox" id="e-rush"> ⚡ Rush</label>
-        <label class="mfield-check"><input type="checkbox" id="e-nsfw"> NSFW</label>
-      </div>
-      <div class="mfield-row">
-        <div class="mfield">
-          <label>Canal de contacto</label>
-          <input id="e-canal" type="text" placeholder="Discord, Twitter…">
-        </div>
-        <div class="mfield">
-          <label>Código de descuento</label>
-          <input id="e-descuento" type="text">
+        <div class="modal-body" id="d-body"></div>
+        <div class="modal-foot">
+          <button class="btn-cancel" onclick="cerrarDetalle()">Cerrar</button>
         </div>
       </div>
     </div>
-    <div class="modal-foot">
-      <button class="btn-cancel" onclick="cerrarEditar()">Cancelar</button>
-      <button class="btn-save" id="e-save-btn" onclick="guardarEdicion()"><i class="ti ti-check"></i> Guardar cambios</button>
+
+    <!-- ══ EDIT OVERLAY ══════════════════════════════════════ -->
+    <div
+      class="modal-overlay"
+      id="edit-overlay"
+      onclick="if (event.target === this) cerrarEditar();"
+    >
+      <div class="modal" style="max-width: 600px">
+        <div class="modal-head">
+          <div class="modal-title">
+            Editar comisión <span id="e-folio" style="color: var(--gl)"></span>
+          </div>
+          <button class="modal-close" onclick="cerrarEditar()"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="mfield-row">
+            <div class="mfield">
+              <label>Cliente / handle</label>
+              <input id="e-tag" type="text" placeholder="@usuario" />
+            </div>
+            <div class="mfield">
+              <label>Email</label>
+              <input id="e-email" type="email" placeholder="cliente@email.com" />
+            </div>
+          </div>
+          <div class="mfield-row">
+            <div class="mfield">
+              <label>Servicio</label>
+              <select id="e-servicio">
+                <option value="">—</option>
+                <option value="Ilustración digital">Ilustración digital</option>
+                <option value="Diseño Editorial">Diseño Editorial</option>
+                <option value="Arte Digital para Imprimir">Arte Digital para Imprimir</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+            <div class="mfield">
+              <label>Tipo / subtipo</label>
+              <input id="e-tipo" type="text" placeholder="ej: Busto, Fullbody…" />
+            </div>
+          </div>
+          <div class="mfield">
+            <label>Descripción</label>
+            <textarea id="e-desc" style="height: 100px"></textarea>
+          </div>
+          <div class="mfield-row" style="align-items: center; padding: 0.25rem 0">
+            <label class="mfield-check"><input type="checkbox" id="e-rush" /> ⚡ Rush</label>
+            <label class="mfield-check"><input type="checkbox" id="e-nsfw" /> NSFW</label>
+          </div>
+          <div class="mfield-row">
+            <div class="mfield">
+              <label>Canal de contacto</label>
+              <input id="e-canal" type="text" placeholder="Discord, Twitter…" />
+            </div>
+            <div class="mfield">
+              <label>Código de descuento</label>
+              <input id="e-descuento" type="text" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-cancel" onclick="cerrarEditar()">Cancelar</button>
+          <button class="btn-save" id="e-save-btn" onclick="guardarEdicion()">
+            <i class="ti ti-check"></i> Guardar cambios
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- ══ TOAST ═════════════════════════════════════════════ -->
-<div class="toast" id="toast"></div>
+    <!-- ══ TOAST ═════════════════════════════════════════════ -->
+    <div class="toast" id="toast"></div>
 
-<script>
-// ━━ CONFIG ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const PAYPAL_ME='etherart';
+    <script>
+      // ━━ CONFIG ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      const PAYPAL_ME = 'etherart';
 
-const SUPABASE_URL='https://eliyhtdwmeghfslijwgh.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaXlodGR3bWVnaGZzbGlqd2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTU2MDMsImV4cCI6MjA5MTMzMTYwM30.QxWx1uHhEZJCvrFcvSfOzlPLUBA39uaRdl80NKEsjZc';
-const RAILWAY_URL='https://niko-studio-production.up.railway.app';
+      const SUPABASE_URL = 'https://eliyhtdwmeghfslijwgh.supabase.co';
+      const SUPABASE_KEY =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaXlodGR3bWVnaGZzbGlqd2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTU2MDMsImV4cCI6MjA5MTMzMTYwM30.QxWx1uHhEZJCvrFcvSfOzlPLUBA39uaRdl80NKEsjZc';
+      const RAILWAY_URL = 'https://niko-studio-production.up.railway.app';
 
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ━━ AUTH ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// El token de admin NO está en el código. Se pide al abrir el panel, se guarda
-// sólo en sessionStorage (se borra al cerrar la pestaña) y se envía como
-// X-Admin-Key en cada petición al backend, que lo valida contra ADMIN_SECRET.
-const TOKEN_KEY='ea-admin-token';
-function getToken(){try{return sessionStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
-function setToken(t){try{sessionStorage.setItem(TOKEN_KEY,t);}catch(e){}}
-function clearToken(){try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('ea-admin');}catch(e){}}
+      // ━━ AUTH ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // El token de admin NO está en el código. Se pide al abrir el panel, se guarda
+      // sólo en sessionStorage (se borra al cerrar la pestaña) y se envía como
+      // X-Admin-Key en cada petición al backend, que lo valida contra ADMIN_SECRET.
+      const TOKEN_KEY = 'ea-admin-token';
+      function getToken() {
+        try {
+          return sessionStorage.getItem(TOKEN_KEY) || '';
+        } catch (e) {
+          return '';
+        }
+      }
+      function setToken(t) {
+        try {
+          sessionStorage.setItem(TOKEN_KEY, t);
+        } catch (e) {}
+      }
+      function clearToken() {
+        try {
+          sessionStorage.removeItem(TOKEN_KEY);
+          sessionStorage.removeItem('ea-admin');
+        } catch (e) {}
+      }
 
-class AuthError extends Error{}
+      class AuthError extends Error {}
 
-// fetch al backend con el token. Si responde 401/403: borra el token y lo vuelve a pedir.
-async function adminFetch(url,opts={}){
-  const token=getToken();
-  if(!token){pedirToken();throw new AuthError('Sin token');}
-  const headers=Object.assign({},opts.headers||{},{'X-Admin-Key':token});
-  const res=await fetch(url,Object.assign({},opts,{headers}));
-  if(res.status===401||res.status===403){
-    clearToken();
-    pedirToken('Token inválido o caducado. Vuelve a introducirlo.');
-    throw new AuthError(`HTTP ${res.status}`);
-  }
-  return res;
-}
+      // fetch al backend con el token. Si responde 401/403: borra el token y lo vuelve a pedir.
+      async function adminFetch(url, opts = {}) {
+        const token = getToken();
+        if (!token) {
+          pedirToken();
+          throw new AuthError('Sin token');
+        }
+        const headers = Object.assign({}, opts.headers || {}, { 'X-Admin-Key': token });
+        const res = await fetch(url, Object.assign({}, opts, { headers }));
+        if (res.status === 401 || res.status === 403) {
+          clearToken();
+          pedirToken('Token inválido o caducado. Vuelve a introducirlo.');
+          throw new AuthError(`HTTP ${res.status}`);
+        }
+        return res;
+      }
 
-function pedirToken(msg){
-  document.getElementById('admin-panel').style.display='none';
-  document.getElementById('login-screen').style.display='flex';
-  const err=document.getElementById('login-error');
-  if(msg){err.textContent=msg;err.style.display='block';}else{err.style.display='none';}
-  const inp=document.getElementById('pwd-input');
-  inp.value='';inp.focus();
-}
+      function pedirToken(msg) {
+        document.getElementById('admin-panel').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'flex';
+        const err = document.getElementById('login-error');
+        if (msg) {
+          err.textContent = msg;
+          err.style.display = 'block';
+        } else {
+          err.style.display = 'none';
+        }
+        const inp = document.getElementById('pwd-input');
+        inp.value = '';
+        inp.focus();
+      }
 
-function mostrarPanel(){
-  document.getElementById('login-error').style.display='none';
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('admin-panel').style.display='flex';
-  cargarComisiones();cargarEstadoComisiones();
-}
+      function mostrarPanel() {
+        document.getElementById('login-error').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-panel').style.display = 'flex';
+        cargarComisiones();
+        cargarEstadoComisiones();
+      }
 
-async function doLogin(){
-  const inp=document.getElementById('pwd-input');
-  const token=inp.value.trim();
-  if(!token){pedirToken('Introduce el token.');return;}
-  const btn=document.getElementById('login-btn');
-  btn.disabled=true;
-  try{
-    // Comprobar el token con el backend antes de abrir el panel
-    const res=await fetch(`${RAILWAY_URL}/admin/comisiones`,{headers:{'X-Admin-Key':token}});
-    if(res.status===401||res.status===403){clearToken();pedirToken('Token incorrecto.');return;}
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    setToken(token);
-    inp.value='';
-    mostrarPanel();
-  }catch(e){
-    console.error(e);
-    const err=document.getElementById('login-error');
-    err.textContent='No se pudo conectar con el servidor. Inténtalo de nuevo.';
-    err.style.display='block';
-  }finally{
-    btn.disabled=false;
-  }
-}
+      async function doLogin() {
+        const inp = document.getElementById('pwd-input');
+        const token = inp.value.trim();
+        if (!token) {
+          pedirToken('Introduce el token.');
+          return;
+        }
+        const btn = document.getElementById('login-btn');
+        btn.disabled = true;
+        try {
+          // Comprobar el token con el backend antes de abrir el panel
+          const res = await fetch(`${RAILWAY_URL}/admin/comisiones`, {
+            headers: { 'X-Admin-Key': token },
+          });
+          if (res.status === 401 || res.status === 403) {
+            clearToken();
+            pedirToken('Token incorrecto.');
+            return;
+          }
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          setToken(token);
+          inp.value = '';
+          mostrarPanel();
+        } catch (e) {
+          console.error(e);
+          const err = document.getElementById('login-error');
+          err.textContent = 'No se pudo conectar con el servidor. Inténtalo de nuevo.';
+          err.style.display = 'block';
+        } finally {
+          btn.disabled = false;
+        }
+      }
 
-function doLogout(){
-  clearToken();
-  location.reload();
-}
+      function doLogout() {
+        clearToken();
+        location.reload();
+      }
 
-// ━━ THEME ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function applyTheme(dark){
-  document.documentElement.setAttribute('data-theme',dark?'dark':'light');
-  document.getElementById('theme-icon').className=dark?'ti ti-sun':'ti ti-moon';
-  localStorage.setItem('ea-theme',dark?'dark':'light');
-}
-function toggleTheme(){applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');}
+      // ━━ THEME ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      function applyTheme(dark) {
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        document.getElementById('theme-icon').className = dark ? 'ti ti-sun' : 'ti ti-moon';
+        localStorage.setItem('ea-theme', dark ? 'dark' : 'light');
+      }
+      function toggleTheme() {
+        applyTheme(document.documentElement.getAttribute('data-theme') !== 'dark');
+      }
 
-// ━━ TOAST ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-let toastTimer;
-function showToast(msg,type=''){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className='toast '+(type?type:'');
-  void t.offsetWidth;t.classList.add('show');
-  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
-}
+      // ━━ TOAST ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      let toastTimer;
+      function showToast(msg, type = '') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast ' + (type ? type : '');
+        void t.offsetWidth;
+        t.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+      }
 
-// ━━ DATOS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-let comisiones=[];
-let filtroActual='all';
-let maxSlots=25;
+      // ━━ DATOS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      let comisiones = [];
+      let filtroActual = 'all';
+      let maxSlots = 25;
 
-const statusLabel={waiting:'En espera',notified:'Notificada',quoted:'Cotizada',active:'En progreso',completed:'Completada',cancelled:'Cancelada',expired:'Expirada'};
-const statusClass={waiting:'s-waiting',notified:'s-notified',quoted:'s-quoted',active:'s-active',completed:'s-completed',cancelled:'s-cancelled',expired:'s-expired'};
-const statusColor={waiting:'#B8860B',notified:'#3D5FC0',quoted:'#D97706',active:'#1F8F85',completed:'#059669',cancelled:'#666',expired:'#666'};
+      const statusLabel = {
+        waiting: 'En espera',
+        notified: 'Notificada',
+        quoted: 'Cotizada',
+        active: 'En progreso',
+        completed: 'Completada',
+        cancelled: 'Cancelada',
+        expired: 'Expirada',
+      };
+      const statusClass = {
+        waiting: 's-waiting',
+        notified: 's-notified',
+        quoted: 's-quoted',
+        active: 's-active',
+        completed: 's-completed',
+        cancelled: 's-cancelled',
+        expired: 's-expired',
+      };
+      const statusColor = {
+        waiting: '#B8860B',
+        notified: '#3D5FC0',
+        quoted: '#D97706',
+        active: '#1F8F85',
+        completed: '#059669',
+        cancelled: '#666',
+        expired: '#666',
+      };
 
-async function cargarComisiones(){
-  const tbody=document.getElementById('admin-tbody');
-  tbody.innerHTML='<tr class="empty-row"><td colspan="7"><i class="ti ti-loader-2"></i> Cargando...</td></tr>';
-  try{
-    const res=await adminFetch(`${RAILWAY_URL}/admin/comisiones`);
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data=await res.json();
-    comisiones=Array.isArray(data)?data:(data.comisiones||[]);
-    comisiones.sort((a,b)=>a.folio-b.folio);
-    actualizarStats();
-    renderComisiones();
-  }catch(e){
-    console.error(e);
-    tbody.innerHTML='<tr class="empty-row"><td colspan="7"><i class="ti ti-wifi-off"></i> Error al cargar. Revisa la consola.</td></tr>';
-  }
-}
+      async function cargarComisiones() {
+        const tbody = document.getElementById('admin-tbody');
+        tbody.innerHTML =
+          '<tr class="empty-row"><td colspan="7"><i class="ti ti-loader-2"></i> Cargando...</td></tr>';
+        try {
+          const res = await adminFetch(`${RAILWAY_URL}/admin/comisiones`);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          comisiones = Array.isArray(data) ? data : data.comisiones || [];
+          comisiones.sort((a, b) => a.folio - b.folio);
+          actualizarStats();
+          renderComisiones();
+        } catch (e) {
+          console.error(e);
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="7"><i class="ti ti-wifi-off"></i> Error al cargar. Revisa la consola.</td></tr>';
+        }
+      }
 
-function actualizarStats(){
-  document.getElementById('stat-total').textContent=comisiones.length;
-  document.getElementById('stat-waiting').textContent=comisiones.filter(c=>c.status==='waiting'||c.status==='notified').length;
-  document.getElementById('stat-active').textContent=comisiones.filter(c=>c.status==='active').length;
-  document.getElementById('stat-completed').textContent=comisiones.filter(c=>c.status==='completed').length;
-  actualizarToggleUI();
-}
+      function actualizarStats() {
+        document.getElementById('stat-total').textContent = comisiones.length;
+        document.getElementById('stat-waiting').textContent = comisiones.filter(
+          (c) => c.status === 'waiting' || c.status === 'notified',
+        ).length;
+        document.getElementById('stat-active').textContent = comisiones.filter(
+          (c) => c.status === 'active',
+        ).length;
+        document.getElementById('stat-completed').textContent = comisiones.filter(
+          (c) => c.status === 'completed',
+        ).length;
+        actualizarToggleUI();
+      }
 
-function renderComisiones(){
-  const tbody=document.getElementById('admin-tbody');
-  const lista=filtroActual==='all'?comisiones:comisiones.filter(c=>c.status===filtroActual);
-  if(!lista.length){
-    tbody.innerHTML='<tr class="empty-row"><td colspan="7"><i class="ti ti-inbox"></i> Sin comisiones en esta categoría.</td></tr>';
-    return;
-  }
-  tbody.innerHTML=lista.map(c=>{
-    const fecha=c.created_at?new Date(c.created_at).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}):'—';
-    const tipo=c.tipo_ilustracion||c.tipo_servicio||'—';
-    const rush=c.es_rush?'<span class="rush-badge">⚡ RUSH</span>':'';
-    const st=c.status||'waiting';
-    const folio=String(c.folio).padStart(4,'0');
-    const quoteBtn=necesitaCotizacion(c)?`<button class="act-btn quote" onclick="abrirCotizacion(${c.folio})" title="Generar cotización"><i class="ti ti-calculator"></i> ${st==='quoted'?'Recotizar':'Cotizar'}</button>`:'';
-    return `<tr data-folio="${c.folio}" data-status="${st}" style="--sc:${statusColor[st]||'#666'}">
+      function renderComisiones() {
+        const tbody = document.getElementById('admin-tbody');
+        const lista =
+          filtroActual === 'all' ? comisiones : comisiones.filter((c) => c.status === filtroActual);
+        if (!lista.length) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="7"><i class="ti ti-inbox"></i> Sin comisiones en esta categoría.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = lista
+          .map((c) => {
+            const fecha = c.created_at
+              ? new Date(c.created_at).toLocaleDateString('es-MX', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                })
+              : '—';
+            const tipo = c.tipo_ilustracion || c.tipo_servicio || '—';
+            const rush = c.es_rush ? '<span class="rush-badge">⚡ RUSH</span>' : '';
+            const st = c.status || 'waiting';
+            const folio = String(c.folio).padStart(4, '0');
+            const quoteBtn = necesitaCotizacion(c)
+              ? `<button class="act-btn quote" onclick="abrirCotizacion(${c.folio})" title="Generar cotización"><i class="ti ti-calculator"></i> ${st === 'quoted' ? 'Recotizar' : 'Cotizar'}</button>`
+              : '';
+            return `<tr data-folio="${c.folio}" data-status="${st}" style="--sc:${statusColor[st] || '#666'}">
       <td class="folio-num">#${folio}</td>
-      <td data-lbl="${statusLabel[st]||st}">${c.cliente_tag||'—'}${c.email?`<br><span style="font-size:11px;color:var(--hint)">${c.email}</span>`:''}</td>
+      <td data-lbl="${statusLabel[st] || st}">${c.cliente_tag || '—'}${c.email ? `<br><span style="font-size:11px;color:var(--hint)">${c.email}</span>` : ''}</td>
       <td>${tipo}</td>
-      <td>${rush||'—'}</td>
-      <td><span class="pill ${statusClass[st]||'s-waiting'}">${statusLabel[st]||st}</span></td>
+      <td>${rush || '—'}</td>
+      <td><span class="pill ${statusClass[st] || 's-waiting'}">${statusLabel[st] || st}</span></td>
       <td>${fecha}</td>
       <td>
         <div class="action-row">
@@ -751,328 +1933,388 @@ function renderComisiones(){
         </div>
       </td>
     </tr>`;
-  }).join('');
-}
+          })
+          .join('');
+      }
 
-function setFilter(f,btn){
-  filtroActual=f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderComisiones();
-}
+      function setFilter(f, btn) {
+        filtroActual = f;
+        document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderComisiones();
+      }
 
-// ━━ ACCIONES (RAILWAY) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Necesitas agregar estos endpoints en tu Railway API:
-// PATCH /admin/comisiones/:folio/status  { status: "completed" }   → actualiza en Supabase
-// POST  /admin/comisiones/:folio/notificar                          → manda email al cliente
-// Todas las llamadas usan adminFetch(), que añade el header X-Admin-Key.
+      // ━━ ACCIONES (RAILWAY) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // Necesitas agregar estos endpoints en tu Railway API:
+      // PATCH /admin/comisiones/:folio/status  { status: "completed" }   → actualiza en Supabase
+      // POST  /admin/comisiones/:folio/notificar                          → manda email al cliente
+      // Todas las llamadas usan adminFetch(), que añade el header X-Admin-Key.
 
-async function cambiarEstado(folio,nuevoStatus){
-  if(!nuevoStatus) return;
-  try{
-    const res=await adminFetch(`${RAILWAY_URL}/admin/comisiones/${folio}/status`,{
-      method:'PATCH',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({status:nuevoStatus})
-    });
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    showToast(`Folio #${String(folio).padStart(4,'0')} → ${statusLabel[nuevoStatus]}`,'ok');
-    await cargarComisiones();
-  }catch(e){
-    console.error(e);
-    showToast('Error al cambiar estado. Revisa la consola.','error');
-  }
-}
+      async function cambiarEstado(folio, nuevoStatus) {
+        if (!nuevoStatus) return;
+        try {
+          const res = await adminFetch(`${RAILWAY_URL}/admin/comisiones/${folio}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: nuevoStatus }),
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          showToast(`Folio #${String(folio).padStart(4, '0')} → ${statusLabel[nuevoStatus]}`, 'ok');
+          await cargarComisiones();
+        } catch (e) {
+          console.error(e);
+          showToast('Error al cambiar estado. Revisa la consola.', 'error');
+        }
+      }
 
-async function notificarCliente(folio){
-  try{
-    const res=await adminFetch(`${RAILWAY_URL}/admin/comisiones/${folio}/notificar`,{
-      method:'POST'
-    });
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    showToast(`Email enviado al cliente del folio #${String(folio).padStart(4,'0')}`,'ok');
-  }catch(e){
-    console.error(e);
-    showToast('Error al enviar notificación. Revisa la consola.','error');
-  }
-}
+      async function notificarCliente(folio) {
+        try {
+          const res = await adminFetch(`${RAILWAY_URL}/admin/comisiones/${folio}/notificar`, {
+            method: 'POST',
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          showToast(`Email enviado al cliente del folio #${String(folio).padStart(4, '0')}`, 'ok');
+        } catch (e) {
+          console.error(e);
+          showToast('Error al enviar notificación. Revisa la consola.', 'error');
+        }
+      }
 
-// ━━ COTIZACIÓN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function necesitaCotizacion(c){
-  const s=(c.tipo_servicio||'').toLowerCase();
-  return s.includes('editorial')||s.includes('imprimir')||c.es_nsfw===true;
-}
+      // ━━ COTIZACIÓN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      function necesitaCotizacion(c) {
+        const s = (c.tipo_servicio || '').toLowerCase();
+        return s.includes('editorial') || s.includes('imprimir') || c.es_nsfw === true;
+      }
 
-let qFolioActual=null;
+      let qFolioActual = null;
 
-function abrirCotizacion(folio){
-  const c=comisiones.find(x=>x.folio===folio);
-  if(!c) return;
-  qFolioActual=folio;
-  document.getElementById('q-folio-title').textContent=`#${String(folio).padStart(4,'0')}`;
-  document.getElementById('q-client').textContent=c.cliente_tag||'—';
-  document.getElementById('q-service').textContent=c.tipo_servicio||'—';
-  document.getElementById('q-desc').textContent=c.descripcion_adicional||'—';
-  document.getElementById('q-rush-row').style.display=c.es_rush?'flex':'none';
-  ['q-base','q-rush-fee','q-extras','q-discount'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  document.getElementById('q-notes').value='';
-  document.getElementById('q-total').textContent='$0.00 USD';
-  document.getElementById('q-paypal-link').value='';
-  document.getElementById('quote-overlay').classList.add('open');
-}
+      function abrirCotizacion(folio) {
+        const c = comisiones.find((x) => x.folio === folio);
+        if (!c) return;
+        qFolioActual = folio;
+        document.getElementById('q-folio-title').textContent = `#${String(folio).padStart(4, '0')}`;
+        document.getElementById('q-client').textContent = c.cliente_tag || '—';
+        document.getElementById('q-service').textContent = c.tipo_servicio || '—';
+        document.getElementById('q-desc').textContent = c.descripcion_adicional || '—';
+        document.getElementById('q-rush-row').style.display = c.es_rush ? 'flex' : 'none';
+        ['q-base', 'q-rush-fee', 'q-extras', 'q-discount'].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+        document.getElementById('q-notes').value = '';
+        document.getElementById('q-total').textContent = '$0.00 USD';
+        document.getElementById('q-paypal-link').value = '';
+        document.getElementById('quote-overlay').classList.add('open');
+      }
 
-function cerrarCotizacion(){
-  document.getElementById('quote-overlay').classList.remove('open');
-  qFolioActual=null;
-}
+      function cerrarCotizacion() {
+        document.getElementById('quote-overlay').classList.remove('open');
+        qFolioActual = null;
+      }
 
-function calcularTotal(){
-  const base=parseFloat(document.getElementById('q-base').value)||0;
-  const rush=parseFloat(document.getElementById('q-rush-fee').value)||0;
-  const extras=parseFloat(document.getElementById('q-extras').value)||0;
-  const discount=parseFloat(document.getElementById('q-discount').value)||0;
-  const total=Math.max(0,base+rush+extras-discount);
-  document.getElementById('q-total').textContent=`$${total.toFixed(2)} USD`;
-  document.getElementById('q-paypal-link').value=total>0?`https://paypal.me/${PAYPAL_ME}/${total.toFixed(2)}`:'';
-}
+      function calcularTotal() {
+        const base = parseFloat(document.getElementById('q-base').value) || 0;
+        const rush = parseFloat(document.getElementById('q-rush-fee').value) || 0;
+        const extras = parseFloat(document.getElementById('q-extras').value) || 0;
+        const discount = parseFloat(document.getElementById('q-discount').value) || 0;
+        const total = Math.max(0, base + rush + extras - discount);
+        document.getElementById('q-total').textContent = `$${total.toFixed(2)} USD`;
+        document.getElementById('q-paypal-link').value =
+          total > 0 ? `https://paypal.me/${PAYPAL_ME}/${total.toFixed(2)}` : '';
+      }
 
-function copiarLinkPaypal(){
-  const link=document.getElementById('q-paypal-link').value;
-  if(!link){showToast('Ingresa un monto primero.','error');return;}
-  navigator.clipboard.writeText(link).then(()=>{
-    showToast('Link de PayPal copiado','ok');
-    const btn=document.getElementById('btn-copy-paypal');
-    btn.innerHTML='<i class="ti ti-check"></i> ¡Copiado!';
-    setTimeout(()=>{btn.innerHTML='<i class="ti ti-copy"></i> Copiar';},2000);
-  });
-}
+      function copiarLinkPaypal() {
+        const link = document.getElementById('q-paypal-link').value;
+        if (!link) {
+          showToast('Ingresa un monto primero.', 'error');
+          return;
+        }
+        navigator.clipboard.writeText(link).then(() => {
+          showToast('Link de PayPal copiado', 'ok');
+          const btn = document.getElementById('btn-copy-paypal');
+          btn.innerHTML = '<i class="ti ti-check"></i> ¡Copiado!';
+          setTimeout(() => {
+            btn.innerHTML = '<i class="ti ti-copy"></i> Copiar';
+          }, 2000);
+        });
+      }
 
-async function guardarCotizacion(){
-  const link=document.getElementById('q-paypal-link').value;
-  if(!link){showToast('Ingresa un monto para generar el link de pago.','error');return;}
-  const folio=qFolioActual;
-  cerrarCotizacion();
-  await cambiarEstado(folio,'quoted');
-}
+      async function guardarCotizacion() {
+        const link = document.getElementById('q-paypal-link').value;
+        if (!link) {
+          showToast('Ingresa un monto para generar el link de pago.', 'error');
+          return;
+        }
+        const folio = qFolioActual;
+        cerrarCotizacion();
+        await cambiarEstado(folio, 'quoted');
+      }
 
-// ━━ ESTADO COMISIONES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-let comisionesAbiertasAdmin=true;
+      // ━━ ESTADO COMISIONES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      let comisionesAbiertasAdmin = true;
 
-async function cargarEstadoComisiones(){
-  try{
-    const{data}=await db.from('config').select('key,value').in('key',['commissions_open','max_slots']);
-    if(data){
-      const openRow=data.find(r=>r.key==='commissions_open');
-      const slotsRow=data.find(r=>r.key==='max_slots');
-      comisionesAbiertasAdmin=!openRow||openRow.value!=='false';
-      if(slotsRow) maxSlots=parseInt(slotsRow.value)||25;
-    }
-  }catch(e){console.warn('Tabla config no encontrada.');}
-  actualizarToggleUI();
-}
+      async function cargarEstadoComisiones() {
+        try {
+          const { data } = await db
+            .from('config')
+            .select('key,value')
+            .in('key', ['commissions_open', 'max_slots']);
+          if (data) {
+            const openRow = data.find((r) => r.key === 'commissions_open');
+            const slotsRow = data.find((r) => r.key === 'max_slots');
+            comisionesAbiertasAdmin = !openRow || openRow.value !== 'false';
+            if (slotsRow) maxSlots = parseInt(slotsRow.value) || 25;
+          }
+        } catch (e) {
+          console.warn('Tabla config no encontrada.');
+        }
+        actualizarToggleUI();
+      }
 
-function actualizarToggleUI(){
-  const btn=document.getElementById('toggle-comisiones');
-  const icon=document.getElementById('toggle-icon');
-  const lbl=document.getElementById('toggle-label');
-  if(comisionesAbiertasAdmin){
-    btn.classList.remove('closed');icon.className='ti ti-lock-open';lbl.textContent='Abiertas';
-  }else{
-    btn.classList.add('closed');icon.className='ti ti-lock';lbl.textContent='Cerradas';
-  }
-  const activas=comisiones.filter(c=>!['completed','cancelled','expired'].includes(c.status)).length;
-  const counter=document.getElementById('slot-counter');
-  const limitInput=document.getElementById('slot-limit-input');
-  if(counter) counter.textContent=`${activas}/${maxSlots}`;
-  if(limitInput&&limitInput!==document.activeElement) limitInput.value=maxSlots;
-}
+      function actualizarToggleUI() {
+        const btn = document.getElementById('toggle-comisiones');
+        const icon = document.getElementById('toggle-icon');
+        const lbl = document.getElementById('toggle-label');
+        if (comisionesAbiertasAdmin) {
+          btn.classList.remove('closed');
+          icon.className = 'ti ti-lock-open';
+          lbl.textContent = 'Abiertas';
+        } else {
+          btn.classList.add('closed');
+          icon.className = 'ti ti-lock';
+          lbl.textContent = 'Cerradas';
+        }
+        const activas = comisiones.filter(
+          (c) => !['completed', 'cancelled', 'expired'].includes(c.status),
+        ).length;
+        const counter = document.getElementById('slot-counter');
+        const limitInput = document.getElementById('slot-limit-input');
+        if (counter) counter.textContent = `${activas}/${maxSlots}`;
+        if (limitInput && limitInput !== document.activeElement) limitInput.value = maxSlots;
+      }
 
-async function actualizarMaxSlots(val){
-  const v=parseInt(val);
-  if(isNaN(v)||v<1) return;
-  maxSlots=v;
-  try{
-    await db.from('config').upsert({key:'max_slots',value:String(v)});
-    actualizarToggleUI();
-    showToast(`Límite: ${v} slots activos`,'ok');
-  }catch(e){showToast('Error al guardar límite.','error');}
-}
+      async function actualizarMaxSlots(val) {
+        const v = parseInt(val);
+        if (isNaN(v) || v < 1) return;
+        maxSlots = v;
+        try {
+          await db.from('config').upsert({ key: 'max_slots', value: String(v) });
+          actualizarToggleUI();
+          showToast(`Límite: ${v} slots activos`, 'ok');
+        } catch (e) {
+          showToast('Error al guardar límite.', 'error');
+        }
+      }
 
-async function actualizarMaxWaitlist(val){
-  const v=parseInt(val);
-  if(isNaN(v)||v<1) return;
-  try{
-    await db.from('config').upsert({key:'max_waitlist',value:String(v)});
-    showToast(`Límite waitlist: ${v} personas`,'ok');
-  }catch(e){showToast('Error al guardar límite.','error');}
-}
+      async function actualizarMaxWaitlist(val) {
+        const v = parseInt(val);
+        if (isNaN(v) || v < 1) return;
+        try {
+          await db.from('config').upsert({ key: 'max_waitlist', value: String(v) });
+          showToast(`Límite waitlist: ${v} personas`, 'ok');
+        } catch (e) {
+          showToast('Error al guardar límite.', 'error');
+        }
+      }
 
-async function toggleComisiones(){
-  const nuevo=!comisionesAbiertasAdmin;
-  try{
-    const{error}=await db.from('config').upsert({key:'commissions_open',value:nuevo?'true':'false'});
-    if(error) throw error;
-    comisionesAbiertasAdmin=nuevo;
-    actualizarToggleUI();
-    showToast(nuevo?'Comisiones abiertas ✓':'Comisiones cerradas',nuevo?'ok':'');
-  }catch(e){
-    console.error(e);
-    showToast('Error al actualizar. ¿Existe la tabla "config" en Supabase?','error');
-  }
-}
+      async function toggleComisiones() {
+        const nuevo = !comisionesAbiertasAdmin;
+        try {
+          const { error } = await db
+            .from('config')
+            .upsert({ key: 'commissions_open', value: nuevo ? 'true' : 'false' });
+          if (error) throw error;
+          comisionesAbiertasAdmin = nuevo;
+          actualizarToggleUI();
+          showToast(nuevo ? 'Comisiones abiertas ✓' : 'Comisiones cerradas', nuevo ? 'ok' : '');
+        } catch (e) {
+          console.error(e);
+          showToast('Error al actualizar. ¿Existe la tabla "config" en Supabase?', 'error');
+        }
+      }
 
-// ━━ DETALLES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function abrirDetalle(folio){
-  const c=comisiones.find(x=>x.folio===folio);
-  if(!c) return;
-  document.getElementById('d-folio').textContent=`#${String(folio).padStart(4,'0')}`;
-  const f=(lbl,val)=>val!=null&&val!==''&&val!==false?`<div class="q-row"><span class="q-lbl">${lbl}</span><span style="color:var(--dark)">${val}</span></div>`:'';
-  const arr=(lbl,val)=>Array.isArray(val)&&val.length?f(lbl,val.join(', ')):'';
-  document.getElementById('d-body').innerHTML=`
+      // ━━ DETALLES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      function abrirDetalle(folio) {
+        const c = comisiones.find((x) => x.folio === folio);
+        if (!c) return;
+        document.getElementById('d-folio').textContent = `#${String(folio).padStart(4, '0')}`;
+        const f = (lbl, val) =>
+          val != null && val !== '' && val !== false
+            ? `<div class="q-row"><span class="q-lbl">${lbl}</span><span style="color:var(--dark)">${val}</span></div>`
+            : '';
+        const arr = (lbl, val) => (Array.isArray(val) && val.length ? f(lbl, val.join(', ')) : '');
+        document.getElementById('d-body').innerHTML = `
     <div class="q-summary">
-      ${f('Cliente',c.cliente_tag)}
-      ${f('Email',c.email)}
-      ${f('Idioma',c.idioma_preferido)}
-      ${f('Primera vez',c.es_primera_comision===true?'Sí':c.es_primera_comision===false?'No':null)}
-      ${f('Canal',c.canal_contacto)}
-      ${f('Cómo llegó',c.como_encontro)}
-      ${f('Descuento',c.descuento)}
+      ${f('Cliente', c.cliente_tag)}
+      ${f('Email', c.email)}
+      ${f('Idioma', c.idioma_preferido)}
+      ${f('Primera vez', c.es_primera_comision === true ? 'Sí' : c.es_primera_comision === false ? 'No' : null)}
+      ${f('Canal', c.canal_contacto)}
+      ${f('Cómo llegó', c.como_encontro)}
+      ${f('Descuento', c.descuento)}
     </div>
     <div class="q-summary" style="margin-top:.75rem">
-      ${f('Servicio',c.tipo_servicio)}
-      ${f('Tipo',c.tipo_ilustracion||c.tipo_editorial||c.tipo_print)}
-      ${f('Acabado',c.acabado)}
-      ${f('Personajes',c.personajes)}
-      ${f('Pers. existentes',c.pers_exist?'Sí':null)}
-      ${f('Rush',c.es_rush?'⚡ Sí':null)}
-      ${f('NSFW',c.es_nsfw?'Sí':null)}
+      ${f('Servicio', c.tipo_servicio)}
+      ${f('Tipo', c.tipo_ilustracion || c.tipo_editorial || c.tipo_print)}
+      ${f('Acabado', c.acabado)}
+      ${f('Personajes', c.personajes)}
+      ${f('Pers. existentes', c.pers_exist ? 'Sí' : null)}
+      ${f('Rush', c.es_rush ? '⚡ Sí' : null)}
+      ${f('NSFW', c.es_nsfw ? 'Sí' : null)}
     </div>
-    ${c.descripcion_adicional?`<div class="mfield" style="margin-top:.75rem"><label>Descripción</label><div style="padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;line-height:1.6;color:var(--dark);white-space:pre-wrap">${c.descripcion_adicional}</div></div>`:''}
-    ${arr('Fondo',c.fondo)}
-    ${arr('Composición',c.composicion)}
+    ${c.descripcion_adicional ? `<div class="mfield" style="margin-top:.75rem"><label>Descripción</label><div style="padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;line-height:1.6;color:var(--dark);white-space:pre-wrap">${c.descripcion_adicional}</div></div>` : ''}
+    ${arr('Fondo', c.fondo)}
+    ${arr('Composición', c.composicion)}
   `;
-  document.getElementById('detail-overlay').classList.add('open');
-}
+        document.getElementById('detail-overlay').classList.add('open');
+      }
 
-function cerrarDetalle(){document.getElementById('detail-overlay').classList.remove('open');}
+      function cerrarDetalle() {
+        document.getElementById('detail-overlay').classList.remove('open');
+      }
 
-// ━━ EDITAR COMISIÓN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-let eFolioActual=null;
+      // ━━ EDITAR COMISIÓN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      let eFolioActual = null;
 
-function abrirEditar(folio){
-  const c=comisiones.find(x=>x.folio===folio);
-  if(!c) return;
-  eFolioActual=folio;
-  document.getElementById('e-folio').textContent=`#${String(folio).padStart(4,'0')}`;
-  document.getElementById('e-tag').value=c.cliente_tag||'';
-  document.getElementById('e-email').value=c.email||'';
-  document.getElementById('e-servicio').value=c.tipo_servicio||'';
-  document.getElementById('e-tipo').value=c.tipo_ilustracion||c.tipo_editorial||c.tipo_print||'';
-  document.getElementById('e-desc').value=c.descripcion_adicional||'';
-  document.getElementById('e-rush').checked=!!c.es_rush;
-  document.getElementById('e-nsfw').checked=!!c.es_nsfw;
-  document.getElementById('e-canal').value=c.canal_contacto||'';
-  document.getElementById('e-descuento').value=c.descuento||'';
-  document.getElementById('e-save-btn').disabled=false;
-  document.getElementById('edit-overlay').classList.add('open');
-}
+      function abrirEditar(folio) {
+        const c = comisiones.find((x) => x.folio === folio);
+        if (!c) return;
+        eFolioActual = folio;
+        document.getElementById('e-folio').textContent = `#${String(folio).padStart(4, '0')}`;
+        document.getElementById('e-tag').value = c.cliente_tag || '';
+        document.getElementById('e-email').value = c.email || '';
+        document.getElementById('e-servicio').value = c.tipo_servicio || '';
+        document.getElementById('e-tipo').value =
+          c.tipo_ilustracion || c.tipo_editorial || c.tipo_print || '';
+        document.getElementById('e-desc').value = c.descripcion_adicional || '';
+        document.getElementById('e-rush').checked = !!c.es_rush;
+        document.getElementById('e-nsfw').checked = !!c.es_nsfw;
+        document.getElementById('e-canal').value = c.canal_contacto || '';
+        document.getElementById('e-descuento').value = c.descuento || '';
+        document.getElementById('e-save-btn').disabled = false;
+        document.getElementById('edit-overlay').classList.add('open');
+      }
 
-function cerrarEditar(){
-  document.getElementById('edit-overlay').classList.remove('open');
-  eFolioActual=null;
-}
+      function cerrarEditar() {
+        document.getElementById('edit-overlay').classList.remove('open');
+        eFolioActual = null;
+      }
 
-async function guardarEdicion(){
-  if(!eFolioActual) return;
-  const btn=document.getElementById('e-save-btn');
-  btn.disabled=true;
-  const servicio=document.getElementById('e-servicio').value;
-  const tipo=document.getElementById('e-tipo').value.trim();
-  const payload={};
-  const tag=document.getElementById('e-tag').value.trim();
-  const email=document.getElementById('e-email').value.trim();
-  const desc=document.getElementById('e-desc').value.trim();
-  const canal=document.getElementById('e-canal').value.trim();
-  const descuento=document.getElementById('e-descuento').value.trim();
-  if(tag) payload.cliente_tag=tag;
-  if(email) payload.email=email;
-  if(servicio) payload.tipo_servicio=servicio;
-  if(tipo){
-    if(servicio==='Ilustración digital') payload.tipo_ilustracion=tipo;
-    else if(servicio==='Diseño Editorial') payload.tipo_editorial=tipo;
-    else if(servicio==='Arte Digital para Imprimir') payload.tipo_print=tipo;
-  }
-  if(desc) payload.descripcion_adicional=desc;
-  payload.es_rush=document.getElementById('e-rush').checked;
-  payload.es_nsfw=document.getElementById('e-nsfw').checked;
-  if(canal) payload.canal_contacto=canal;
-  if(descuento) payload.descuento=descuento;
-  try{
-    const res=await adminFetch(`${RAILWAY_URL}/admin/comisiones/${eFolioActual}`,{
-      method:'PATCH',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(payload)
-    });
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    showToast(`Folio #${String(eFolioActual).padStart(4,'0')} actualizado`,'ok');
-    cerrarEditar();
-    await cargarComisiones();
-  }catch(e){
-    console.error(e);
-    showToast('Error al guardar. Revisa la consola.','error');
-    btn.disabled=false;
-  }
-}
+      async function guardarEdicion() {
+        if (!eFolioActual) return;
+        const btn = document.getElementById('e-save-btn');
+        btn.disabled = true;
+        const servicio = document.getElementById('e-servicio').value;
+        const tipo = document.getElementById('e-tipo').value.trim();
+        const payload = {};
+        const tag = document.getElementById('e-tag').value.trim();
+        const email = document.getElementById('e-email').value.trim();
+        const desc = document.getElementById('e-desc').value.trim();
+        const canal = document.getElementById('e-canal').value.trim();
+        const descuento = document.getElementById('e-descuento').value.trim();
+        if (tag) payload.cliente_tag = tag;
+        if (email) payload.email = email;
+        if (servicio) payload.tipo_servicio = servicio;
+        if (tipo) {
+          if (servicio === 'Ilustración digital') payload.tipo_ilustracion = tipo;
+          else if (servicio === 'Diseño Editorial') payload.tipo_editorial = tipo;
+          else if (servicio === 'Arte Digital para Imprimir') payload.tipo_print = tipo;
+        }
+        if (desc) payload.descripcion_adicional = desc;
+        payload.es_rush = document.getElementById('e-rush').checked;
+        payload.es_nsfw = document.getElementById('e-nsfw').checked;
+        if (canal) payload.canal_contacto = canal;
+        if (descuento) payload.descuento = descuento;
+        try {
+          const res = await adminFetch(`${RAILWAY_URL}/admin/comisiones/${eFolioActual}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          showToast(`Folio #${String(eFolioActual).padStart(4, '0')} actualizado`, 'ok');
+          cerrarEditar();
+          await cargarComisiones();
+        } catch (e) {
+          console.error(e);
+          showToast('Error al guardar. Revisa la consola.', 'error');
+          btn.disabled = false;
+        }
+      }
 
-async function eliminarComision(folio){
-  if(!confirm(`¿Eliminar permanentemente la comisión #${String(folio).padStart(4,'0')}?\nEsta acción no se puede deshacer.`)) return;
-  try{
-    const res=await adminFetch(`${RAILWAY_URL}/admin/comisiones/${folio}`,{
-      method:'DELETE'
-    });
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    showToast(`Comisión #${String(folio).padStart(4,'0')} eliminada`,'ok');
-    await cargarComisiones();
-  }catch(e){
-    console.error(e);
-    showToast('Error al eliminar. Revisa la consola.','error');
-  }
-}
+      async function eliminarComision(folio) {
+        if (
+          !confirm(
+            `¿Eliminar permanentemente la comisión #${String(folio).padStart(4, '0')}?\nEsta acción no se puede deshacer.`,
+          )
+        )
+          return;
+        try {
+          const res = await adminFetch(`${RAILWAY_URL}/admin/comisiones/${folio}`, {
+            method: 'DELETE',
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          showToast(`Comisión #${String(folio).padStart(4, '0')} eliminada`, 'ok');
+          await cargarComisiones();
+        } catch (e) {
+          console.error(e);
+          showToast('Error al eliminar. Revisa la consola.', 'error');
+        }
+      }
 
-// ━━ WAITLIST ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-let waitlistItems=[];
+      // ━━ WAITLIST ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      let waitlistItems = [];
 
-async function cargarWaitlist(){
-  const tbody=document.getElementById('waitlist-tbody');
-  tbody.innerHTML='<tr class="empty-row"><td colspan="6"><i class="ti ti-loader-2"></i> Cargando...</td></tr>';
-  try{
-    const{data,error}=await db.from('waitlist').select('*').order('created_at',{ascending:true});
-    if(error) throw error;
-    waitlistItems=data||[];
-    renderWaitlist();
-    const wlLimitRow=await db.from('config').select('value').eq('key','max_waitlist').single();
-    const limit=parseInt(wlLimitRow?.data?.value)||50;
-    const inp=document.getElementById('wl-limit-input');if(inp) inp.value=limit;
-    const ctr=document.getElementById('wl-counter');if(ctr) ctr.textContent=`${waitlistItems.length}/${limit}`;
-  }catch(e){
-    console.error(e);
-    tbody.innerHTML='<tr class="empty-row"><td colspan="6"><i class="ti ti-database-off"></i> Error al cargar. ¿Existe la tabla "waitlist"?</td></tr>';
-  }
-}
+      async function cargarWaitlist() {
+        const tbody = document.getElementById('waitlist-tbody');
+        tbody.innerHTML =
+          '<tr class="empty-row"><td colspan="6"><i class="ti ti-loader-2"></i> Cargando...</td></tr>';
+        try {
+          const { data, error } = await db
+            .from('waitlist')
+            .select('*')
+            .order('created_at', { ascending: true });
+          if (error) throw error;
+          waitlistItems = data || [];
+          renderWaitlist();
+          const wlLimitRow = await db
+            .from('config')
+            .select('value')
+            .eq('key', 'max_waitlist')
+            .single();
+          const limit = parseInt(wlLimitRow?.data?.value) || 50;
+          const inp = document.getElementById('wl-limit-input');
+          if (inp) inp.value = limit;
+          const ctr = document.getElementById('wl-counter');
+          if (ctr) ctr.textContent = `${waitlistItems.length}/${limit}`;
+        } catch (e) {
+          console.error(e);
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="6"><i class="ti ti-database-off"></i> Error al cargar. ¿Existe la tabla "waitlist"?</td></tr>';
+        }
+      }
 
-function renderWaitlist(){
-  const tbody=document.getElementById('waitlist-tbody');
-  if(!waitlistItems.length){
-    tbody.innerHTML='<tr class="empty-row"><td colspan="6"><i class="ti ti-inbox"></i> La waitlist está vacía.</td></tr>';
-    return;
-  }
-  tbody.innerHTML=waitlistItems.map((w,i)=>{
-    const fecha=w.created_at?new Date(w.created_at).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}):'—';
-    return `<tr>
-      <td class="folio-num">${i+1}</td>
-      <td>${w.nombre||'—'}</td>
-      <td style="font-size:12px;color:var(--muted)">${w.email||'—'}</td>
-      <td>${w.tipo_interes||'—'}</td>
+      function renderWaitlist() {
+        const tbody = document.getElementById('waitlist-tbody');
+        if (!waitlistItems.length) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="6"><i class="ti ti-inbox"></i> La waitlist está vacía.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = waitlistItems
+          .map((w, i) => {
+            const fecha = w.created_at
+              ? new Date(w.created_at).toLocaleDateString('es-MX', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                })
+              : '—';
+            return `<tr>
+      <td class="folio-num">${i + 1}</td>
+      <td>${w.nombre || '—'}</td>
+      <td style="font-size:12px;color:var(--muted)">${w.email || '—'}</td>
+      <td>${w.tipo_interes || '—'}</td>
       <td>${fecha}</td>
       <td><div class="action-row">
         <button class="act-btn" onclick="promoverWaitlist('${w.id}')" title="Promover a comisión" style="border-color:var(--gl);color:var(--gl)"><i class="ti ti-arrow-up"></i> Promover</button>
@@ -1080,95 +2322,109 @@ function renderWaitlist(){
         <button class="act-btn danger" onclick="eliminarWaitlist('${w.id}')" title="Eliminar"><i class="ti ti-trash"></i></button>
       </div></td>
     </tr>`;
-  }).join('');
-}
+          })
+          .join('');
+      }
 
-async function notificarWaitlist(id){
-  try{
-    const res=await adminFetch(`${RAILWAY_URL}/admin/waitlist/${id}/notificar`,{
-      method:'POST'
-    });
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    showToast('Notificación enviada','ok');
-  }catch(e){
-    console.error(e);
-    showToast('Error al notificar.','error');
-  }
-}
+      async function notificarWaitlist(id) {
+        try {
+          const res = await adminFetch(`${RAILWAY_URL}/admin/waitlist/${id}/notificar`, {
+            method: 'POST',
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          showToast('Notificación enviada', 'ok');
+        } catch (e) {
+          console.error(e);
+          showToast('Error al notificar.', 'error');
+        }
+      }
 
-async function promoverWaitlist(id){
-  const w=waitlistItems.find(x=>x.id===id||String(x.id)===String(id));
-  const nombre=w?.nombre||id;
-  if(!confirm(`¿Promover a ${nombre} a comisión?\nSe creará un borrador con estado "En espera" y se eliminará de la waitlist.`)) return;
-  try{
-    const res=await adminFetch(`${RAILWAY_URL}/admin/waitlist/${id}/promover`,{
-      method:'POST'
-    });
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data=await res.json();
-    showToast(`Promovida → Folio ${data.folio_num||('#'+data.folio)}`,'ok');
-    await cargarWaitlist();
-    await cargarComisiones();
-  }catch(e){
-    console.error(e);
-    showToast('Error al promover. Revisa la consola.','error');
-  }
-}
+      async function promoverWaitlist(id) {
+        const w = waitlistItems.find((x) => x.id === id || String(x.id) === String(id));
+        const nombre = w?.nombre || id;
+        if (
+          !confirm(
+            `¿Promover a ${nombre} a comisión?\nSe creará un borrador con estado "En espera" y se eliminará de la waitlist.`,
+          )
+        )
+          return;
+        try {
+          const res = await adminFetch(`${RAILWAY_URL}/admin/waitlist/${id}/promover`, {
+            method: 'POST',
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          showToast(`Promovida → Folio ${data.folio_num || '#' + data.folio}`, 'ok');
+          await cargarWaitlist();
+          await cargarComisiones();
+        } catch (e) {
+          console.error(e);
+          showToast('Error al promover. Revisa la consola.', 'error');
+        }
+      }
 
-async function eliminarWaitlist(id){
-  if(!confirm('¿Eliminar esta persona de la waitlist?')) return;
-  try{
-    const res=await adminFetch(`${RAILWAY_URL}/admin/waitlist/${id}`,{
-      method:'DELETE'
-    });
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    showToast('Eliminado de la waitlist','ok');
-    await cargarWaitlist();
-  }catch(e){
-    console.error(e);
-    showToast('Error al eliminar.','error');
-  }
-}
+      async function eliminarWaitlist(id) {
+        if (!confirm('¿Eliminar esta persona de la waitlist?')) return;
+        try {
+          const res = await adminFetch(`${RAILWAY_URL}/admin/waitlist/${id}`, {
+            method: 'DELETE',
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          showToast('Eliminado de la waitlist', 'ok');
+          await cargarWaitlist();
+        } catch (e) {
+          console.error(e);
+          showToast('Error al eliminar.', 'error');
+        }
+      }
 
-// ━━ PORTAFOLIO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // ━━ PORTAFOLIO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function switchView(v){
-  const isCom=v==='comisiones';
-  const isPort=v==='portafolio';
-  const isWL=v==='waitlist';
-  document.getElementById('tab-comisiones').classList.toggle('active',isCom);
-  document.getElementById('tab-portafolio').classList.toggle('active',isPort);
-  document.getElementById('tab-waitlist').classList.toggle('active',isWL);
-  document.getElementById('comisiones-section').style.display=isCom?'flex':'none';
-  document.getElementById('port-section').style.display=isPort?'flex':'none';
-  document.getElementById('waitlist-section').style.display=isWL?'flex':'none';
-  if(isPort) cargarPortfolio();
-  if(isWL) cargarWaitlist();
-}
+      function switchView(v) {
+        const isCom = v === 'comisiones';
+        const isPort = v === 'portafolio';
+        const isWL = v === 'waitlist';
+        document.getElementById('tab-comisiones').classList.toggle('active', isCom);
+        document.getElementById('tab-portafolio').classList.toggle('active', isPort);
+        document.getElementById('tab-waitlist').classList.toggle('active', isWL);
+        document.getElementById('comisiones-section').style.display = isCom ? 'flex' : 'none';
+        document.getElementById('port-section').style.display = isPort ? 'flex' : 'none';
+        document.getElementById('waitlist-section').style.display = isWL ? 'flex' : 'none';
+        if (isPort) cargarPortfolio();
+        if (isWL) cargarWaitlist();
+      }
 
-let portItems=[];
+      let portItems = [];
 
-async function cargarPortfolio(){
-  const list=document.getElementById('port-list');
-  list.innerHTML='<div class="port-empty"><i class="ti ti-loader-2"></i> Cargando...</div>';
-  try{
-    const{data,error}=await db.from('portfolio').select('*').order('orden',{ascending:true}).order('created_at',{ascending:false});
-    if(error) throw error;
-    portItems=data||[];
-    renderPortfolio();
-  }catch(e){
-    console.error(e);
-    list.innerHTML='<div class="port-empty" style="color:var(--danger)"><i class="ti ti-database-off"></i> Error al cargar. ¿Existe la tabla "portfolio" en Supabase?</div>';
-  }
-}
+      async function cargarPortfolio() {
+        const list = document.getElementById('port-list');
+        list.innerHTML = '<div class="port-empty"><i class="ti ti-loader-2"></i> Cargando...</div>';
+        try {
+          const { data, error } = await db
+            .from('portfolio')
+            .select('*')
+            .order('orden', { ascending: true })
+            .order('created_at', { ascending: false });
+          if (error) throw error;
+          portItems = data || [];
+          renderPortfolio();
+        } catch (e) {
+          console.error(e);
+          list.innerHTML =
+            '<div class="port-empty" style="color:var(--danger)"><i class="ti ti-database-off"></i> Error al cargar. ¿Existe la tabla "portfolio" en Supabase?</div>';
+        }
+      }
 
-function renderPortfolio(){
-  const list=document.getElementById('port-list');
-  if(!portItems.length){
-    list.innerHTML='<div class="port-empty"><i class="ti ti-photo-off"></i> Sin obras aún. ¡Agrega la primera!</div>';
-    return;
-  }
-  list.innerHTML=`<div class="port-grid-admin">${portItems.map(p=>`
+      function renderPortfolio() {
+        const list = document.getElementById('port-list');
+        if (!portItems.length) {
+          list.innerHTML =
+            '<div class="port-empty"><i class="ti ti-photo-off"></i> Sin obras aún. ¡Agrega la primera!</div>';
+          return;
+        }
+        list.innerHTML = `<div class="port-grid-admin">${portItems
+          .map(
+            (p) => `
     <div class="port-item-card">
       <img src="img/${p.imagen}" class="port-item-thumb"
         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${p.nombre}">
@@ -1176,124 +2432,166 @@ function renderPortfolio(){
       <div class="port-item-info">
         <div class="port-item-name">${p.nombre}</div>
         <div class="port-item-meta">
-          <span>${p.categoria} · ${p.site==='wuff'?'Wuff':'Art/Mango'}</span>
-          <span>${p.anio||'—'}</span>
+          <span>${p.categoria} · ${p.site === 'wuff' ? 'Wuff' : 'Art/Mango'}</span>
+          <span>${p.anio || '—'}</span>
         </div>
-        ${!p.en_galeria?'<div class="port-hint">Solo portafolio</div>':''}
+        ${!p.en_galeria ? '<div class="port-hint">Solo portafolio</div>' : ''}
       </div>
       <button class="port-item-del" onclick="eliminarObra('${p.id}')" title="Eliminar"><i class="ti ti-trash"></i></button>
-    </div>`).join('')}</div>`;
-}
+    </div>`,
+          )
+          .join('')}</div>`;
+      }
 
-async function agregarObra(){
-  const nombre=document.getElementById('p-nombre').value.trim();
-  const imagen=document.getElementById('p-imagen').value.trim();
-  const categoria=document.getElementById('p-categoria').value;
-  const site=document.getElementById('p-site').value;
-  const anio=document.getElementById('p-anio').value.trim()||'2026';
-  const en_galeria=document.getElementById('p-galeria').checked;
-  if(!nombre||!imagen){showToast('Nombre y nombre de archivo son obligatorios.','error');return;}
-  const btn=document.getElementById('btn-agregar');
-  btn.disabled=true;btn.textContent='Guardando...';
-  try{
-    const{error}=await db.from('portfolio').insert({nombre,imagen,categoria,site,anio,en_galeria,orden:portItems.length});
-    if(error) throw error;
-    showToast('Obra agregada al portafolio','ok');
-    document.getElementById('p-nombre').value='';
-    document.getElementById('p-imagen').value='';
-    await cargarPortfolio();
-  }catch(e){
-    console.error(e);
-    showToast('Error al guardar. Revisa que la tabla "portfolio" exista en Supabase con RLS habilitado.','error');
-  }finally{
-    btn.disabled=false;btn.innerHTML='<i class="ti ti-plus"></i> Agregar obra';
-  }
-}
+      async function agregarObra() {
+        const nombre = document.getElementById('p-nombre').value.trim();
+        const imagen = document.getElementById('p-imagen').value.trim();
+        const categoria = document.getElementById('p-categoria').value;
+        const site = document.getElementById('p-site').value;
+        const anio = document.getElementById('p-anio').value.trim() || '2026';
+        const en_galeria = document.getElementById('p-galeria').checked;
+        if (!nombre || !imagen) {
+          showToast('Nombre y nombre de archivo son obligatorios.', 'error');
+          return;
+        }
+        const btn = document.getElementById('btn-agregar');
+        btn.disabled = true;
+        btn.textContent = 'Guardando...';
+        try {
+          const { error } = await db
+            .from('portfolio')
+            .insert({ nombre, imagen, categoria, site, anio, en_galeria, orden: portItems.length });
+          if (error) throw error;
+          showToast('Obra agregada al portafolio', 'ok');
+          document.getElementById('p-nombre').value = '';
+          document.getElementById('p-imagen').value = '';
+          await cargarPortfolio();
+        } catch (e) {
+          console.error(e);
+          showToast(
+            'Error al guardar. Revisa que la tabla "portfolio" exista en Supabase con RLS habilitado.',
+            'error',
+          );
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="ti ti-plus"></i> Agregar obra';
+        }
+      }
 
-async function eliminarObra(id){
-  if(!confirm('¿Eliminar esta obra del portafolio?')) return;
-  try{
-    const{error}=await db.from('portfolio').delete().eq('id',id);
-    if(error) throw error;
-    showToast('Obra eliminada','ok');
-    await cargarPortfolio();
-  }catch(e){
-    console.error(e);
-    showToast('Error al eliminar.','error');
-  }
-}
+      async function eliminarObra(id) {
+        if (!confirm('¿Eliminar esta obra del portafolio?')) return;
+        try {
+          const { error } = await db.from('portfolio').delete().eq('id', id);
+          if (error) throw error;
+          showToast('Obra eliminada', 'ok');
+          await cargarPortfolio();
+        } catch (e) {
+          console.error(e);
+          showToast('Error al eliminar.', 'error');
+        }
+      }
 
-// ━━ MODAL ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function abrirModal(){document.getElementById('modal-overlay').classList.add('open');}
-function cerrarModal(){document.getElementById('modal-overlay').classList.remove('open');}
+      // ━━ MODAL ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      function abrirModal() {
+        document.getElementById('modal-overlay').classList.add('open');
+      }
+      function cerrarModal() {
+        document.getElementById('modal-overlay').classList.remove('open');
+      }
 
-async function guardarComision(){
-  const tag=document.getElementById('m-tag').value.trim();
-  const email=document.getElementById('m-email').value.trim();
-  const servicio=document.getElementById('m-servicio').value;
-  const tipo=document.getElementById('m-tipo').value;
-  const desc=document.getElementById('m-desc').value.trim();
-  const lang=document.getElementById('m-lang').value;
-  const rush=document.getElementById('m-rush').checked;
-  const primera=document.getElementById('m-primera').checked;
-  if(!tag||!email||!servicio){showToast('Cliente, email y servicio son obligatorios.','error');return;}
-  const btn=document.getElementById('btn-save');
-  btn.disabled=true;btn.textContent='Guardando...';
-  try{
-    const res=await adminFetch(`${RAILWAY_URL}/comisiones/nueva`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        cliente_tag:tag,email,idioma_preferido:lang,
-        es_primera_comision:primera,tipo_servicio:servicio,
-        tipo_ilustracion:tipo||null,es_rush:rush,
-        descripcion_adicional:desc||null,
-        fondo:[],composicion:[],es_nsfw:false,
-        personajes:1,acabado:null,
-        tipo_editorial:null,formato_editorial:null,
-        tipo_print:null,uso_personal_comercial:null,
-        pers_exist:false,canal_contacto:'email',
-        como_encontro:null,descuento:null,rush:rush?'si':'no'
-      })
-    });
-    const data=await res.json();
-    if(data.status==='ok'||res.ok){
-      showToast(`Comisión creada: folio #${data.folio||'—'}`,'ok');
-      cerrarModal();
-      limpiarModal();
-      await cargarComisiones();
-    }else throw new Error(data.message||'Error');
-  }catch(e){
-    console.error(e);
-    showToast('Error al crear comisión. Revisa la consola.','error');
-  }finally{btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> Crear comisión';}
-}
+      async function guardarComision() {
+        const tag = document.getElementById('m-tag').value.trim();
+        const email = document.getElementById('m-email').value.trim();
+        const servicio = document.getElementById('m-servicio').value;
+        const tipo = document.getElementById('m-tipo').value;
+        const desc = document.getElementById('m-desc').value.trim();
+        const lang = document.getElementById('m-lang').value;
+        const rush = document.getElementById('m-rush').checked;
+        const primera = document.getElementById('m-primera').checked;
+        if (!tag || !email || !servicio) {
+          showToast('Cliente, email y servicio son obligatorios.', 'error');
+          return;
+        }
+        const btn = document.getElementById('btn-save');
+        btn.disabled = true;
+        btn.textContent = 'Guardando...';
+        try {
+          const res = await adminFetch(`${RAILWAY_URL}/comisiones/nueva`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              cliente_tag: tag,
+              email,
+              idioma_preferido: lang,
+              es_primera_comision: primera,
+              tipo_servicio: servicio,
+              tipo_ilustracion: tipo || null,
+              es_rush: rush,
+              descripcion_adicional: desc || null,
+              fondo: [],
+              composicion: [],
+              es_nsfw: false,
+              personajes: 1,
+              acabado: null,
+              tipo_editorial: null,
+              formato_editorial: null,
+              tipo_print: null,
+              uso_personal_comercial: null,
+              pers_exist: false,
+              canal_contacto: 'email',
+              como_encontro: null,
+              descuento: null,
+              rush: rush ? 'si' : 'no',
+            }),
+          });
+          const data = await res.json();
+          if (data.status === 'ok' || res.ok) {
+            showToast(`Comisión creada: folio #${data.folio || '—'}`, 'ok');
+            cerrarModal();
+            limpiarModal();
+            await cargarComisiones();
+          } else throw new Error(data.message || 'Error');
+        } catch (e) {
+          console.error(e);
+          showToast('Error al crear comisión. Revisa la consola.', 'error');
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="ti ti-send"></i> Crear comisión';
+        }
+      }
 
-function limpiarModal(){
-  ['m-tag','m-email','m-desc','m-descuento'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  document.getElementById('m-servicio').value='';
-  document.getElementById('m-tipo').value='';
-  document.getElementById('m-lang').value='es';
-  document.getElementById('m-rush').checked=false;
-  document.getElementById('m-primera').checked=true;
-}
+      function limpiarModal() {
+        ['m-tag', 'm-email', 'm-desc', 'm-descuento'].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+        document.getElementById('m-servicio').value = '';
+        document.getElementById('m-tipo').value = '';
+        document.getElementById('m-lang').value = 'es';
+        document.getElementById('m-rush').checked = false;
+        document.getElementById('m-primera').checked = true;
+      }
 
-// ━━ INIT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-document.addEventListener('DOMContentLoaded',()=>{
-  const savedTheme=localStorage.getItem('ea-theme');
-  const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(savedTheme?savedTheme==='dark':prefersDark);
-  try{sessionStorage.removeItem('ea-admin');}catch(e){}
-  if(getToken()) mostrarPanel();
-  else pedirToken();
-  document.getElementById('admin-tbody').addEventListener('click',function(e){
-    if(window.innerWidth>600) return;
-    const tr=e.target.closest('tr[data-status]');
-    if(!tr) return;
-    document.querySelectorAll('#admin-tbody tr.peeking').forEach(r=>{if(r!==tr)r.classList.remove('peeking');});
-    tr.classList.toggle('peeking');
-  });
-});
-</script>
-</body>
+      // ━━ INIT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('ea-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+        try {
+          sessionStorage.removeItem('ea-admin');
+        } catch (e) {}
+        if (getToken()) mostrarPanel();
+        else pedirToken();
+        document.getElementById('admin-tbody').addEventListener('click', function (e) {
+          if (window.innerWidth > 600) return;
+          const tr = e.target.closest('tr[data-status]');
+          if (!tr) return;
+          document.querySelectorAll('#admin-tbody tr.peeking').forEach((r) => {
+            if (r !== tr) r.classList.remove('peeking');
+          });
+          tr.classList.toggle('peeking');
+        });
+      });
+    </script>
+  </body>
 </html>

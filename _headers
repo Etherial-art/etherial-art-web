@@ -1,0 +1,20 @@
+# Cabeceras HTTP de Cloudflare para todo el sitio.
+# https://developers.cloudflare.com/pages/configuration/headers/
+#
+# - nosniff: el navegador no adivina el tipo de un archivo (p. ej. tratar una
+#   imagen como script).
+# - Referrer-Policy: a otros sitios solo se les manda el dominio, no la URL
+#   completa con sus parámetros (?folio=…, ?token=…).
+# - X-Frame-Options y frame-ancestors: ninguna página ajena puede mostrar el
+#   sitio dentro de un iframe (clickjacking sobre los formularios o el panel).
+# - Permissions-Policy: el sitio no usa cámara, micrófono ni ubicación.
+#
+# La CSP solo fija frame-ancestors a propósito: una política de scripts y
+# estilos hay que probarla antes en modo Report-Only (hay muchos onclick inline
+# y librerías de CDN).
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Content-Security-Policy: frame-ancestors 'none'
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()

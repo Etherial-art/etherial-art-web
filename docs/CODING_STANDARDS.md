@@ -50,9 +50,13 @@ pip install pre-commit   # o: pipx install pre-commit
 pre-commit install
 ```
 
-Desde ese momento, cada `git commit` formatea y revisa los archivos que
-cambiaron. Si un hook modifica archivos, el commit se aborta: revisa los
-cambios, haz `git add` y vuelve a commitear.
+Desde ese momento, cada `git commit` formatea con Prettier y revisa con ESLint
+los archivos que cambiaron. Si un hook modifica archivos, el commit se aborta:
+revisa los cambios, haz `git add` y vuelve a commitear.
+
+El hook de ESLint **no** usa `--fix`: algunos autofix (como `var` → `let`)
+cambian el alcance de las variables, es decir, la lógica. Esos se aplican a
+conciencia con `npm run lint:fix` y en un commit propio.
 
 ```bash
 pre-commit run --all-files   # todo el repo
@@ -60,6 +64,13 @@ npm run format               # solo Prettier
 npm run lint                 # solo ESLint
 npm run check                # Prettier --check + ESLint, sin modificar nada
 ```
+
+### CI
+
+`.github/workflows/ci.yml` corre pre-commit en cada PR, sobre los archivos que
+cambia el PR (en `main`, sobre todo el repo). Es el mismo chequeo que el hook
+local. Un PR solo se mergea con el check en verde. (No hay job de pytest: este
+repo no tiene Python; las pruebas del backend están en `niko-studio`.)
 
 > **No uses `git commit --no-verify`** para saltarte los hooks. Si un hook se
 > equivoca, corrige la configuración en un PR aparte.
@@ -141,9 +152,13 @@ etherial-art-web/
 ├── mango.html          # Variante de tema "mango"
 ├── wuff.html           # Variante de tema "wuff"
 ├── admin.html          # Panel de administración (requiere X-Admin-Key)
+├── a11y.js             # Mejoras de accesibilidad compartidas por las páginas
 ├── favicon*.svg
+├── robots.txt, sitemap.xml
 ├── img/                # Imágenes del portafolio y perfil
+│   └── thumb/          #   Miniaturas .webp para la galería
 ├── docs/               # Documentación (este archivo)
+├── .github/workflows/  # CI: pre-commit en cada PR
 ├── eslint.config.js, .prettierrc.json, .editorconfig, .pre-commit-config.yaml
 └── package.json        # Solo herramientas de desarrollo
 ```
@@ -220,11 +235,16 @@ Reglas:
 
 ### Línea base (deuda técnica)
 
-Al adoptar estos estándares había 6 `catch (e) {}` vacíos en `index.html`,
-`mango.html` y `wuff.html`. Para no bloquear commits, `eslint.config.js` baja
-`no-empty` a _warning_ solo en esos archivos. Se siguen viendo en cada
-`npm run lint`. Al corregirlos (en un PR propio), **quitar el archivo de esa
-lista**. Archivos nuevos nunca se agregan.
+Al adoptar estos estándares había código que no cumplía reglas cuyo arreglo
+cambia lógica. Para no bloquear commits, `eslint.config.js` baja esas reglas a
+_warning_ solo en esos archivos:
+
+- `no-empty`: `catch (e) {}` vacíos en `index.html`, `mango.html`, `wuff.html`
+  y `admin.html`.
+- `no-var`: `a11y.js`.
+
+Se siguen viendo en cada `npm run lint`. Al corregirlos (en un PR propio),
+**quitar el archivo de la lista**. Archivos nuevos nunca se agregan.
 
 ---
 

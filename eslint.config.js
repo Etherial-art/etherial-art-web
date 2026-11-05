@@ -9,8 +9,10 @@ export default [
   },
   js.configs.recommended,
   {
-    // El JS vive en <script> inline dentro de cada página.
-    files: ['**/*.html'],
+    // El JS del sitio: <script> inline en cada página y scripts sueltos
+    // (p. ej. a11y.js) que se cargan con <script src>.
+    files: ['**/*.html', '**/*.js'],
+    ignores: ['eslint.config.js'],
     plugins: { html },
     languageOptions: {
       ecmaVersion: 2024,
@@ -41,9 +43,23 @@ export default [
     // `catch (e) {}` vacíos que existían al adoptar estos estándares. Corregirlos
     // implica decidir qué hacer con el error (cambio de lógica), así que van en
     // PRs propios. Al corregir un archivo, QUITARLO de esta lista.
-    files: ['index.html', 'mango.html', 'wuff.html'],
+    files: ['index.html', 'mango.html', 'wuff.html', 'admin.html'],
     rules: {
       'no-empty': 'warn',
     },
+  },
+  {
+    // ── DEUDA TÉCNICA (línea base) ────────────────────────────────────────
+    // a11y.js usa `var`. Pasar a let/const puede cambiar el alcance de las
+    // variables, así que se hace en un PR propio. Al corregirlo, borrar este bloque.
+    files: ['a11y.js'],
+    rules: {
+      'no-var': 'warn',
+    },
+  },
+  {
+    // ── Configuración de herramientas (Node, módulo ES) ───────────────────
+    files: ['eslint.config.js'],
+    languageOptions: { sourceType: 'module', globals: globals.node },
   },
 ];

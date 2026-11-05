@@ -32,8 +32,10 @@ repos:
         entry: npx --no-install prettier --write --ignore-unknown
         language: system
         types_or: [html, css, javascript, json, markdown, yaml]
+      # Sin --fix: los autofix de ESLint (p. ej. var -> let) cambian código, no
+      # solo formato. Se aplican a conciencia con `npm run lint:fix`.
       - id: eslint
         name: eslint
-        entry: npx --no-install eslint --fix
+        entry: npx --no-install eslint
         language: system
         files: \.(html|js|mjs)$

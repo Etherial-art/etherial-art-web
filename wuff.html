@@ -9,7 +9,17 @@
 <meta property="og:title" content="Etherial_Wuff — Arte Anthro · Furry · Comisiones">
 <meta property="og:description" content="Arte anthro y furry por Nikolas. Comisiones de personajes, OCs, stickers y más para la comunidad furry.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="img/galeria-02f.jpg">
+<link rel="canonical" href="https://etherialart.com/wuff">
+<meta property="og:url" content="https://etherialart.com/wuff">
+<meta property="og:site_name" content="Etherial_Wuff">
+<meta property="og:locale" content="es_MX">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:image" content="https://etherialart.com/img/og/og-wuff.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="502">
+<meta property="og:image:alt" content="Ilustración de Etherial_Wuff">
+<meta name="twitter:image" content="https://etherialart.com/img/og/og-wuff.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Etherial_Wuff — Arte Anthro · Furry · Comisiones">
 <meta name="twitter:description" content="Arte anthro y furry por Nikolas. Comisiones abiertas para la comunidad furry.">
@@ -25,7 +35,7 @@
 :root{
   --gl:#0099CC;--gp:#E0F7FF;--gb:#9AE0F5;
   --teal:#44BBDD;--gold:#F5D000;--cream:#F0FAFE;
-  --dark:#051520;--dg:#006699;--muted:#1A6A8A;--hint:#44A8CC;
+  --dark:#051520;--dg:#006699;--muted:#1A6A8A;--hint:#24779A;
   --card:#ffffff;--border:#9AE0F5;
   --serif:'Cormorant Garamond',Georgia,serif;
   --sans:'DM Sans',sans-serif;
@@ -33,7 +43,7 @@
 [data-theme="dark"]{
   --gl:#00D4FF;--gp:#010D15;--gb:#0A3A55;
   --teal:#22BBEE;--gold:#F5D000;--cream:#000A12;
-  --dark:#CCEEFF;--dg:#88DDFF;--muted:#44AACC;--hint:#1A6A88;
+  --dark:#CCEEFF;--dg:#88DDFF;--muted:#44AACC;--hint:#3A8FB0;
   --card:#010D15;--border:#0A3A55;
 }
 html,body{height:100%;overflow:hidden}
@@ -205,7 +215,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 .form-section-title{font-family:var(--serif);font-size:26px;font-weight:300;color:var(--dark);margin-bottom:.25rem}
 .form-section-sub{font-size:13px;color:var(--muted);margin-bottom:2rem;line-height:1.6}
 .field{margin-bottom:1.25rem}
-.field-label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:7px}
+.field-label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
 .field-note{font-size:11px;color:var(--hint);margin-top:5px;line-height:1.5}
 .field input[type=text],.field input[type=email],.field textarea{width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none;transition:border-color .2s,background .3s}
 .field input:focus,.field textarea:focus{border-color:var(--gl)}
@@ -300,6 +310,12 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
   .gallery-hero-title{font-size:22px}
   .about-stats{grid-template-columns:repeat(3,1fr)}
 }
+
+/* a11y: indicador de foco visible para navegación con teclado */
+:focus-visible{outline:2px solid var(--gl)!important;outline-offset:2px}
+.form-section-title:focus{outline:none}
+/* a11y: en modo oscuro --gl es claro; texto blanco encima quedaba < 3:1 */
+[data-theme="dark"] .lang-btn.active,[data-theme="dark"] .srv-pay,[data-theme="dark"] .tracker-btn,[data-theme="dark"] .opt.selected .opt-check,[data-theme="dark"] .btn-next,[data-theme="dark"] .btn-submit{color:var(--cream)}
 </style>
 </head>
 <body>
@@ -309,7 +325,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
   <div class="brand">Etherial_<b>Wuff</b></div>
   <div class="topbar-right">
     <a href="index.html" class="hub-btn">← Etherial_Art</a>
-    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">
       <i class="ti ti-moon" id="theme-icon"></i>
     </button>
     <div class="lang-selector">
@@ -342,28 +358,28 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
     <h1 class="gallery-hero-title" id="home-title">Lo que sale de mis <em>manos.</em></h1>
   </div>
   <div class="gallery-grid">
-    <div class="gallery-item" data-type="image" data-href="img/galeria-01f.jpg"><div class="gallery-img" style="height:260px"><img src="img/galeria-01f.jpg" style="width:100%;display:block;object-fit:cover;height:260px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 01</span></div></div>
-    <div class="gallery-item" data-type="image" data-href="img/galeria-02f.jpg"><div class="gallery-img" style="height:200px"><img src="img/galeria-02f.jpg" style="width:100%;display:block;object-fit:cover;height:200px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 02</span></div></div>
-    <div class="gallery-item" data-type="image" data-href="img/galeria-03f.jpg"><div class="gallery-img" style="height:300px"><img src="img/galeria-03f.jpg" style="width:100%;display:block;object-fit:cover;height:300px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 03</span></div></div>
-    <div class="gallery-item" data-type="image" data-href="img/galeria-04f.jpg"><div class="gallery-img" style="height:180px"><img src="img/galeria-04f.jpg" style="width:100%;display:block;object-fit:cover;height:180px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 04</span></div></div>
-    <div class="gallery-item" data-type="image" data-href="img/galeria-05f.jpg"><div class="gallery-img" style="height:240px"><img src="img/galeria-05f.jpg" style="width:100%;display:block;object-fit:cover;height:240px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 05</span></div></div>
-    <div class="gallery-item" data-type="image" data-href="img/galeria-06f.jpg"><div class="gallery-img" style="height:200px"><img src="img/galeria-06f.jpg" style="width:100%;display:block;object-fit:cover;height:200px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 06</span></div></div>
-    <div class="gallery-item" data-type="image" data-href="img/galeria-07f.jpg"><div class="gallery-img" style="height:220px"><img src="img/galeria-07f.jpg" style="width:100%;display:block;object-fit:cover;height:220px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 07</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-01f.jpg"><div class="gallery-img" style="height:260px"><img src="img/thumb/galeria-01f.webp" alt="Ilustración de Etherial_Wuff — Obra 01" width="800" height="800" decoding="async" style="width:100%;display:block;object-fit:cover;height:260px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 01</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-02f.jpg"><div class="gallery-img" style="height:200px"><img src="img/thumb/galeria-02f.webp" alt="Ilustración de Etherial_Wuff — Obra 02" width="800" height="335" decoding="async" style="width:100%;display:block;object-fit:cover;height:200px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 02</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-03f.jpg"><div class="gallery-img" style="height:300px"><img src="img/thumb/galeria-03f.webp" alt="Ilustración de Etherial_Wuff — Obra 03" width="800" height="1000" decoding="async" style="width:100%;display:block;object-fit:cover;height:300px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 03</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-04f.jpg"><div class="gallery-img" style="height:180px"><img src="img/thumb/galeria-04f.webp" alt="Ilustración de Etherial_Wuff — Obra 04" width="800" height="800" decoding="async" style="width:100%;display:block;object-fit:cover;height:180px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 04</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-05f.jpg"><div class="gallery-img" style="height:240px"><img src="img/thumb/galeria-05f.webp" alt="Ilustración de Etherial_Wuff — Obra 05" width="800" height="800" loading="lazy" decoding="async" style="width:100%;display:block;object-fit:cover;height:240px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 05</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-06f.jpg"><div class="gallery-img" style="height:200px"><img src="img/thumb/galeria-06f.webp" alt="Ilustración de Etherial_Wuff — Obra 06" width="800" height="893" loading="lazy" decoding="async" style="width:100%;display:block;object-fit:cover;height:200px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 06</span></div></div>
+    <div class="gallery-item" data-type="image" data-href="img/galeria-07f.jpg"><div class="gallery-img" style="height:220px"><img src="img/thumb/galeria-07f.webp" alt="Ilustración de Etherial_Wuff — Obra 07" width="800" height="1025" loading="lazy" decoding="async" style="width:100%;display:block;object-fit:cover;height:220px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">Obra 07</span></div></div>
     <div id="gallery-extra-items"></div>
   </div>
   <div class="page-footer">
     <div class="footer-brand">Etherial_Wuff</div>
     <div class="footer-social">
-      <a href="https://bsky.app/profile/etherial-wuff.bsky.social" target="_blank"><i class="ti ti-brand-bluesky"></i></a>
-      <a href="https://www.furaffinity.net/user/etherialwuff/" target="_blank"><i class="ti ti-paw"></i></a>
-      <a href="https://instagram.com/etherial_wuff" target="_blank" style="opacity:.4;pointer-events:none"><i class="ti ti-brand-instagram"></i></a>
-      <a href="https://etherial-wuff.tumblr.com" target="_blank" style="opacity:.4;pointer-events:none"><i class="ti ti-brand-tumblr"></i></a>
-      <a href="https://x.com/etherial_wuff" target="_blank" style="opacity:.4;pointer-events:none"><i class="ti ti-brand-x"></i></a>
-      <a href="https://ko-fi.com/etherial_art" target="_blank"><i class="ti ti-coffee"></i></a>
-      <a href="mailto:etherial_wuff@etherialart.com"><i class="ti ti-mail"></i></a>
+      <a href="https://bsky.app/profile/etherial-wuff.bsky.social" target="_blank" rel="noopener"><i class="ti ti-brand-bluesky"></i></a>
+      <a href="https://www.furaffinity.net/user/etherialwuff/" target="_blank" rel="noopener"><i class="ti ti-paw"></i></a>
+      <a href="https://instagram.com/etherial_wuff" target="_blank" rel="noopener" style="opacity:.4;pointer-events:none"><i class="ti ti-brand-instagram"></i></a>
+      <a href="https://etherial-wuff.tumblr.com" target="_blank" rel="noopener" style="opacity:.4;pointer-events:none"><i class="ti ti-brand-tumblr"></i></a>
+      <a href="https://x.com/etherial_wuff" target="_blank" rel="noopener" style="opacity:.4;pointer-events:none"><i class="ti ti-brand-x"></i></a>
+      <a href="https://ko-fi.com/etherial_art" target="_blank" rel="noopener" aria-label="Ko-fi"><i class="ti ti-coffee" aria-hidden="true"></i></a>
+      <a href="mailto:etherial_wuff@etherialart.com" aria-label="Email"><i class="ti ti-mail" aria-hidden="true"></i></a>
     </div>
     <div class="footer-copy" id="footer-copy">© 2026 Etherial_Wuff · Todos los derechos reservados</div>
-    <a href="admin.html" class="admin-link" title=""><i class="ti ti-lock"></i></a>
+    <a href="admin.html" class="admin-link" aria-label="Admin" title="Admin"><i class="ti ti-lock"></i></a>
   </div>
 </div>
 
@@ -372,7 +388,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
   <div class="about-page">
     <div class="about-layout">
       <div>
-        <img src="img/Jako.jpeg" alt="Foto de perfil — Etherial_Wuff" style="width:100%;border-radius:16px;display:block;object-fit:cover;aspect-ratio:3/4">
+        <img src="img/thumb/Jako.webp" alt="Foto de perfil — Etherial_Wuff" width="800" height="800" loading="lazy" decoding="async" style="width:100%;border-radius:16px;display:block;object-fit:cover;aspect-ratio:3/4">
       </div>
       <div>
         <div class="about-eyebrow">Quién soy</div>
@@ -400,13 +416,13 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         <div class="about-divider"></div>
         <div class="about-section-label" id="about-findme">Encuéntrame en</div>
         <div class="about-contact-row">
-          <a href="https://bsky.app/profile/etherial-wuff.bsky.social" target="_blank" class="about-contact-chip"><i class="ti ti-brand-bluesky"></i> @etherial-wuff</a>
-          <a href="https://www.furaffinity.net/user/etherialwuff/" target="_blank" class="about-contact-chip"><i class="ti ti-paw"></i> etherialwuff</a>
+          <a href="https://bsky.app/profile/etherial-wuff.bsky.social" target="_blank" rel="noopener" class="about-contact-chip"><i class="ti ti-brand-bluesky"></i> @etherial-wuff</a>
+          <a href="https://www.furaffinity.net/user/etherialwuff/" target="_blank" rel="noopener" class="about-contact-chip"><i class="ti ti-paw"></i> etherialwuff</a>
           <a href="#" onclick="navigator.clipboard.writeText('ethemango');event.preventDefault();" class="about-contact-chip"><i class="ti ti-brand-discord"></i> ethemango</a>
-          <a href="https://instagram.com/etherial_wuff" target="_blank" class="about-contact-chip pending"><i class="ti ti-brand-instagram"></i> @etherial_wuff</a>
-          <a href="https://etherial-wuff.tumblr.com" target="_blank" class="about-contact-chip pending"><i class="ti ti-brand-tumblr"></i> etherial-wuff</a>
-          <a href="https://x.com/etherial_wuff" target="_blank" class="about-contact-chip pending"><i class="ti ti-brand-x"></i> @etherial_wuff</a>
-          <a href="https://ko-fi.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
+          <a href="https://instagram.com/etherial_wuff" target="_blank" rel="noopener" class="about-contact-chip pending"><i class="ti ti-brand-instagram"></i> @etherial_wuff</a>
+          <a href="https://etherial-wuff.tumblr.com" target="_blank" rel="noopener" class="about-contact-chip pending"><i class="ti ti-brand-tumblr"></i> etherial-wuff</a>
+          <a href="https://x.com/etherial_wuff" target="_blank" rel="noopener" class="about-contact-chip pending"><i class="ti ti-brand-x"></i> @etherial_wuff</a>
+          <a href="https://ko-fi.com/etherial_art" target="_blank" rel="noopener" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
           <a href="mailto:etherial_wuff@etherialart.com" class="about-contact-chip"><i class="ti ti-mail"></i> etherial_wuff@etherialart.com</a>
         </div>
       </div>
@@ -446,7 +462,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
     <div class="page-eyebrow" id="seg-eyebrow">Estado de pedidos</div>
     <h2 class="page-title" id="seg-title">Seguimiento</h2>
     <div class="tracker-bar">
-      <input class="tracker-input" id="folio-input" placeholder="Ingresa tu número de folio o nombre, ej: #0001">
+      <input class="tracker-input" id="folio-input" aria-label="Número de folio o nombre" placeholder="Ingresa tu número de folio o nombre, ej: #0001">
       <button class="tracker-btn" id="tracker-search-btn" onclick="buscarFolio()">Buscar</button>
     </div>
     <div id="tracker-result"></div>
@@ -468,11 +484,11 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
       </div>
       <div id="wl-form-wrap" style="max-width:480px">
         <div class="field">
-          <label class="field-label" id="lbl-wl-name">Tu nombre o @</label>
+          <label for="wl-name" class="field-label" id="lbl-wl-name">Tu nombre o @</label>
           <input type="text" id="wl-name" placeholder="@usuario o Nombre">
         </div>
         <div class="field">
-          <label class="field-label" id="lbl-wl-email">Correo electrónico</label>
+          <label for="wl-email" class="field-label" id="lbl-wl-email">Correo electrónico</label>
           <input type="email" id="wl-email" placeholder="tu@correo.com">
         </div>
         <div class="field">
@@ -512,7 +528,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
           <div class="srv-body-inner">
             <p class="srv-desc" id="srv1-desc">Piezas completamente únicas creadas desde cero según tu idea — con mi estilo propio o adaptado a tu visión. Stickers, icons, PFPs, badges, half/full body y escenas cinemáticas. Incluye boceto inicial para aprobación y hasta 2 rondas de ajustes.</p>
             <div class="srv-btn-row">
-              <a href="https://ko-fi.com/etherial_art" target="_blank" class="srv-pay-outline"><i class="ti ti-coffee" style="font-size:13px"></i><span id="btn-kofi">Ver en Ko-fi</span></a>
+              <a href="https://ko-fi.com/etherial_art" target="_blank" rel="noopener" class="srv-pay-outline"><i class="ti ti-coffee" style="font-size:13px"></i><span id="btn-kofi">Ver en Ko-fi</span></a>
               <button class="srv-pay" id="btn-req-illus" onclick="abrirFormulario('ilustracion')">Solicitar comisión →</button>
             </div>
           </div>
@@ -563,17 +579,17 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
       <p style="font-size:13px;color:var(--muted);max-width:400px;margin:0 auto 1.75rem;line-height:1.7" id="closed-msg">Por el momento no estoy aceptando nuevas comisiones. ¡Vuelve pronto!</p>
       <button class="srv-pay" onclick="goTab('seguimiento')" id="closed-wl-btn" style="margin-bottom:1.5rem">Unirme a la waitlist →</button>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <a href="https://bsky.app/profile/etherial-wuff.bsky.social" target="_blank" class="about-contact-chip"><i class="ti ti-brand-bluesky"></i> @etherial-wuff</a>
-        <a href="https://www.furaffinity.net/user/etherialwuff/" target="_blank" class="about-contact-chip"><i class="ti ti-paw"></i> etherialwuff</a>
+        <a href="https://bsky.app/profile/etherial-wuff.bsky.social" target="_blank" rel="noopener" class="about-contact-chip"><i class="ti ti-brand-bluesky"></i> @etherial-wuff</a>
+        <a href="https://www.furaffinity.net/user/etherialwuff/" target="_blank" rel="noopener" class="about-contact-chip"><i class="ti ti-paw"></i> etherialwuff</a>
         <a href="#" onclick="navigator.clipboard.writeText('ethemango');event.preventDefault();" class="about-contact-chip"><i class="ti ti-brand-discord"></i> ethemango</a>
-        <a href="https://ko-fi.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
+        <a href="https://ko-fi.com/etherial_art" target="_blank" rel="noopener" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
       </div>
     </div>
     <div id="form-wrap">
     <div class="page-eyebrow" id="form-eyebrow">Solicitud de comisión</div>
     <h2 class="page-title" style="margin-bottom:.25rem" id="form-main-title">Comisiones</h2>
     <p style="font-size:13px;color:var(--muted);margin-bottom:2rem;line-height:1.6" id="form-intro">Cuéntame tu idea y nos ponemos en contacto en 48hrs para confirmar detalles y enviarte tu invoice.</p>
-    <div class="form-step-label" id="form-step-label">Paso 1 de 5 — Información básica</div>
+    <div class="form-step-label" id="form-step-label" aria-live="polite">Paso 1 de 5 — Información básica</div>
     <div class="form-progress">
       <div class="form-step active" id="step-1"></div><div class="form-step" id="step-2"></div>
       <div class="form-step" id="step-3"></div><div class="form-step" id="step-4"></div><div class="form-step" id="step-5"></div>
@@ -583,8 +599,8 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
     <div class="form-section active" id="fs-1">
       <h3 class="form-section-title" id="fs1-title">Información básica</h3>
       <p class="form-section-sub" id="fs1-sub">Cuéntame quién eres y qué tipo de servicio necesitas.</p>
-      <div class="field"><label class="field-label" id="lbl-f-tag">Tu nombre o @ de red social *</label><input type="text" id="f-tag" placeholder="ej: @usuario o Nombre"><p class="field-note" id="note-f-tag">El nombre con el que prefieras que me dirija a ti.</p></div>
-      <div class="field"><label class="field-label" id="lbl-f-email">Correo electrónico *</label><input type="email" id="f-email" placeholder="tu@correo.com"><p class="field-note" id="note-f-email">Aquí recibirás tu número de folio.</p></div>
+      <div class="field"><label for="f-tag" class="field-label" id="lbl-f-tag">Tu nombre o @ de red social *</label><input type="text" id="f-tag" placeholder="ej: @usuario o Nombre"><p class="field-note" id="note-f-tag">El nombre con el que prefieras que me dirija a ti.</p></div>
+      <div class="field"><label for="f-email" class="field-label" id="lbl-f-email">Correo electrónico *</label><input type="email" id="f-email" placeholder="tu@correo.com"><p class="field-note" id="note-f-email">Aquí recibirás tu número de folio.</p></div>
       <div class="field">
         <label class="field-label" id="lbl-f-lang">Idioma de preferencia *</label>
         <div class="options-grid">
@@ -743,7 +759,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
     <div class="form-section" id="fs-2e">
       <h3 class="form-section-title" id="fs2e-title">Cuéntame tu idea</h3>
       <p class="form-section-sub" id="fs2e-sub">Describe tu propuesta con el mayor detalle posible.</p>
-      <div class="field"><label class="field-label" id="lbl-other-idea">¿Qué tienes en mente? *</label><textarea id="f-otro" placeholder="Describe tu idea, el formato, el propósito..."></textarea></div>
+      <div class="field"><label for="f-otro" class="field-label" id="lbl-other-idea">¿Qué tienes en mente? *</label><textarea id="f-otro" placeholder="Describe tu idea, el formato, el propósito..."></textarea></div>
       <div class="form-nav"><button class="btn-back" onclick="backSection(2)">← Atrás</button><button class="btn-next" onclick="nextSection(2)">Siguiente →</button></div>
     </div>
 
@@ -758,11 +774,11 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         </div>
         <p class="field-note" id="note-char-exist">Si dejas esto en blanco, asumiré que es un diseño nuevo desde cero.</p>
       </div>
-      <div class="field" id="field-especie"><label class="field-label" id="lbl-char-species">Especie o raza del personaje</label><input type="text" id="f-especie" placeholder="ej: lobo anthro, humano, dragón..."></div>
-      <div class="field"><label class="field-label" id="lbl-refs">Referencias visuales (opcional)</label><input type="text" id="f-refs" placeholder="Links a Pinterest, Toyhouse, Drive, sta.sh..."><p class="field-note" id="note-refs">También puedes enviarlas por el canal de contacto después de recibir tu folio.</p></div>
-      <div class="field"><label class="field-label" id="lbl-desc">Brief description — Descripción de tu idea *</label><textarea id="f-desc" placeholder="Describe la escena: personaje, pose, expresión, vestimenta, colores, ambiente..."></textarea></div>
-      <div class="field"><label class="field-label" id="lbl-mood">Atmósfera o mood</label><input type="text" id="f-mood" placeholder="ej: oscuro, alegre, épico, tierno..."></div>
-      <div class="field"><label class="field-label" id="lbl-omit">Elementos a omitir (opcional)</label><textarea id="f-no-quiere" placeholder="Qué NO quieres que aparezca: colores, elementos, estilos..." style="height:70px"></textarea></div>
+      <div class="field" id="field-especie"><label for="f-especie" class="field-label" id="lbl-char-species">Especie o raza del personaje</label><input type="text" id="f-especie" placeholder="ej: lobo anthro, humano, dragón..."></div>
+      <div class="field"><label for="f-refs" class="field-label" id="lbl-refs">Referencias visuales (opcional)</label><input type="text" id="f-refs" placeholder="Links a Pinterest, Toyhouse, Drive, sta.sh..."><p class="field-note" id="note-refs">También puedes enviarlas por el canal de contacto después de recibir tu folio.</p></div>
+      <div class="field"><label for="f-desc" class="field-label" id="lbl-desc">Brief description — Descripción de tu idea *</label><textarea id="f-desc" placeholder="Describe la escena: personaje, pose, expresión, vestimenta, colores, ambiente..."></textarea></div>
+      <div class="field"><label for="f-mood" class="field-label" id="lbl-mood">Atmósfera o mood</label><input type="text" id="f-mood" placeholder="ej: oscuro, alegre, épico, tierno..."></div>
+      <div class="field"><label for="f-no-quiere" class="field-label" id="lbl-omit">Elementos a omitir (opcional)</label><textarea id="f-no-quiere" placeholder="Qué NO quieres que aparezca: colores, elementos, estilos..." style="height:70px"></textarea></div>
       <div class="field">
         <label class="field-label" id="lbl-priority">Prioridad de la orden *</label>
         <div class="options-grid single">
@@ -785,8 +801,8 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
           <div class="opt" onclick="selectOpt(this,'contacto')" data-val="Discord"><div class="opt-radio"></div>Discord</div>
         </div>
       </div>
-      <div class="field" id="field-discord" style="display:none"><label class="field-label" id="lbl-discord-user">Tu usuario de Discord</label><input type="text" id="f-discord" placeholder="usuario o usuario#0000"></div>
-      <div class="field"><label class="field-label" id="lbl-discount">Código de descuento (opcional)</label><input type="text" id="f-descuento" placeholder="Ingresa tu código si tienes uno"></div>
+      <div class="field" id="field-discord" style="display:none"><label for="f-discord" class="field-label" id="lbl-discord-user">Tu usuario de Discord</label><input type="text" id="f-discord" placeholder="usuario o usuario#0000"></div>
+      <div class="field"><label for="f-descuento" class="field-label" id="lbl-discount">Código de descuento (opcional)</label><input type="text" id="f-descuento" placeholder="Ingresa tu código si tienes uno"></div>
       <div class="field">
         <label class="field-label" id="lbl-findme-channel">¿Cómo me encontraste?</label>
         <div class="options-grid">
@@ -829,8 +845,8 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
       <p id="success-track">Con este folio puedes rastrear tu comisión en <strong>Servicios → Tracker</strong>.</p>
       <p style="margin-top:1rem" id="success-time">Revisaré tu solicitud en las próximas <strong>48 horas</strong>.</p>
       <div style="margin-top:2rem;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <a href="https://bsky.app/profile/etherial-wuff.bsky.social" target="_blank" class="about-contact-chip"><i class="ti ti-brand-bluesky"></i> @etherial-wuff</a>
-        <a href="https://ko-fi.com/etherial_art" target="_blank" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
+        <a href="https://bsky.app/profile/etherial-wuff.bsky.social" target="_blank" rel="noopener" class="about-contact-chip"><i class="ti ti-brand-bluesky"></i> @etherial-wuff</a>
+        <a href="https://ko-fi.com/etherial_art" target="_blank" rel="noopener" class="about-contact-chip"><i class="ti ti-coffee"></i> Ko-fi</a>
       </div>
     </div>
     </div><!-- /form-wrap -->
@@ -853,9 +869,9 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
         </div>
       </div>
       <div>
-        <div style="margin-bottom:14px"><label style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:7px" id="lbl-contact-name">Nombre</label><input id="f-nombre" placeholder="Tu nombre" style="width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none"></div>
-        <div style="margin-bottom:14px"><label style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:7px" id="lbl-contact-email">Correo</label><input id="f-correo" type="email" placeholder="tu@correo.com" style="width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none"></div>
-        <div style="margin-bottom:14px"><label style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:7px" id="lbl-contact-msg">Mensaje</label><textarea id="f-msg" placeholder="Cuéntame sobre tu proyecto..." style="width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none;height:100px;resize:vertical"></textarea></div>
+        <div style="margin-bottom:14px"><label for="f-nombre" style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px" id="lbl-contact-name">Nombre</label><input id="f-nombre" placeholder="Tu nombre" style="width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none"></div>
+        <div style="margin-bottom:14px"><label for="f-correo" style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px" id="lbl-contact-email">Correo</label><input id="f-correo" type="email" placeholder="tu@correo.com" style="width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none"></div>
+        <div style="margin-bottom:14px"><label for="f-msg" style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px" id="lbl-contact-msg">Mensaje</label><textarea id="f-msg" placeholder="Cuéntame sobre tu proyecto..." style="width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);color:var(--dark);font-family:var(--sans);outline:none;height:100px;resize:vertical"></textarea></div>
         <button onclick="enviarCorreo()" id="contact-send-btn" style="width:100%;padding:11px;background:var(--gl);color:#fff;border:1.5px solid var(--gold);border-radius:8px;font-size:13px;letter-spacing:.06em;cursor:pointer;font-family:var(--sans)">Enviar mensaje</button>
       </div>
     </div>
@@ -863,7 +879,7 @@ body{background:var(--cream);font-family:var(--sans);color:var(--dark);display:f
 </div>
 
 </div><!-- /main -->
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 // ━━ TRADUCCIONES (de Gemini — más completas) ━━━━━━━━
 const i18n={
@@ -1873,7 +1889,7 @@ async function loadExtraPortfolio(){
     if(!data||!data.length) return;
     const g=document.getElementById('gallery-extra-items');
     if(g){
-      g.innerHTML=data.filter(p=>p.en_galeria).map(p=>`<div class="gallery-item" data-type="image" data-href="img/${p.imagen}"><div class="gallery-img" style="height:240px"><img src="img/${p.imagen}" style="width:100%;display:block;object-fit:cover;height:240px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">${p.nombre}</span></div></div>`).join('');
+      g.innerHTML=data.filter(p=>p.en_galeria).map(p=>`<div class="gallery-item" data-type="image" data-href="img/${p.imagen}"><div class="gallery-img" style="height:240px"><img src="img/${p.imagen}" alt="" loading="lazy" decoding="async" style="width:100%;display:block;object-fit:cover;height:240px"></div><div class="gallery-overlay"><span class="gallery-overlay-text">${p.nombre}</span></div></div>`).join('');
       if(g.innerHTML) GLightbox({selector:'.gallery-item',touchNavigation:true,loop:true,zoomable:true});
     }
     const pg=document.getElementById('port-extra-items');
@@ -1881,5 +1897,6 @@ async function loadExtraPortfolio(){
   }catch(e){console.error('portfolio:',e);}
 }
 </script>
+<script src="a11y.js" defer></script>
 </body>
 </html>

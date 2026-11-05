@@ -42,18 +42,21 @@ insignias cerrado/lleno) se conservan tal cual.
 
 ### Tonos derivados permitidos
 
-Sólo mezclas u opacidades de la paleta. No se añaden tonos nuevos.
+Sólo mezclas, opacidades o rotaciones de tono (OKLCH, misma luminosidad y croma) de la
+paleta. No se añaden tonos nuevos.
 
-| Token               | Claro                  | Oscuro                      | Derivación                                                      | Por qué                                                                     |
-| ------------------- | ---------------------- | --------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `--color-accent`    | `#1A7169`              | `= --gl`                    | claro: `--gl` 70 % + `--dark` 30 %                              | `--gl` da 3.7:1 como texto; esto da 5.5:1 y deja leer blanco encima (5.8:1) |
-| `--color-on-accent` | `#FFFFFF`              | `= --cream`                 | —                                                               | Texto sobre botón primario                                                  |
-| `--color-eyebrow`   | `= --hint`             | `= --teal`                  | —                                                               | Antetítulos, precios, encabezados de tabla                                  |
-| `--border-field`    | `#669692`              | `#4D807C`                   | `--gb`+`--muted` (35/65 claro, 50/50 oscuro)                    | Borde de campos y radios: 3:1 mínimo (WCAG 1.4.11)                          |
-| `--border-soft`     | `--gb` al 75 %         | `--gb` al 90 %              | opacidad                                                        | Divisores y bordes de tarjetas (decorativos)                                |
-| `--surface-hover`   | `#EFF9F7`              | `#17302E`                   | claro: `--gp`/`--card` 50/50; oscuro: `--gp` 65 % + `--gb` 35 % | Hover muy leve                                                              |
-| `--surface-bar`     | `--cream` al 78 %      | `--cream` al 80 %           | opacidad                                                        | Barras superior/inferior translúcidas                                       |
-| `--background-aura` | `--teal` 34 % + `--gp` | `--teal` 11 % + `--gb` 45 % | degradados radiales                                             | "Luz difusa" en el fondo de la página                                       |
+| Token                     | Claro             | Oscuro            | Derivación                                                      | Por qué                                                                     |
+| ------------------------- | ----------------- | ----------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `--color-accent`          | `#1A7169`         | `= --gl`          | claro: `--gl` 70 % + `--dark` 30 %                              | `--gl` da 3.7:1 como texto; esto da 5.5:1 y deja leer blanco encima (5.8:1) |
+| `--color-on-accent`       | `#FFFFFF`         | `= --cream`       | —                                                               | Texto sobre botón primario                                                  |
+| `--color-eyebrow`         | `= --hint`        | `= --teal`        | —                                                               | Antetítulos, precios, encabezados de tabla                                  |
+| `--border-field`          | `#669692`         | `#4D807C`         | `--gb`+`--muted` (35/65 claro, 50/50 oscuro)                    | Borde de campos y radios: 3:1 mínimo (WCAG 1.4.11)                          |
+| `--border-soft`           | `--gb` al 75 %    | `--gb` al 90 %    | opacidad                                                        | Divisores y bordes de tarjetas (decorativos)                                |
+| `--surface-hover`         | `#EFF9F7`         | `#17302E`         | claro: `--gp`/`--card` 50/50; oscuro: `--gp` 65 % + `--gb` 35 % | Hover muy leve                                                              |
+| `--surface-bar`           | `--cream` al 78 % | `--cream` al 80 % | opacidad                                                        | Barras superior/inferior translúcidas                                       |
+| `--background-tint-start` | `--teal` al 6 %   | `--teal` al 10 %  | opacidad                                                        | Inicio del degradado de fondo (turquesa)                                    |
+| `--background-tint-end`   | `#ABD5E6` al 6 %  | `#66C2E3` al 10 % | `--teal` rotado +35° en OKLCH                                   | Final del degradado (azul análogo)                                          |
+| `--background-light`      | `--card` al 60 %  | —                 | opacidad                                                        | "Luz difusa" arriba; sólo aclara, así que sólo sube el contraste            |
 
 ### Contraste medido (WCAG 2.x)
 
@@ -78,6 +81,36 @@ Texto normal necesita 4.5:1; texto grande y elementos de control 3:1.
 
 Botón primario: blanco sobre `--color-accent` **5.8:1** (claro); `--cream` sobre `--gl`
 **7.5:1** (oscuro). Pie: `--teal` sobre `--dg` 5.2:1 (claro).
+
+### Fondo: degradado turquesa → azul análogo
+
+`body::before` fijo, detrás de todo: un lineal a 155° de `--background-tint-start`
+(turquesa) a transparente y a `--background-tint-end` (azul análogo), más una luz
+difusa arriba (`--background-light`, sólo en claro). Es **estático**.
+
+- **Por qué esas opacidades (6 % claro, 10 % oscuro):** cualquier tinte oscurece el
+  fondo claro o aclara el oscuro, y `--hint` y `--border-field` tienen poco margen sobre
+  `--cream`. En el punto más tintado quedan: claro `--hint` 4.64:1, `--border-field`
+  3.07:1, `--muted` 5.23:1; oscuro `--hint` 4.64:1, `--border-field` 3.15:1. Con 7 % en
+  claro, `--hint` bajaba a 4.497:1 bajo la sombra de la foto de "Sobre mí".
+- **Cómo se verifica:** axe no puede calcular contraste sobre degradados (los deja en
+  "revisar"), así que se mide píxel a píxel: captura del fondo con el texto
+  transparente y contraste de cada texto contra el píxel más claro y el más oscuro
+  bajo él, en las 6 secciones × 375/768/1440 × claro/oscuro. Así se encontró que el
+  aura anterior (turquesa al 34 %) dejaba 13 textos y un borde de campo bajo AA.
+- **Sin animación:** una deriva lenta (sólo `transform`, 48 s, sólo escritorio)
+  funcionaba, pero pasaba la página de 0 a 60 frames/s continuos (~85 % de un núcleo en
+  GPU por software en Chromium headless). No compensa: el fondo no se anima.
+
+**Propuesta para las otras páginas** (todavía no aplicada; cada par sale de su propia
+paleta y el tope es la opacidad que mantiene el contraste actual de sus textos):
+
+| Página | Color principal                                         | Par del degradado                                                                    | Tope claro / oscuro |
+| ------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------- |
+| mango  | naranja `--gl` `#D4720A` (amarillo en sus tonos claros) | amarillo `--gb` `#FFD99A` → naranja `--teal` `#E09040`; oscuro `#F5C060` → `#F0A040` | 19 % / 13 %         |
+| wuff   | azul `--gl` `#0099CC`                                   | cian `--teal` `#44BBDD` → azul `--gl`; oscuro `#22BBEE` → `#00D4FF`                  | 4 % / 12 %          |
+
+En wuff claro el tope es bajo (4 %) porque su `--hint` ya está en 4.74:1 sobre `--cream`.
 
 ## 3. Tipografía
 

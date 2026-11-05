@@ -404,10 +404,6 @@
         background: #fef8e0;
         color: #7a5900;
       }
-      .s-notified {
-        background: #e8f0ff;
-        color: #1a3a8a;
-      }
       .s-active {
         background: #eef7f0;
         color: #1e4d2b;
@@ -416,18 +412,13 @@
         background: #e0f5f0;
         color: #085041;
       }
-      .s-cancelled,
-      .s-expired {
+      .s-cancelled {
         background: #f0f0f0;
         color: #777;
       }
       [data-theme='dark'] .s-waiting {
         background: #3a2e00;
         color: #f5d000;
-      }
-      [data-theme='dark'] .s-notified {
-        background: #0d1a3a;
-        color: #7bb8d4;
       }
       [data-theme='dark'] .s-active {
         background: #0d2e1a;
@@ -437,8 +428,7 @@
         background: #0a2a22;
         color: #5ec9c1;
       }
-      [data-theme='dark'] .s-cancelled,
-      [data-theme='dark'] .s-expired {
+      [data-theme='dark'] .s-cancelled {
         background: #1a1a1a;
         color: #7bb8b4;
       }
@@ -736,20 +726,22 @@
         .admin-table tr[data-status='waiting'] td:first-child {
           border-left-color: #c9900a;
         }
-        .admin-table tr[data-status='notified'] td:first-child {
-          border-left-color: #3d5fc0;
-        }
         .admin-table tr[data-status='quoted'] td:first-child {
           border-left-color: #d97706;
         }
         .admin-table tr[data-status='active'] td:first-child {
           border-left-color: #1f8f85;
         }
+        .admin-table tr[data-status='revision'] td:first-child {
+          border-left-color: #7c3aed;
+        }
+        .admin-table tr[data-status='delivered'] td:first-child {
+          border-left-color: #0e7490;
+        }
         .admin-table tr[data-status='completed'] td:first-child {
           border-left-color: #059669;
         }
-        .admin-table tr[data-status='cancelled'] td:first-child,
-        .admin-table tr[data-status='expired'] td:first-child {
+        .admin-table tr[data-status='cancelled'] td:first-child {
           border-left-color: #999;
         }
         .admin-table tr[data-status] {
@@ -786,6 +778,22 @@
       .s-quoted {
         background: #fff9e0;
         color: #7a5900;
+      }
+      .s-revision {
+        background: #f3e8ff;
+        color: #5b21b6;
+      }
+      .s-delivered {
+        background: #e0f2fe;
+        color: #075985;
+      }
+      [data-theme='dark'] .s-revision {
+        background: #2a1640;
+        color: #d8b4fe;
+      }
+      [data-theme='dark'] .s-delivered {
+        background: #082f49;
+        color: #7dd3fc;
       }
       [data-theme='dark'] .s-quoted {
         background: #3a2e00;
@@ -1195,9 +1203,10 @@
             <div class="filter-group">
               <button class="filter-btn active" onclick="setFilter('all', this)">Todas</button>
               <button class="filter-btn" onclick="setFilter('waiting', this)">En espera</button>
-              <button class="filter-btn" onclick="setFilter('notified', this)">Notificadas</button>
               <button class="filter-btn" onclick="setFilter('quoted', this)">Cotizadas</button>
-              <button class="filter-btn" onclick="setFilter('active', this)">Activas</button>
+              <button class="filter-btn" onclick="setFilter('active', this)">En progreso</button>
+              <button class="filter-btn" onclick="setFilter('revision', this)">En revisión</button>
+              <button class="filter-btn" onclick="setFilter('delivered', this)">Entregadas</button>
               <button class="filter-btn" onclick="setFilter('completed', this)">Completadas</button>
               <button class="filter-btn" onclick="setFilter('cancelled', this)">Canceladas</button>
             </div>
@@ -1874,33 +1883,38 @@
       let filtroActual = 'all';
       let maxSlots = 25;
 
+      // Los mismos estados que acepta el backend (VALID_STATUSES en
+      // niko-studio/routes/admin.py). Un estado que no esté aquí da 400.
       const statusLabel = {
         waiting: 'En espera',
-        notified: 'Notificada',
         quoted: 'Cotizada',
         active: 'En progreso',
+        revision: 'En revisión',
+        delivered: 'Entregada',
         completed: 'Completada',
         cancelled: 'Cancelada',
-        expired: 'Expirada',
       };
       const statusClass = {
         waiting: 's-waiting',
-        notified: 's-notified',
         quoted: 's-quoted',
         active: 's-active',
+        revision: 's-revision',
+        delivered: 's-delivered',
         completed: 's-completed',
         cancelled: 's-cancelled',
-        expired: 's-expired',
       };
       const statusColor = {
         waiting: '#B8860B',
-        notified: '#3D5FC0',
         quoted: '#D97706',
         active: '#1F8F85',
+        revision: '#7C3AED',
+        delivered: '#0E7490',
         completed: '#059669',
         cancelled: '#666',
-        expired: '#666',
       };
+      // Ocupan slot: igual que ACTIVE_STATUSES en niko-studio/utils.py, para que
+      // el contador del panel coincida con lo que decide el webhook.
+      const ESTADOS_ACTIVOS = ['waiting', 'quoted', 'active', 'revision', 'delivered'];
 
       async function cargarComisiones() {
         const tbody = document.getElementById('admin-tbody');
@@ -1924,10 +1938,10 @@
       function actualizarStats() {
         document.getElementById('stat-total').textContent = comisiones.length;
         document.getElementById('stat-waiting').textContent = comisiones.filter(
-          (c) => c.status === 'waiting' || c.status === 'notified',
+          (c) => c.status === 'waiting' || c.status === 'quoted',
         ).length;
         document.getElementById('stat-active').textContent = comisiones.filter(
-          (c) => c.status === 'active',
+          (c) => c.status === 'active' || c.status === 'revision',
         ).length;
         document.getElementById('stat-completed').textContent = comisiones.filter(
           (c) => c.status === 'completed',
@@ -1974,13 +1988,10 @@
         <div class="action-row">
           <select class="status-select" onchange="cambiarEstado(${num},this.value)" title="Cambiar estado">
             <option value="">Estado →</option>
-            <option value="waiting">En espera</option>
-            <option value="notified">Notificada</option>
-            <option value="quoted">Cotizada</option>
-            <option value="active">En progreso</option>
-            <option value="completed">Completada</option>
-            <option value="cancelled">Cancelada</option>
-            <option value="expired">Expirada</option>
+            ${Object.entries(statusLabel)
+              .filter(([valor]) => valor !== st)
+              .map(([valor, texto]) => `<option value="${valor}">${texto}</option>`)
+              .join('')}
           </select>
           ${quoteBtn}
           <button class="act-btn" onclick="abrirDetalle(${num})" title="Ver detalles"><i class="ti ti-eye"></i> Ver</button>
@@ -2010,17 +2021,17 @@
       async function cambiarEstado(folio, nuevoStatus) {
         if (!nuevoStatus) return;
         try {
-          const res = await adminFetch(`${RAILWAY_URL}/admin/comisiones/${folio}/status`, {
+          await adminJson(`/admin/comisiones/${Number(folio)}/status`, {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: nuevoStatus }),
+            body: { status: nuevoStatus },
           });
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
           showToast(`Folio #${String(folio).padStart(4, '0')} → ${statusLabel[nuevoStatus]}`, 'ok');
           await cargarComisiones();
         } catch (e) {
-          console.error(e);
-          showToast('Error al cambiar estado. Revisa la consola.', 'error');
+          console.error('No se pudo cambiar el estado:', e);
+          showToast(`No se cambió el estado: ${textoError(e)}`, 'error');
+          // Vuelve a pintar para que el <select> no se quede en el valor elegido.
+          renderComisiones();
         }
       }
 
@@ -2052,7 +2063,7 @@
         document.getElementById('q-folio-title').textContent = `#${String(folio).padStart(4, '0')}`;
         document.getElementById('q-client').textContent = c.cliente_tag || '—';
         document.getElementById('q-service').textContent = c.tipo_servicio || '—';
-        document.getElementById('q-desc').textContent = c.descripcion_adicional || '—';
+        document.getElementById('q-desc').textContent = c.descripcion_arte || '—';
         document.getElementById('q-rush-row').style.display = c.es_rush ? 'flex' : 'none';
         ['q-base', 'q-rush-fee', 'q-extras', 'q-discount'].forEach((id) => {
           const el = document.getElementById(id);
@@ -2135,9 +2146,7 @@
           icon.className = 'ti ti-lock';
           lbl.textContent = 'Cerradas';
         }
-        const activas = comisiones.filter(
-          (c) => !['completed', 'cancelled', 'expired'].includes(c.status),
-        ).length;
+        const activas = comisiones.filter((c) => ESTADOS_ACTIVOS.includes(c.status)).length;
         const counter = document.getElementById('slot-counter');
         const limitInput = document.getElementById('slot-limit-input');
         if (counter) counter.textContent = `${activas}/${maxSlots}`;
@@ -2207,28 +2216,52 @@
             ? `<div class="q-row"><span class="q-lbl">${lbl}</span><span style="color:var(--dark)">${esc(val)}</span></div>`
             : '';
         const arr = (lbl, val) => (Array.isArray(val) && val.length ? f(lbl, val.join(', ')) : '');
+        const bloque = (lbl, val) =>
+          val
+            ? `<div class="mfield" style="margin-top:.75rem"><label>${lbl}</label><div style="padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;line-height:1.6;color:var(--dark);white-space:pre-wrap">${esc(val)}</div></div>`
+            : '';
+        const sino = (v) => (v === true ? 'Sí' : v === false ? 'No' : null);
+        const dinero = (v) => (v == null ? null : `$${Number(v).toFixed(2)} USD`);
+        // Nombres de columna reales de comisiones_v2 (los que devuelve
+        // GET /admin/comisiones); antes se leían otros y el detalle salía vacío.
         document.getElementById('d-body').innerHTML = `
     <div class="q-summary">
       ${f('Cliente', c.cliente_tag)}
       ${f('Email', c.email)}
+      ${f('Estado', statusLabel[c.status] || c.status)}
       ${f('Idioma', c.idioma_preferido)}
-      ${f('Primera vez', c.es_primera_comision === true ? 'Sí' : c.es_primera_comision === false ? 'No' : null)}
-      ${f('Canal', c.canal_contacto)}
-      ${f('Cómo llegó', c.como_encontro)}
-      ${f('Descuento', c.descuento)}
+      ${f('Primera vez', sino(c.es_primera_comision))}
+      ${f('Contacto', c.contacto_preferido)}
+      ${f('Discord', c.discord_user)}
+      ${f('Cómo llegó', c.como_me_encontro)}
+      ${f('Descuento', c.codigo_descuento)}
     </div>
     <div class="q-summary" style="margin-top:.75rem">
       ${f('Servicio', c.tipo_servicio)}
       ${f('Tipo', c.tipo_ilustracion || c.tipo_editorial || c.tipo_print)}
       ${f('Acabado', c.acabado)}
-      ${f('Personajes', c.personajes)}
-      ${f('Pers. existentes', c.pers_exist ? 'Sí' : null)}
+      ${f('Estilo', c.estilo)}
+      ${f('Personajes', c.num_personajes)}
+      ${f('Pers. existente', c.personaje_existente ? 'Sí' : null)}
+      ${f('Especie', c.especie)}
+      ${f('Fondo', c.fondo)}
+      ${arr('Add-ons', c.addons)}
+      ${f('Uso', c.uso_personal_comercial)}
       ${f('Rush', c.es_rush ? '⚡ Sí' : null)}
       ${f('NSFW', c.es_nsfw ? 'Sí' : null)}
     </div>
-    ${c.descripcion_adicional ? `<div class="mfield" style="margin-top:.75rem"><label>Descripción</label><div style="padding:10px 14px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;line-height:1.6;color:var(--dark);white-space:pre-wrap">${esc(c.descripcion_adicional)}</div></div>` : ''}
-    ${arr('Fondo', c.fondo)}
-    ${arr('Composición', c.composicion)}
+    <div class="q-summary" style="margin-top:.75rem">
+      ${f('Precio total', dinero(c.precio_total))}
+      ${f('Depósito', dinero(c.deposito_inicial))}
+      ${f('Link de pago', c.payment_link)}
+      ${f('Ko-fi', c.kofi_transaction_id)}
+      ${f('Creada', c.created_at ? new Date(c.created_at).toLocaleString('es-MX') : null)}
+    </div>
+    ${bloque('Descripción', c.descripcion_arte)}
+    ${bloque('Mood', c.mood)}
+    ${bloque('Lo que no quiere', c.que_no_quiere)}
+    ${bloque('Referencias', c.referencias_links)}
+    ${bloque('Notas', c.notas)}
   `;
         document.getElementById('detail-overlay').classList.add('open');
       }
@@ -2250,11 +2283,11 @@
         document.getElementById('e-servicio').value = c.tipo_servicio || '';
         document.getElementById('e-tipo').value =
           c.tipo_ilustracion || c.tipo_editorial || c.tipo_print || '';
-        document.getElementById('e-desc').value = c.descripcion_adicional || '';
+        document.getElementById('e-desc').value = c.descripcion_arte || '';
         document.getElementById('e-rush').checked = !!c.es_rush;
         document.getElementById('e-nsfw').checked = !!c.es_nsfw;
-        document.getElementById('e-canal').value = c.canal_contacto || '';
-        document.getElementById('e-descuento').value = c.descuento || '';
+        document.getElementById('e-canal').value = c.contacto_preferido || '';
+        document.getElementById('e-descuento').value = c.codigo_descuento || '';
         document.getElementById('e-save-btn').disabled = false;
         document.getElementById('edit-overlay').classList.add('open');
       }
@@ -2284,24 +2317,25 @@
           else if (servicio === 'Diseño Editorial') payload.tipo_editorial = tipo;
           else if (servicio === 'Arte Digital para Imprimir') payload.tipo_print = tipo;
         }
-        if (desc) payload.descripcion_adicional = desc;
+        // Nombres de campo que acepta PATCH /admin/comisiones/{folio}; los que
+        // se mandaban antes (descripcion_adicional, canal_contacto, descuento)
+        // se ignoraban en silencio.
+        if (desc) payload.descripcion_arte = desc;
         payload.es_rush = document.getElementById('e-rush').checked;
         payload.es_nsfw = document.getElementById('e-nsfw').checked;
-        if (canal) payload.canal_contacto = canal;
-        if (descuento) payload.descuento = descuento;
+        if (canal) payload.contacto_preferido = canal;
+        if (descuento) payload.codigo_descuento = descuento;
         try {
-          const res = await adminFetch(`${RAILWAY_URL}/admin/comisiones/${eFolioActual}`, {
+          await adminJson(`/admin/comisiones/${Number(eFolioActual)}`, {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
+            body: payload,
           });
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
           showToast(`Folio #${String(eFolioActual).padStart(4, '0')} actualizado`, 'ok');
           cerrarEditar();
           await cargarComisiones();
         } catch (e) {
-          console.error(e);
-          showToast('Error al guardar. Revisa la consola.', 'error');
+          console.error('No se pudo guardar la edición:', e);
+          showToast(`No se guardó: ${textoError(e)}`, 'error');
           btn.disabled = false;
         }
       }
@@ -2565,6 +2599,9 @@
         document.getElementById('modal-overlay').classList.remove('open');
       }
 
+      // Valores de idioma_preferido que entienden los correos del backend.
+      const IDIOMAS_BACKEND = { es: 'Español', en: 'English', de: 'Deutsch' };
+
       async function guardarComision() {
         const tag = document.getElementById('m-tag').value.trim();
         const email = document.getElementById('m-email').value.trim();
@@ -2582,44 +2619,29 @@
         btn.disabled = true;
         btn.textContent = 'Guardando...';
         try {
-          const res = await adminFetch(`${RAILWAY_URL}/comisiones/nueva`, {
+          // Endpoint de admin: crea la comisión sin mandar el correo de
+          // "solicitud recibida" (el público /comisiones/nueva sí lo manda).
+          const data = await adminJson('/admin/comisiones', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+            body: {
               cliente_tag: tag,
               email,
-              idioma_preferido: lang,
+              idioma_preferido: IDIOMAS_BACKEND[lang] || null,
               es_primera_comision: primera,
               tipo_servicio: servicio,
               tipo_ilustracion: tipo || null,
               es_rush: rush,
-              descripcion_adicional: desc || null,
-              fondo: [],
-              composicion: [],
-              es_nsfw: false,
-              personajes: 1,
-              acabado: null,
-              tipo_editorial: null,
-              formato_editorial: null,
-              tipo_print: null,
-              uso_personal_comercial: null,
-              pers_exist: false,
-              canal_contacto: 'email',
-              como_encontro: null,
-              descuento: null,
-              rush: rush ? 'si' : 'no',
-            }),
+              descripcion_arte: desc || 'Alta manual desde el panel',
+              codigo_descuento: document.getElementById('m-descuento').value.trim() || null,
+            },
           });
-          const data = await res.json();
-          if (data.status === 'ok' || res.ok) {
-            showToast(`Comisión creada: folio #${data.folio || '—'}`, 'ok');
-            cerrarModal();
-            limpiarModal();
-            await cargarComisiones();
-          } else throw new Error(data.message || 'Error');
+          showToast(`Comisión creada: folio #${String(data.folio).padStart(4, '0')}`, 'ok');
+          cerrarModal();
+          limpiarModal();
+          await cargarComisiones();
         } catch (e) {
-          console.error(e);
-          showToast('Error al crear comisión. Revisa la consola.', 'error');
+          console.error('No se pudo crear la comisión:', e);
+          showToast(`No se creó la comisión: ${textoError(e)}`, 'error');
         } finally {
           btn.disabled = false;
           btn.innerHTML = '<i class="ti ti-send"></i> Crear comisión';

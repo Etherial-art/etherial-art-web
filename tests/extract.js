@@ -12,15 +12,23 @@ function inlineScripts(page) {
   return [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
 }
 
-/** Devuelve el código fuente de las funciones (declaraciones) pedidas. */
+/**
+ * Devuelve el código fuente de las declaraciones de nivel superior pedidas:
+ * funciones y también `const`/`let` de un solo nombre (p. ej. constantes que
+ * deben probarse tal como están en la página, sin copiarlas en la prueba).
+ */
 export function functionSources(page, names) {
   const found = new Map();
   for (const src of inlineScripts(page)) {
     const ast = espree.parse(src, { ecmaVersion: 2024, range: true });
     for (const node of ast.body) {
-      if (node.type === 'FunctionDeclaration' && names.includes(node.id.name)) {
-        found.set(node.id.name, src.slice(...node.range));
-      }
+      const name =
+        node.type === 'FunctionDeclaration'
+          ? node.id.name
+          : node.type === 'VariableDeclaration' && node.declarations.length === 1
+            ? node.declarations[0].id.name
+            : null;
+      if (name && names.includes(name)) found.set(name, src.slice(...node.range));
     }
   }
   const missing = names.filter((n) => !found.has(n));

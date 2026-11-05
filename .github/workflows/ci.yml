@@ -1,6 +1,6 @@
 # Corre en cada PR (y en main) los mismos chequeos que el hook local.
-# Ver docs/CODING_STANDARDS.md. Este repo no tiene código Python, así que no
-# hay job de pytest (las pruebas del backend viven en niko-studio).
+# Ver docs/CODING_STANDARDS.md. Este repo no tiene código Python: sus pruebas
+# corren con el runner de Node (npm test); las de pytest viven en niko-studio.
 name: CI
 
 on:
@@ -46,3 +46,15 @@ jobs:
           else
             pre-commit run --show-diff-on-failure --color=always --all-files
           fi
+
+  test:
+    name: npm test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test

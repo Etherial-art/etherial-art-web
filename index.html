@@ -4903,11 +4903,16 @@
       let waitlistFull = false;
 
       async function cargarEstadoComisiones() {
+        // Si una consulta falla se mantienen los valores por defecto de arriba
+        // (comisiones abiertas, 25 slots, waitlist de 50), pero el error se
+        // registra en consola. supabase-js no lanza en errores de consulta:
+        // los devuelve en `error`, así que se revisa además del catch.
         try {
-          const { data } = await db
+          const { data, error } = await db
             .from('config')
             .select('key,value')
             .in('key', ['commissions_open', 'max_slots', 'max_waitlist']);
+          if (error) console.error('No se pudo leer la configuración de comisiones:', error);
           if (data) {
             const openRow = data.find((r) => r.key === 'commissions_open');
             const slotsRow = data.find((r) => r.key === 'max_slots');
@@ -4916,25 +4921,32 @@
             if (slotsRow) maxSlots = parseInt(slotsRow.value) || 25;
             if (wlRow) maxWaitlist = parseInt(wlRow.value) || 50;
           }
-        } catch (e) {}
+        } catch (e) {
+          console.error('No se pudo leer la configuración de comisiones:', e);
+        }
         if (comisionesAbiertas) {
           try {
-            const { count } = await db
+            const { count, error } = await db
               .from('seguimiento_publico')
               .select('folio', { count: 'exact', head: true })
               .not('status', 'in', '(completed,cancelled,expired)');
+            if (error) console.error('No se pudo contar las comisiones activas:', error);
             activeCount = count || 0;
             slotsFull = activeCount >= maxSlots;
-          } catch (e) {}
+          } catch (e) {
+            console.error('No se pudo contar las comisiones activas:', e);
+          }
         } else {
           slotsFull = false;
         }
         try {
-          const { count: wlCount } = await db
+          const { count: wlCount, error } = await db
             .from('waitlist')
             .select('id', { count: 'exact', head: true });
+          if (error) console.error('No se pudo contar la waitlist:', error);
           waitlistFull = (wlCount || 0) >= maxWaitlist;
         } catch (e) {
+          console.error('No se pudo contar la waitlist:', e);
           waitlistFull = false;
         }
         const page = document.getElementById('page-comisiones');

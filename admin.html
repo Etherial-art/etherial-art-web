@@ -1694,23 +1694,31 @@
       // sólo en sessionStorage (se borra al cerrar la pestaña) y se envía como
       // X-Admin-Key en cada petición al backend, que lo valida contra ADMIN_SECRET.
       const TOKEN_KEY = 'ea-admin-token';
+      // sessionStorage puede no estar disponible (navegación privada en algunos
+      // navegadores, almacenamiento bloqueado). En ese caso el panel sigue
+      // funcionando, pero el token no se recuerda entre recargas: se avisa en consola.
       function getToken() {
         try {
           return sessionStorage.getItem(TOKEN_KEY) || '';
         } catch (e) {
+          console.warn('sessionStorage no disponible; no se puede leer el token guardado:', e);
           return '';
         }
       }
       function setToken(t) {
         try {
           sessionStorage.setItem(TOKEN_KEY, t);
-        } catch (e) {}
+        } catch (e) {
+          console.warn('sessionStorage no disponible; el token no se recordará al recargar:', e);
+        }
       }
       function clearToken() {
         try {
           sessionStorage.removeItem(TOKEN_KEY);
           sessionStorage.removeItem('ea-admin');
-        } catch (e) {}
+        } catch (e) {
+          console.warn('sessionStorage no disponible; no se pudo borrar el token guardado:', e);
+        }
       }
 
       class AuthError extends Error {}
@@ -2577,9 +2585,12 @@
         const savedTheme = localStorage.getItem('ea-theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+        // Limpia la clave de la versión anterior del login (ya no se usa).
         try {
           sessionStorage.removeItem('ea-admin');
-        } catch (e) {}
+        } catch (e) {
+          console.warn('sessionStorage no disponible; no se pudo limpiar la sesión anterior:', e);
+        }
         if (getToken()) mostrarPanel();
         else pedirToken();
         document.getElementById('admin-tbody').addEventListener('click', function (e) {

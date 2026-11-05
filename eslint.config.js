@@ -12,7 +12,7 @@ export default [
     // El JS del sitio: <script> inline en cada página y scripts sueltos
     // (p. ej. a11y.js) que se cargan con <script src>.
     files: ['**/*.html', '**/*.js'],
-    ignores: ['eslint.config.js'],
+    ignores: ['eslint.config.js', 'tests/**'],
     plugins: { html },
     languageOptions: {
       ecmaVersion: 2024,
@@ -40,16 +40,6 @@ export default [
   },
   {
     // ── DEUDA TÉCNICA (línea base) ────────────────────────────────────────
-    // `catch (e) {}` vacíos que existían al adoptar estos estándares. Corregirlos
-    // implica decidir qué hacer con el error (cambio de lógica), así que van en
-    // PRs propios. Al corregir un archivo, QUITARLO de esta lista.
-    files: ['index.html', 'mango.html', 'wuff.html', 'admin.html'],
-    rules: {
-      'no-empty': 'warn',
-    },
-  },
-  {
-    // ── DEUDA TÉCNICA (línea base) ────────────────────────────────────────
     // a11y.js usa `var`. Pasar a let/const puede cambiar el alcance de las
     // variables, así que se hace en un PR propio. Al corregirlo, borrar este bloque.
     files: ['a11y.js'],
@@ -58,8 +48,8 @@ export default [
     },
   },
   {
-    // ── Configuración de herramientas (Node, módulo ES) ───────────────────
-    files: ['eslint.config.js'],
-    languageOptions: { sourceType: 'module', globals: globals.node },
+    // ── Configuración y pruebas (Node, módulos ES) ────────────────────────
+    files: ['eslint.config.js', 'tests/**/*.js'],
+    languageOptions: { ecmaVersion: 2024, sourceType: 'module', globals: globals.node },
   },
 ];

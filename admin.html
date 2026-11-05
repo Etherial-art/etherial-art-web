@@ -987,6 +987,125 @@
         }
       }
 
+      /* ── Labs ──────────────────────────────────────────────── */
+      .labs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 0.75rem;
+      }
+      .lab-card {
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-radius: 12px;
+        padding: 0.9rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      .lab-card h3 {
+        margin: 0;
+        font-family: var(--serif);
+        font-weight: 500;
+        font-size: 1.2rem;
+        color: var(--dark);
+        flex: 1;
+      }
+      .lab-desc {
+        margin: 0;
+        font-size: 13px;
+        color: var(--dark);
+      }
+      .lab-card .act-btn {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        text-decoration: none;
+      }
+      .lab-publicado {
+        background: #e0f5f0;
+        color: #085041;
+      }
+      .lab-borrador {
+        background: #fef8e0;
+        color: #7a5900;
+      }
+      .lab-archivado {
+        background: #f0f0f0;
+        color: #555;
+      }
+      [data-theme='dark'] .lab-publicado {
+        background: #0a2a22;
+        color: #5ec9c1;
+      }
+      [data-theme='dark'] .lab-borrador {
+        background: #3a2e00;
+        color: #f5d000;
+      }
+      [data-theme='dark'] .lab-archivado {
+        background: #1a1a1a;
+        color: #aaa;
+      }
+      .aviso-lab {
+        margin: 0;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: var(--warnbg);
+        color: var(--dark);
+        font-size: 13px;
+      }
+      .lab-preview {
+        background: var(--card);
+        border: 0.5px solid var(--border);
+        border-radius: 12px;
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .lab-preview-barra {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .lab-preview-barra h2 {
+        flex: 1;
+        margin: 0;
+      }
+      .lab-preview-barra .act-btn {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        text-decoration: none;
+      }
+      #lab-preview-marco iframe {
+        width: 100%;
+        height: 70vh;
+        border: 0.5px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+      }
+      @media (max-width: 600px) {
+        /* En el teléfono la vista previa ocupa la pantalla. */
+        .lab-preview:not([hidden]) {
+          position: fixed;
+          inset: 0;
+          z-index: 300;
+          border-radius: 0;
+          padding: 12px 16px;
+        }
+        #lab-preview-marco {
+          flex: 1;
+          display: flex;
+        }
+        #lab-preview-marco iframe {
+          height: auto;
+          flex: 1;
+        }
+      }
+
       /* ── Tablero ───────────────────────────────────────────── */
       .sr-only {
         position: absolute;
@@ -1533,6 +1652,9 @@
           <button class="view-tab" id="tab-waitlist" onclick="switchView('waitlist')">
             <i class="ti ti-list"></i> Waitlist
           </button>
+          <button class="view-tab" id="tab-labs" onclick="switchView('labs')">
+            <i class="ti ti-flask"></i> Labs
+          </button>
         </div>
 
         <!-- Comisiones section -->
@@ -1816,6 +1938,63 @@
           </div>
         </div>
         <!-- /waitlist-section -->
+
+        <!-- Labs (GET /admin/labs; los labs viven en labs.etherialart.com) -->
+        <div id="labs-section" style="display: none; flex-direction: column; gap: 1rem">
+          <div class="vista-bar" role="group" aria-label="Filtrar labs por estado">
+            <button
+              class="kanban-chip"
+              data-estado-lab="todos"
+              aria-pressed="true"
+              onclick="setFiltroLabs('todos')"
+            >
+              Todos
+            </button>
+            <button
+              class="kanban-chip"
+              data-estado-lab="publicado"
+              aria-pressed="false"
+              onclick="setFiltroLabs('publicado')"
+            >
+              Publicados
+            </button>
+            <button
+              class="kanban-chip"
+              data-estado-lab="borrador"
+              aria-pressed="false"
+              onclick="setFiltroLabs('borrador')"
+            >
+              Borradores
+            </button>
+            <button
+              class="kanban-chip"
+              data-estado-lab="archivado"
+              aria-pressed="false"
+              onclick="setFiltroLabs('archivado')"
+            >
+              Archivados
+            </button>
+            <div class="spacer"></div>
+            <button class="icon-btn" onclick="cargarLabs()">
+              <i class="ti ti-refresh"></i> Actualizar
+            </button>
+          </div>
+          <div id="labs-avisos" aria-live="polite"></div>
+          <div id="labs-lista" class="labs-grid" aria-live="polite"></div>
+          <section id="lab-preview" class="lab-preview" hidden aria-labelledby="lab-preview-titulo">
+            <div class="lab-preview-barra">
+              <h2 id="lab-preview-titulo" class="modal-title"></h2>
+              <a id="lab-preview-abrir" class="act-btn" target="_blank" rel="noopener noreferrer">
+                <i class="ti ti-external-link"></i> Abrir en pestaña nueva
+              </a>
+              <button class="act-btn" onclick="cerrarPreviewLab()">
+                <i class="ti ti-x"></i> Cerrar
+              </button>
+            </div>
+            <p id="lab-preview-nota" class="kanban-vacio"></p>
+            <div id="lab-preview-marco"></div>
+          </section>
+        </div>
       </div>
       <!-- /main -->
     </div>
@@ -3338,14 +3517,125 @@
         const isCom = v === 'comisiones';
         const isPort = v === 'portafolio';
         const isWL = v === 'waitlist';
+        const isLabs = v === 'labs';
         document.getElementById('tab-comisiones').classList.toggle('active', isCom);
         document.getElementById('tab-portafolio').classList.toggle('active', isPort);
         document.getElementById('tab-waitlist').classList.toggle('active', isWL);
+        document.getElementById('tab-labs').classList.toggle('active', isLabs);
         document.getElementById('comisiones-section').style.display = isCom ? 'flex' : 'none';
         document.getElementById('port-section').style.display = isPort ? 'flex' : 'none';
         document.getElementById('waitlist-section').style.display = isWL ? 'flex' : 'none';
+        document.getElementById('labs-section').style.display = isLabs ? 'flex' : 'none';
         if (isPort) cargarPortfolio();
         if (isWL) cargarWaitlist();
+        if (isLabs) cargarLabs();
+        if (!isLabs) cerrarPreviewLab();
+      }
+
+      // ━━ LABS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // Los labs se sirven desde otro origen (labs.etherialart.com): su JS no
+      // puede leer el token del panel. La vista previa además usa un iframe con
+      // sandbox="allow-scripts" (sin allow-same-origin): origen opaco, sin
+      // popups, sin formularios y sin acceso a la ventana del panel.
+      const LABS_ORIGEN = 'https://labs.etherialart.com';
+      const PATRON_SLUG_LAB = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+      const ETIQUETA_LAB = { publicado: 'Publicado', borrador: 'Borrador', archivado: 'Archivado' };
+      let labsItems = [];
+      let filtroLabs = 'todos';
+
+      // URL de la vista previa solo si el slug es válido y coincide con la que
+      // arma el backend; nunca se usa una URL arbitraria en el iframe.
+      function urlLab(lab) {
+        if (!lab || !PATRON_SLUG_LAB.test(lab.slug || '')) return null;
+        const esperada = `${LABS_ORIGEN}/labs/${lab.slug}/`;
+        return lab.url === esperada ? esperada : null;
+      }
+
+      async function cargarLabs() {
+        const lista = document.getElementById('labs-lista');
+        const avisos = document.getElementById('labs-avisos');
+        lista.innerHTML = '<p class="kanban-vacio">Cargando…</p>';
+        avisos.textContent = '';
+        try {
+          const data = await adminJson('/admin/labs');
+          labsItems = Array.isArray(data.labs) ? data.labs : [];
+          if (data.advertencias && data.advertencias.length) {
+            avisos.innerHTML = data.advertencias
+              .map((a) => `<p class="aviso-lab">${esc(a)}</p>`)
+              .join('');
+          }
+          renderLabs();
+        } catch (e) {
+          console.error('No se pudieron cargar los labs:', e);
+          lista.innerHTML = `<p class="resumen-error">No se pudieron cargar los labs: ${esc(textoError(e))}</p>`;
+        }
+      }
+
+      function setFiltroLabs(estado) {
+        filtroLabs = estado;
+        document.querySelectorAll('[data-estado-lab]').forEach((b) => {
+          b.setAttribute('aria-pressed', String(b.dataset.estadoLab === estado));
+        });
+        renderLabs();
+      }
+
+      function renderLabs() {
+        const lista = document.getElementById('labs-lista');
+        const visibles = labsItems.filter((l) => filtroLabs === 'todos' || l.estado === filtroLabs);
+        if (!visibles.length) {
+          lista.innerHTML = '<p class="kanban-vacio">No hay labs en esta categoría.</p>';
+          return;
+        }
+        lista.innerHTML = visibles
+          .map((lab) => {
+            const url = urlLab(lab);
+            const acciones = url
+              ? `<button class="act-btn" onclick="abrirPreviewLab(${jsArg(lab.slug)})"><i class="ti ti-eye"></i> Vista previa</button>
+                 <a class="act-btn" href="${url}" target="_blank" rel="noopener noreferrer"><i class="ti ti-external-link"></i> Abrir</a>`
+              : '<span class="kanban-vacio">Borrador: aún no está publicado.</span>';
+            return `<article class="lab-card">
+  <div class="kc-top">
+    <h3>${esc(lab.nombre)}</h3>
+    <span class="pill lab-${esc(lab.estado)}">${ETIQUETA_LAB[lab.estado] || esc(lab.estado)}</span>
+  </div>
+  <p class="lab-desc">${esc(lab.descripcion)}</p>
+  <div class="kc-meta">${esc(lab.fecha)} · ${esc(lab.slug)}${lab.dispositivo ? ' · usa un dispositivo' : ''}</div>
+  <div class="kc-acciones">${acciones}</div>
+</article>`;
+          })
+          .join('');
+      }
+
+      function abrirPreviewLab(slug) {
+        const lab = labsItems.find((l) => l.slug === slug);
+        const url = urlLab(lab);
+        if (!url) {
+          showToast('Este lab no tiene una dirección válida para previsualizar.', 'error');
+          return;
+        }
+        const marco = document.getElementById('lab-preview-marco');
+        marco.textContent = '';
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('sandbox', 'allow-scripts');
+        iframe.setAttribute('referrerpolicy', 'no-referrer');
+        iframe.setAttribute('loading', 'lazy');
+        iframe.title = `Vista previa: ${lab.nombre}`;
+        iframe.src = url;
+        marco.appendChild(iframe);
+        document.getElementById('lab-preview-titulo').textContent = lab.nombre;
+        document.getElementById('lab-preview-abrir').href = url;
+        document.getElementById('lab-preview-nota').textContent = lab.dispositivo
+          ? 'Usa un dispositivo: en la vista previa los permisos de hardware están bloqueados. Ábrelo en una pestaña nueva para usarlo.'
+          : '';
+        document.getElementById('lab-preview').hidden = false;
+      }
+
+      function cerrarPreviewLab() {
+        const preview = document.getElementById('lab-preview');
+        if (!preview) return;
+        preview.hidden = true;
+        // Quitar el iframe detiene el lab (sonido, cámara, timers).
+        document.getElementById('lab-preview-marco').textContent = '';
       }
 
       let portItems = [];

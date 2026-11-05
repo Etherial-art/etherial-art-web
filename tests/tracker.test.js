@@ -31,32 +31,85 @@ for (const page of ['index.html', 'mango.html', 'wuff.html']) {
       }
     });
 
-    it('busca por número de folio exacto, no por texto', () => {
+    it('no lee ninguna tabla ni vista: usa las funciones', () => {
+      assert.doesNotMatch(html, /seguimiento_publico/);
+      assert.match(html, /rpc\('buscar_folio', \{ p_folio: numero \}\)/);
+      assert.match(html, /rpc\('contar_comisiones_activas'\)/);
+    });
+
+    function tracker(respuesta) {
       const dom = new JSDOM(
         '<!doctype html><input id="folio-input"><div id="tracker-result"></div><table><tbody id="folio-tbody"></tbody></table>',
       );
-      const ctx = vm.createContext({ document: dom.window.document });
+      const llamadas = [];
+      const ctx = vm.createContext({
+        document: dom.window.document,
+        console: { warn() {}, error() {} },
+        db: {
+          rpc(fn, params) {
+            llamadas.push([fn, params.p_folio]);
+            if (respuesta instanceof Error) return Promise.reject(respuesta);
+            return Promise.resolve(respuesta(params.p_folio));
+          },
+        },
+      });
       vm.runInContext(ESCAPE_JS, ctx);
       vm.runInContext(
         `let lang = 'es'; const t = (k) => k; const eClass = {};
-         let foliosGlobales = ${JSON.stringify(FOLIOS)};
+         let foliosGlobales = [];
          ${functionSources(page, ['buscarFolio', 'renderFolios'])}`,
         ctx,
       );
-      const buscar = (q) => {
+      const buscar = async (q) => {
         dom.window.document.getElementById('folio-input').value = q;
-        ctx.buscarFolio();
+        await ctx.buscarFolio();
         return [...dom.window.document.querySelectorAll('#folio-tbody .folio-num')].map((c) =>
           c.textContent.trim(),
         );
       };
-      assert.deepEqual(buscar('#0012'), ['#0012']);
-      assert.deepEqual(buscar('12'), ['#0012']);
-      assert.deepEqual(buscar('Busto'), []);
-      assert.deepEqual(buscar('1'), ['#0001']);
-      // Sin búsqueda: todos, con 5 columnas (sin cliente).
-      assert.equal(buscar('').length, 3);
-      assert.equal(dom.window.document.querySelector('#folio-tbody tr').cells.length, 5);
+      return { buscar, llamadas, doc: dom.window.document };
+    }
+
+    const porFolio = (n) => ({ data: FOLIOS.filter((f) => f.folio === n), error: null });
+
+    it('busca un folio con buscar_folio(), sin listar los demás', async () => {
+      const { buscar, llamadas, doc } = tracker(porFolio);
+      assert.deepEqual(await buscar('#0012'), ['#0012']);
+      assert.deepEqual(await buscar('12'), ['#0012']);
+      assert.deepEqual(await buscar('1'), ['#0001']);
+      assert.equal(doc.querySelector('#folio-tbody tr').cells.length, 5);
+      assert.deepEqual(llamadas, [
+        ['buscar_folio', 12],
+        ['buscar_folio', 12],
+        ['buscar_folio', 1],
+      ]);
+    });
+
+    it('texto o folio inexistente: "no encontrado", sin consultar texto libre', async () => {
+      const { buscar, llamadas, doc } = tracker(porFolio);
+      assert.deepEqual(await buscar('Busto'), []);
+      assert.equal(llamadas.length, 0);
+      assert.equal(doc.getElementById('tracker-result').textContent, 'tracker.notfound');
+      assert.deepEqual(await buscar('999'), []);
+      assert.equal(doc.getElementById('tracker-result').textContent, 'tracker.notfound');
+    });
+
+    it('vacío: vuelve a la indicación inicial', async () => {
+      const { buscar, doc } = tracker(porFolio);
+      await buscar('12');
+      assert.deepEqual(await buscar(''), []);
+      assert.match(doc.getElementById('folio-tbody').textContent, /tracker\.empty/);
+    });
+
+    it('si la función falla, muestra el error', async () => {
+      for (const respuesta of [
+        () => ({ data: null, error: { message: 'x' } }),
+        new TypeError('Failed to fetch'),
+      ]) {
+        const { buscar, doc } = tracker(respuesta);
+        assert.deepEqual(await buscar('12'), []);
+        assert.match(doc.getElementById('folio-tbody').textContent, /tracker\.error/);
+      }
     });
   });
 }

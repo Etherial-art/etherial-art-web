@@ -4026,7 +4026,7 @@
           'tracker.search': 'Buscar',
           'tracker.loading': 'Cargando folios...',
           'tracker.placeholder': 'Ingresa tu número de folio, ej: #0001',
-          'tracker.empty': 'No hay folios para mostrar',
+          'tracker.empty': 'Escribe tu número de folio para ver su estado.',
           'tracker.error': 'No se pudieron cargar los folios. Intenta más tarde.',
           'tracker.found': 'Se encontró {n} folio(s).',
           'tracker.notfound': 'No se encontró ningún folio.',
@@ -4329,7 +4329,7 @@
           'tracker.search': 'Search',
           'tracker.loading': 'Loading orders...',
           'tracker.placeholder': 'Enter your folio number, e.g. #0001',
-          'tracker.empty': 'No orders to display',
+          'tracker.empty': 'Enter your folio number to see its status.',
           'tracker.error': 'Could not load orders. Please try again later.',
           'tracker.found': 'Found {n} order(s).',
           'tracker.notfound': 'No order found.',
@@ -4632,7 +4632,7 @@
           'tracker.search': 'Suchen',
           'tracker.loading': 'Aufträge werden geladen...',
           'tracker.placeholder': 'Folio-Nummer eingeben, z.B. #0001',
-          'tracker.empty': 'Keine Aufträge vorhanden',
+          'tracker.empty': 'Gib deine Folio-Nummer ein, um den Status zu sehen.',
           'tracker.error': 'Aufträge konnten nicht geladen werden.',
           'tracker.found': '{n} Auftrag/Aufträge gefunden.',
           'tracker.notfound': 'Kein Auftrag gefunden.',
@@ -5409,15 +5409,13 @@
         }
         if (comisionesAbiertas) {
           try {
-            const { count, error } = await db
-              .from('seguimiento_publico')
-              .select('folio', { count: 'exact', head: true })
-              .not('status', 'in', '(completed,cancelled,expired)');
+            // Solo el número: el sitio ya no puede listar comisiones.
+            const { data: activas, error } = await db.rpc('contar_comisiones_activas');
             if (error) {
               console.error('No se pudo contar las comisiones activas:', error);
               estadoDesconocido = true;
             }
-            activeCount = count || 0;
+            activeCount = activas || 0;
             slotsFull = activeCount >= maxSlots;
           } catch (e) {
             console.error('No se pudo contar las comisiones activas:', e);
@@ -5592,26 +5590,10 @@
           .join('');
       }
 
-      async function cargarFolios() {
-        const tbody = document.getElementById('folio-tbody');
-        if (!tbody) return;
-        tbody.innerHTML = `<tr><td colspan="5" class="tracker-loading"><i class="ti ti-loader-2"></i> ${t('tracker.loading')}</td></tr>`;
-        try {
-          const { data, error } = await db
-            .from('seguimiento_publico')
-            .select('folio,tipo_ilustracion,tipo_servicio,status,lugar_en_fila,created_at')
-            .order('folio', { ascending: true });
-          if (error) throw error;
-          foliosGlobales = data || [];
-          renderFolios(foliosGlobales);
-        } catch (e) {
-          console.error('Supabase error:', e);
-          document.getElementById('folio-tbody').innerHTML =
-            `<tr><td colspan="5" class="tracker-empty"><i class="ti ti-wifi-off"></i> ${t('tracker.error')}</td></tr>`;
-        }
-      }
-
-      function buscarFolio() {
+      // El tracker es solo por folio: no se carga ninguna lista al abrir. Cada
+      // búsqueda pide una comisión a la función buscar_folio() (columnas
+      // públicas, sin datos del cliente).
+      async function buscarFolio() {
         const q = document
           .getElementById('folio-input')
           .value.trim()
@@ -5620,20 +5602,35 @@
         const res = document.getElementById('tracker-result');
         if (!q) {
           if (res) res.style.display = 'none';
+          foliosGlobales = [];
           renderFolios(foliosGlobales);
           return;
         }
-        // Solo por folio: el tracker público ya no muestra datos del cliente.
-        const numero = Number(q.replace(/^0+(?=\d)/, ''));
-        const found = /^\d+$/.test(q)
-          ? foliosGlobales.filter((f) => Number(f.folio) === numero)
-          : [];
+        const numero = /^\d+$/.test(q) ? Number(q) : NaN;
+        let found = [];
+        if (Number.isSafeInteger(numero) && numero > 0 && numero <= 2147483647) {
+          const tbody = document.getElementById('folio-tbody');
+          if (tbody)
+            tbody.innerHTML = `<tr><td colspan="5" class="tracker-loading"><i class="ti ti-loader-2"></i> ${t('tracker.loading')}</td></tr>`;
+          try {
+            const { data, error } = await db.rpc('buscar_folio', { p_folio: numero });
+            if (error) throw error;
+            found = Array.isArray(data) ? data : [];
+          } catch (e) {
+            console.error('No se pudo buscar el folio:', e);
+            if (res) res.style.display = 'none';
+            if (tbody)
+              tbody.innerHTML = `<tr><td colspan="5" class="tracker-empty"><i class="ti ti-wifi-off"></i> ${t('tracker.error')}</td></tr>`;
+            return;
+          }
+        }
         if (res) {
           res.style.display = 'block';
           res.textContent = found.length
             ? t('tracker.found', { n: found.length })
             : t('tracker.notfound');
         }
+        foliosGlobales = found;
         renderFolios(found);
       }
 
@@ -6286,7 +6283,7 @@
           fi.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') buscarFolio();
           });
-        cargarFolios();
+        renderFolios(foliosGlobales);
         cargarEstadoComisiones();
         // URL params
         const p = new URLSearchParams(window.location.search);

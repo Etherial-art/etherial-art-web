@@ -3455,6 +3455,8 @@
           'form.sending': 'Enviando...',
           'form.error': 'Hubo un error. Intenta de nuevo.',
           'form.conn.error': 'Error de conexión. Intenta de nuevo.',
+          'form.link.invalid':
+            'Este enlace no es válido para tu pedido. Usa el botón del correo de confirmación de Ko-fi o responde a ese correo.',
           'form.success.title': '¡Solicitud enviada!',
           'form.success.received': '¡Solicitud recibida!',
           'form.success.no_email':
@@ -3779,6 +3781,8 @@
           'form.sending': 'Sending...',
           'form.error': 'Something went wrong. Please try again.',
           'form.conn.error': 'Connection error. Please try again.',
+          'form.link.invalid':
+            'This link isn’t valid for your order. Use the button in your Ko-fi confirmation email, or reply to that email.',
           'form.success.title': 'Request sent!',
           'form.success.received': 'Request received!',
           'form.success.no_email':
@@ -4103,6 +4107,8 @@
           'form.sending': 'Wird gesendet...',
           'form.error': 'Da ist etwas schiefgelaufen. Bitte versuch es noch mal.',
           'form.conn.error': 'Verbindungsproblem – bitte versuch es noch mal.',
+          'form.link.invalid':
+            'Dieser Link passt nicht zu deiner Bestellung. Nutze den Button in deiner Ko-fi-Bestätigungsmail oder antworte auf diese Mail.',
           'form.success.title': 'Anfrage gesendet!',
           'form.success.received': 'Anfrage erhalten!',
           'form.success.no_email':
@@ -5020,6 +5026,9 @@
       // Resultado de buscar_folio() (con el nombre ya enmascarado por la base).
       let folioBuscado = null;
       let folioKofi = null;
+      // Token del enlace del correo de Ko-fi: el backend lo pide para guardar
+      // los detalles de ese pedido.
+      let tokenKofi = null;
 
       // Traduce un valor guardado en español (tipo de servicio o de ilustración)
       // al idioma del visitante. Si no está en el diccionario, se muestra tal cual.
@@ -5639,7 +5648,10 @@
           const method = folioKofi ? 'PATCH' : 'POST';
           const res = await fetch(url, {
             method,
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              ...(folioKofi && tokenKofi ? { 'X-Detalles-Token': tokenKofi } : {}),
+            },
             body: JSON.stringify(payload),
           });
           const data = await res.json();
@@ -5654,7 +5666,10 @@
               if (st) st.classList.add('done');
             }
           } else {
-            showToast(t('form.error'));
+            // 401/403 en un pedido de Ko-fi: el enlace no trae el token de ese
+            // pedido (p. ej. un correo anterior). Decirlo ayuda más que "error".
+            const enlaceInvalido = folioKofi && (res.status === 401 || res.status === 403);
+            showToast(t(enlaceInvalido ? 'form.link.invalid' : 'form.error'));
             btn.disabled = false;
             btn.textContent = t('form.submit');
           }
@@ -5785,7 +5800,10 @@
           pTipo = p.get('tipo'),
           pFolio = p.get('folio'),
           pSubtipo = p.get('subtipo');
-        if (pFolio) folioKofi = pFolio;
+        if (pFolio) {
+          folioKofi = pFolio;
+          tokenKofi = p.get('token');
+        }
         const tipoTarget = comision || pTipo;
         if (tab === 'seguimiento') goTab('seguimiento');
         else if (tab === 'comisiones' || tab === 'servicios' || tipoTarget || pNombre || pEmail)

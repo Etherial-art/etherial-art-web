@@ -157,7 +157,8 @@ describe('admin.html: detalle', () => {
       '<span id="d-folio"></span><div id="d-body"></div><div id="detail-overlay"></div>',
       ['abrirDetalle'],
       {
-        prelude: `let comisiones = [{ folio: 2, status: 'quoted', cliente_tag: 'Ana',
+        prelude: `function cargarFicha() {}
+          let comisiones = [{ folio: 2, status: 'quoted', cliente_tag: 'Ana',
           email: 'ana@x.com', descripcion_arte: 'Un zorro azul', contacto_preferido: 'discord',
           num_personajes: '2', codigo_descuento: 'OTONO10', precio_total: 40, addons: ['Fondo'],
           como_me_encontro: 'Instagram' }];`,
